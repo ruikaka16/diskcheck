@@ -1,0 +1,28 @@
+DROP TABLE IF EXISTS `test`.`devicedisk1`;
+CREATE TABLE  `test`.`devicedisk1` (
+  `date` varchar(45) DEFAULT NULL,
+  `ip` varchar(45) NOT NULL DEFAULT '0',
+  `deviceId` varchar(45) NOT NULL DEFAULT '',
+  `freespace` float(5,2) NOT NULL DEFAULT '0.00',
+  `size` float(5,2) NOT NULL DEFAULT '0.00',
+  `util` float(5,2) NOT NULL DEFAULT '0.00',
+  `type` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `test`.`device`;
+CREATE TABLE  `test`.`device` (
+  `ip` varchar(45) NOT NULL DEFAULT '',
+  `username` varchar(45) NOT NULL DEFAULT '',
+  `password` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `test`.`systemconfig`;
+CREATE TABLE  `test`.`systemconfig` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `value` varchar(45) NOT NULL DEFAULT '',
+  `remark` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
