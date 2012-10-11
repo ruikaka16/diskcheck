@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,6 +41,8 @@ public class DeviceConfig extends JFrame {
 	DBConnection conn_num, conn_table,conn_insert,conn_del,conn_modify;
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
+	private JComboBox cb; //20121011 增加下拉框
+	private static String[] data = {"Windwos","Linux"};//20121011下拉框中的默认数据
 
 	int num; // 记录条数
 	int i = 0;
@@ -51,7 +54,14 @@ public class DeviceConfig extends JFrame {
 		setTitle("查询设备配置");
 		setBounds(100, 100, 800, 600);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		String[] columnNames = { "IP地址", "用户名", "密码" }; // 列名
+		String[] columnNames = { "IP地址", "用户名", "密码","操作系统" }; // 20121011列增加os字段对应操作系统
+		cb = new JComboBox();
+
+		//在下拉框中增加默认数据
+		for (int i = 0; i < data.length; i++) {  
+           cb.addItem(data[i]);
+		}
+		
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
@@ -75,10 +85,11 @@ public class DeviceConfig extends JFrame {
 		tableVales = new String[num][7];
 		try {
 			while (rs1.next()) {
-				// System.out.println(tableVales[i][1]);
+				//在表中获取数据
 				tableVales[i][0] = rs1.getString(1);
 				tableVales[i][1] = rs1.getString(2);
 				tableVales[i][2] = rs1.getString(3);
+				tableVales[i][3] = rs1.getString(4); 
 				i++;
 
 			}
@@ -89,7 +100,7 @@ public class DeviceConfig extends JFrame {
 			e.printStackTrace();
 		}
 
-		// 添加数据和表到jtable中
+		// 添加数据和表到表中
 		tableModel = new DefaultTableModel(tableVales, columnNames);
 		table = new JTable(tableModel);
 		
@@ -109,9 +120,24 @@ public class DeviceConfig extends JFrame {
 				Object oa = tableModel.getValueAt(selectedRow, 0);
 				Object ob = tableModel.getValueAt(selectedRow, 1);
 				Object oc = tableModel.getValueAt(selectedRow, 2);
+				Object od = tableModel.getValueAt(selectedRow, 3);
 				aTextField.setText(oa.toString()); // 给文本框赋值
 				bTextField.setText(ob.toString());
-				cTextField.setText(oc.toString());
+				cTextField.setText(oc.toString());				
+				//设置添加设备下来框中根据选择的设备信息在Jcombox显示
+				if(od.toString().equals("Windows"))   
+					{cb.removeAllItems();
+					 cb.addItem(data[0]);
+					 cb.addItem(data[1]);
+					 cb.setSelectedItem("Windwos");
+					 }
+				else if(od.toString().equals("Linux"))
+					{cb.removeAllItems();
+					cb.addItem(data[0]);
+					cb.addItem(data[1]);
+					cb.setSelectedItem("Linux");
+					}
+				System.out.println(data[1]);
 			}
 		});
 
@@ -128,6 +154,9 @@ public class DeviceConfig extends JFrame {
 		panel.add(new JLabel("密码: "));
 		cTextField = new JTextField("", 10);
 		panel.add(cTextField);
+		
+		panel.add(new JLabel("操作类型: "));
+		panel.add(cb);
 
 		//添加查询设备
 		final JButton addButton = new JButton("添加"); // 添加按钮

@@ -54,7 +54,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 			}
 		 
 			conn_table = new DBConnection();
-			String sql4 = "select * from test.deviceDisk1 order by date desc";
+			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk1 order by date desc";
 			rs1 = conn_table.executeQuery(sql4);
 			tableVales= new String [num][8];
 			try {
@@ -100,7 +100,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 
 
 		  label1=new JLabel("当前"+table.currentPage+"页|总共"+table.totalRowCount+"条记录");	
-		  label1.setBounds(450, 440, 130, 20);
+		  label1.setBounds(420, 440, 130, 20);
 		  this.getContentPane().setLayout(null);
 		  this.getContentPane().add(panel);
 		  this.getContentPane().add(previous);
