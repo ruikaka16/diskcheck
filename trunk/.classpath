@@ -5,5 +5,8 @@
 	<classpathentry kind="lib" path="D:/tomcat 5.5.30/common/lib/mysql-connector-java-5.0.3-bin.jar"/>
 	<classpathentry kind="lib" path="D:/jars/JTattoo.jar"/>
 	<classpathentry kind="lib" path="D:/jars/jsch-0.1.48.jar"/>
+	<classpathentry kind="lib" path="D:/jars/expect4j-1.0.jar"/>
+	<classpathentry kind="lib" path="D:/jars/easydbo-0.9.1.jar"/>
+	<classpathentry kind="lib" path="D:/jars/log4j-1.2.14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

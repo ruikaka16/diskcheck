@@ -2,7 +2,7 @@ package com.wangrui.client;
 
 public class DeviceBean {
 	
-	public String ip,username,password;
+	public String ip,username,password,os;
 
 	public String getIp() {
 		return this.ip;
@@ -28,9 +28,17 @@ public class DeviceBean {
 		this.password = password;
 	}
 	
+	public String getOs() {
+		return this.os;
+	}
+
+	public void setOs(String os) {
+		this.os = os;
+	}
+	
 	   public Object[] toObjectArray() {
 	        return new Object[]{
-	        		ip,username,password};
+	        		ip,username,password,os};
 	} 
 	
 

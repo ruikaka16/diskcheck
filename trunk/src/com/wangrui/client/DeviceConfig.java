@@ -42,8 +42,7 @@ public class DeviceConfig extends JFrame {
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
 	private JComboBox cb; //20121011 增加下拉框
-	private static String[] data = {"Windwos","Linux"};//20121011下拉框中的默认数据
-
+	private static String[] data = {"Windwos","Linux"};//20121011增加下拉框中的默认数据
 	int num; // 记录条数
 	int i = 0;
 	private Object tableVales[][];
@@ -155,7 +154,7 @@ public class DeviceConfig extends JFrame {
 		cTextField = new JTextField("", 10);
 		panel.add(cTextField);
 		
-		panel.add(new JLabel("操作类型: "));
+		panel.add(new JLabel("操作系统: "));
 		panel.add(cb);
 
 		//添加查询设备
@@ -163,6 +162,7 @@ public class DeviceConfig extends JFrame {
 		addButton.addActionListener(new ActionListener() {// 添加事件
 					public void actionPerformed(ActionEvent e) {
 					
+						System.out.println("获得Jcombox的当前值："+cb.getSelectedItem());
 						if(aTextField.getText().length()==0){
 							JOptionPane.showMessageDialog(null, "请输入查询设备的IP地址！");
 							return;
@@ -177,7 +177,7 @@ public class DeviceConfig extends JFrame {
 						}
 						else{
 						String[] rowValues = { aTextField.getText(),
-								bTextField.getText(), cTextField.getText() };
+								bTextField.getText(), cTextField.getText(),cb.getSelectedItem().toString()};
 						tableModel.addRow(rowValues); // 添加一行
 						int rowCount = table.getRowCount() + 1; // 行数加上1
 						}
@@ -187,12 +187,7 @@ public class DeviceConfig extends JFrame {
 						try {
 						
 							conn_insert = new DBConnection();
-							String sql5 = "insert into test.device (ip,username,password) values('"
-									+ aTextField.getText()
-									+ "','"
-									+ bTextField.getText()
-									+ "','"
-									+ cTextField.getText() + "')";
+							String sql5 = "insert into test.device (ip,username,password,os) values('"+ aTextField.getText()+ "','"+ bTextField.getText()+ "','"+ cTextField.getText()+"','"+cb.getSelectedItem()+"')";
 							conn_insert.executeUpdate(sql5);
 							conn_insert.close();
 
@@ -249,7 +244,7 @@ public class DeviceConfig extends JFrame {
 					}
 				});
 		panel.add(delButton);
-		
+		//修改选中设备信息
 		final JButton updateButton = new JButton("修改");
 		updateButton.addActionListener(new ActionListener() {
 			
