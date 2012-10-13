@@ -157,13 +157,19 @@ public class ChkResult1 extends JTable {
 		Object[][] data = getData(chkResultBean);
 		if (data != null) {
 			initResultData(data);
-			model = new DefaultTableModel(getPageData(), columnNames);
+			model = new DefaultTableModel(getPageData(), columnNames){
+				//设置表格不可编辑
+				public boolean isCellEditable(int row, int column) { 
+		            return false; 
+				}
+			};
 		} else {
 			// 如果结果集中没有数据，那么就用空来代替数据集中的每一行
 			Object[][] nothing = { {}, {}, {}, {}, {}, {}, {} };
 			model = new DefaultTableModel(nothing, columnNames);
 			totalRowCount = 0;
 		}
+		
 		this.setModel(model);
 		this.setRowHeight(20);
 		
