@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -54,7 +55,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 			}
 		 
 			conn_table = new DBConnection();
-			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk1 order by date desc";
+			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk1 where deviceid not in ('/boot') and date = date_format(now(),'%Y%m%d') order by date desc ";
 			rs1 = conn_table.executeQuery(sql4);
 			tableVales= new String [num][8];
 			try {
@@ -62,16 +63,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 					
 					  ChkResultBean s=new ChkResultBean(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),rs1.getString(5),rs1.getString(6),rs1.getString(7));
 					  ChkResultBean.chkResultBean.add(s);
-					
-					//System.out.println(tableVales[i][1]);				
-//					tableVales[i][0]=rs1.getString(1);
-//					tableVales[i][1]=rs1.getString(2);
-//					tableVales[i][2]=rs1.getString(3);
-//					tableVales[i][3]=rs1.getString(4);
-//					tableVales[i][4]=rs1.getString(5);
-//					tableVales[i][5]=rs1.getString(6);
-//					tableVales[i][6]=rs1.getString(7);
-//					i++;			
+			
 				}
 				rs1.close();
 				conn_table.close();
@@ -79,8 +71,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		  
-		  
+
 		 }
 	 
 	 private void initComponent() {
@@ -100,7 +91,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 
 
 		  label1=new JLabel("当前"+table.currentPage+"页|总共"+table.totalRowCount+"条记录");	
-		  label1.setBounds(420, 440, 130, 20);
+		  label1.setBounds(10, 440, 150, 30);
 		  this.getContentPane().setLayout(null);
 		  this.getContentPane().add(panel);
 		  this.getContentPane().add(previous);

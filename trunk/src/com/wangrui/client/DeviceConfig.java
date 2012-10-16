@@ -14,12 +14,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -38,6 +40,7 @@ public class DeviceConfig extends JFrame {
 	private JTable table;
 	private JTextField aTextField, cTextField;
 	private JTextField bTextField, dTextField;
+	private JPasswordField password;
 	DBConnection conn_num, conn_table,conn_insert,conn_del,conn_modify;
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
@@ -64,7 +67,7 @@ public class DeviceConfig extends JFrame {
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
-		String sql3 = "select count(*) from test.device ";
+		String sql3 = "select count(*) from test.device";
 		rs = conn_num.executeQuery(sql3);
 		try {
 			while (rs.next()) {
@@ -79,7 +82,7 @@ public class DeviceConfig extends JFrame {
 
 		// 将表中的数据显示到jtable中
 		conn_table = new DBConnection();
-		String sql4 = "select * from test.device";
+		String sql4 = "select * from test.device  order by os";
 		rs1 = conn_table.executeQuery(sql4);
 		tableVales = new String[num][7];
 		try {
@@ -122,7 +125,7 @@ public class DeviceConfig extends JFrame {
 				Object od = tableModel.getValueAt(selectedRow, 3);
 				aTextField.setText(oa.toString()); // 给文本框赋值
 				bTextField.setText(ob.toString());
-				cTextField.setText(oc.toString());				
+				password.setText(oc.toString());				
 				//设置添加设备下来框中根据选择的设备信息在Jcombox显示
 				if(od.toString().equals("Windows"))   
 					{cb.removeAllItems();
@@ -139,20 +142,36 @@ public class DeviceConfig extends JFrame {
 				System.out.println(data[1]);
 			}
 		});
+		
+		//设置表格密码字段table中表格显示为******
+		table.getColumn("密码").setCellRenderer(new DefaultTableCellRenderer() {
+			// 重写 setValue 方法
+			public void setValue(Object value) {
+				String password = "";
+				int wordLong = value.toString().length();
+
+				for (int i = 0; i < wordLong; i++)
+					password += "*";
+
+				super.setValue(password);
+			}
+		});
 
 		scrollPane.setViewportView(table);
 		final JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.SOUTH);
 		panel.add(new JLabel("IP地址: "));
-		aTextField = new JTextField("", 10);
+		aTextField = new JTextField("",8);
 		panel.add(aTextField);
 		panel.add(new JLabel("用户名: "));
-		bTextField = new JTextField("", 10);
+		bTextField = new JTextField("",8);
 		panel.add(bTextField);
 
 		panel.add(new JLabel("密码: "));
-		cTextField = new JTextField("", 10);
-		panel.add(cTextField);
+//		cTextField = new JTextField("", 10);
+		password = new JPasswordField("",8);
+//		panel.add(cTextField);
+		panel.add(password);
 		
 		panel.add(new JLabel("操作系统: "));
 		panel.add(cb);
@@ -259,14 +278,14 @@ public class DeviceConfig extends JFrame {
 					
 					
 					try{
-						String sql = "update device set username = '"+bTextField.getText()+"',password = '"+cTextField.getText()+"' where ip = '"+aTextField.getText()+"'";
+						String sql = "update device set username = '"+bTextField.getText()+"',password = '"+password.getText()+"',os = '"+cb.getSelectedItem()+"' where ip = '"+aTextField.getText()+"'";
 						conn_modify = new DBConnection();
 						conn_modify.executeUpdate(sql);
 						conn_modify.close();
 						JOptionPane.showMessageDialog(null, "该设备信息已经修改！");
 						bTextField.setText("");
 						aTextField.setText("");
-						cTextField.setText("");
+						password.setText("");
 						setVisible(false);
 						
 					}catch(Exception e2){
@@ -278,6 +297,12 @@ public class DeviceConfig extends JFrame {
 			}
 		});
 		panel.add(updateButton);
+	}
+	
+	public static void main(String [] args){
+		
+		new DeviceConfig();
+		
 	}
 	
 

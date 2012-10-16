@@ -88,7 +88,7 @@ public class DiskCheck extends JFrame {
 		JLabel jLabel1 = new JLabel();
 		// JLabel jLabel2 = new JLabel();
 		JLabel jLabel3 = new JLabel();
-		JLabel mainLabel = new JLabel("欢迎使用Windows磁盘监控程序");
+		JLabel mainLabel = new JLabel("欢迎使用磁盘空间查询系统");
 		
 		JLabel systimeLable = new JLabel();
 		systimeLable.setLocation(450, 250);
@@ -401,7 +401,7 @@ public class DiskCheck extends JFrame {
 				if(!str.trim().isEmpty()){
 				String s[] = str.split(" ");
 				String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"+ip+"','"
-					+ s[0]
+					+ s[5]
 					+ "',"
 					+ "'"
 					+ s[3]
@@ -604,7 +604,7 @@ public class DiskCheck extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					JOptionPane.showMessageDialog(null, "磁盘查询程序");
+					JOptionPane.showMessageDialog(null, "磁盘查询程序V2.1，支持Windows、Linux系统！");
 				}
 			});
 
@@ -623,13 +623,13 @@ public class DiskCheck extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 
 					//未分页表格
-//					ChkResult t = new ChkResult();
-//					t.setVisible(true);
-//					t.setLocationRelativeTo(null);
+					ChkResult t = new ChkResult();
+					t.setVisible(true);
+					t.setLocationRelativeTo(null);
 					
 					//分页表格
-					ChkResultTable t = new  ChkResultTable();
-					t.setLocationRelativeTo(null);
+//					ChkResultTable t = new  ChkResultTable();
+//					t.setLocationRelativeTo(null);
 				}
 			});
 
