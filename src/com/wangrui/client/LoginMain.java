@@ -33,7 +33,8 @@ public class LoginMain extends JFrame {
 	 */
 	public static void main(String[] args) {
 
-		LoginMain inst = new LoginMain();
+		LoginMain inst = 
+			new LoginMain();
 		inst.setLocationRelativeTo(null);
 		inst.setVisible(true);
 
@@ -90,6 +91,15 @@ public class LoginMain extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if(usernameField.getText().length()==0){
+					
+					JOptionPane.showMessageDialog(null,"请输入用户名!");
+					return;
+				}
+				else if(passwordField.getText().length()==0){
+					JOptionPane.showMessageDialog(null, "请输入密码");
+					return;
+				}
 				try {
 					//System.out.println(username.getText()+password.getText());
 					login(usernameField.getText(), passwordField.getText());
@@ -177,11 +187,15 @@ public class LoginMain extends JFrame {
 			diskCheck.setLocationRelativeTo(null); // 设置窗口居中显示
 			diskCheck.show();
 			
+			rs_login.close();
+			conn_login.close();
 		}
-		else
+
+		else {
 			JOptionPane.showMessageDialog(null,"用户名或密码错误，请重新输入！");
 		    usernameField.setText("");
 		    passwordField.setText("");
+		}
 				
 	}
 	

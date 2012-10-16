@@ -236,7 +236,7 @@ public class SystemConfig extends JFrame {
 						conn_modify = new DBConnection();
 						conn_modify.executeUpdate(sql);
 						conn_modify.close();
-						JOptionPane.showMessageDialog(null, "该设备信息已经修改,重新登录生效！");
+						JOptionPane.showMessageDialog(null, "该设备信息已经修改,重新登录后生效！");
 						bTextField.setText("");
 						aTextField.setText("");
 						cTextField.setText("");

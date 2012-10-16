@@ -33,6 +33,7 @@ public class ChkResult1 extends JTable {
 
 	public ChkResult1() {
 		initTable();
+
 	}
 
 	/**
@@ -180,6 +181,8 @@ public class ChkResult1 extends JTable {
 		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
 		r.setHorizontalAlignment(JLabel.CENTER);
 		setDefaultRenderer(Object.class, r);
+		
+	
 
 	}
 

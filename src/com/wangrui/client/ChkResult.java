@@ -73,7 +73,7 @@ public class ChkResult extends JFrame{
 		
 		 //将表中的数据显示到jtable中
 		conn_table = new DBConnection();
-		String sql4 = "select * from test.deviceDisk1 order by date desc";
+		String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk1 where deviceid not in ('/boot')  order by date desc ";
 		rs1 = conn_table.executeQuery(sql4);
 		tableVales= new String [num][8];
 		try {
@@ -161,11 +161,11 @@ public class ChkResult extends JFrame{
     /**
      * @param args
      */
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        // TODO Auto-generated method stub
-//        TableEditor jTableDefaultTableModelTest = new TableEditor();
-//        jTableDefaultTableModelTest.setVisible(true);
-//    }
+        
+      new ChkResult();
+    }
 
 }
 
