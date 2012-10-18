@@ -1,12 +1,15 @@
 package com.wangrui.client;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Label;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -21,17 +24,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -43,11 +44,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.ProgressMonitor;
 
 import com.easyjf.util.FileCopyUtils;
 import com.jcraft.jsch.Channel;
@@ -73,11 +73,14 @@ public class DiskCheck extends JFrame {
 	public static JLabel jLabel2;
 	public ResultSet rs_queryDeviceInfo, rs_querySysConfigInfo, rs_getFilePath,
 			rs_getUtil;
-	// private String utilresult,filePathresult;
 	private int l = 1000, m = 1002, n = 1003;
 	private SystemConfigBean sysConfigBean;
 	public static LoginMain loginMain;
 	public RandomAccessFile dos_vbs=null;
+	private boolean running=false;
+	public int x,y,height,width;
+	public static JProgressBar bar ;
+	public static JDialog jdiaLog;
 
 	public DiskCheck() {
 
@@ -95,13 +98,15 @@ public class DiskCheck extends JFrame {
 		SystTimeUpdateTimer s = new SystTimeUpdateTimer(systimeLable);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JPanel jPanel = new JPanel();
+		final JPanel jPanel = new JPanel();
 		jPanel.setLayout(new FlowLayout());
 		// jLabel1.setText("系统初始化日期：");
-		JButton button = new JButton("开始查询！");
+	    final JButton button = new JButton("开始查询！");
+		final JButton  bt = new JButton("test progressbar");
 		mainLabel.setFont(new Font("华文楷体", Font.ITALIC, 24));
 		Image icon = (new ImageIcon("D:/Program Files/DiskCheck/disk.gif")).getImage();
 		setIconImage(icon);
+		
 
 		/*
 		 * 从systemconfig表中去参数配置
@@ -121,14 +126,21 @@ public class DiskCheck extends JFrame {
 			}
 		}
 		
+		bt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 
+		  
 		//执行vbs的查询命令
 		button.addActionListener(new ActionListener() {
-
-			@Override
+//
+//			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+//	// 设置查询进度条
 				
+				
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~			
 				jTextArea.append("【" + getSystime() + "】︰"
 						+ "开始写入查询命令，请等待!" + "\n");
 				jTextArea.paintImmediately(jTextArea.getBounds());
@@ -204,6 +216,7 @@ public class DiskCheck extends JFrame {
 		jPanel.add(jScrollPanel);
 		setContentPane(jPanel);
 		jPanel.add(button);
+		jPanel.add(bt);
 		jPanel.add(systimeLable);
 		Container contentpane = getContentPane();
 
@@ -485,9 +498,17 @@ public class DiskCheck extends JFrame {
 					conn_insertCommdToDatabase.close();	
 					
 					JOptionPane.showMessageDialog(null, "查询完毕!");
+					
+					//jdiaLog.setVisible(false);
+					//enable();
+					
 					jTextArea.append("【" + getSystime() + "】︰"
 							+"磁盘信息查询完成!" + "\n");
 					jTextArea.paintImmediately(jTextArea.getBounds());
+					
+//					button.remove(bar);
+//					enable();
+					
 //查询完成直接显示结果	
 					//未分页
 //					ChkResult t = new ChkResult();
@@ -679,19 +700,20 @@ public class DiskCheck extends JFrame {
 
 			return mediumDateFormat.format(date);
 		}
-//程序入口
-//	public static void main(String[] args) {
-//		// TODO Auto-generated method stub
-//		//loginMain = new LoginMain();
-//		DiskCheck diskCheck = new DiskCheck();
-//		// win.setIconImage(icon);
-//		diskCheck.setResizable(false);
-//		diskCheck.setTitle("磁盘空间查询");
-//		diskCheck.setAlwaysOnTop(false);
-//		diskCheck.setSize(490, 310);
-//		diskCheck.setLocationRelativeTo(null); // 设置窗口居中显示
-//		diskCheck.show();
-//	}
 
+//程序入口
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//loginMain = new LoginMain();
+		DiskCheck diskCheck = new DiskCheck();
+		// win.setIconImage(icon);
+		diskCheck.setResizable(false);
+		diskCheck.setTitle("磁盘空间查询");
+		diskCheck.setAlwaysOnTop(false);
+		diskCheck.setSize(490, 310);
+		diskCheck.setLocationRelativeTo(null); // 设置窗口居中显示
+		diskCheck.show();
+	}
 
 }
+
