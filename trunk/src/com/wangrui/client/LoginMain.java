@@ -26,6 +26,7 @@ public class LoginMain extends JFrame {
 	private JButton loginBt;
 	private DBConnection conn_login;
 	private ResultSet rs_login;
+	private MainPanel appPanel;
 
 
 	/**
@@ -174,20 +175,8 @@ public class LoginMain extends JFrame {
 		if(rs_login.next()){
 
 			setVisible(false);
-			DiskCheck diskCheck = new DiskCheck();
-			// win.setIconImage(icon);
-//			URL imgURL = DiskCheck.class.getResource("/chart_pie.gif"); 
-//			ImageIcon imgIcon = new ImageIcon(imgURL); 
-//			Image img = imgIcon.getImage();
-//			diskCheck.setIconImage(img); 
-			diskCheck.setResizable(false);
-			diskCheck.setTitle("磁盘空间查询");
-			diskCheck.setAlwaysOnTop(false);
-			diskCheck.setSize(490, 310);
-			diskCheck.setLocationRelativeTo(null); // 设置窗口居中显示
-			diskCheck.show();
-			
-			rs_login.close();
+			appPanel = new MainPanel();
+		rs_login.close();
 			conn_login.close();
 		}
 
