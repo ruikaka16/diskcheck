@@ -96,7 +96,12 @@ public class ChkResult extends JFrame{
 		}
         
 		//添加数据和表到jtable中
-        tableModel = new DefaultTableModel(tableVales,columnNames);      
+        tableModel = new DefaultTableModel(tableVales,columnNames){
+			//设置表格不可编辑
+			public boolean isCellEditable(int row, int column) { 
+	            return false; 
+			}
+		};      
         table = new JTable(tableModel);
        //设置当利用率大于60%时，记录背景设置为红色
         table.setDefaultRenderer(Object.class, new TableCellRenderer() {   
