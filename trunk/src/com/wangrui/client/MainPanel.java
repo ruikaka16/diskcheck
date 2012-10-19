@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import com.easyjf.util.FileCopyUtils;
@@ -47,7 +48,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.wangrui.server.DBConnection;
-import com.wangrui.test.ThreadDemo;
 
 /*
  * 定义查询的各项操作的线程
@@ -457,17 +457,18 @@ public class MainPanel implements ActionListener {
 	private JPanel ptop;
 	private JButton button;
 	private JMenuBar menuBar;
-	private JScrollPane jScrollPanel;
+	private JScrollPane jScrollPanel,jScrollPanel1;
 	private JLabel mainLabel;
 	private JPanel pcenter;
 	private T1 t1;
+	private JTabbedPane tabbedPane;
 
 	// 因为要在类外部访问以下标签，所以要声明为包类型
 	JProgressBar bar;
 	JDialog jdiaLog;
 	Boolean flag = false;
 	int i = 0;
-	JTextArea jTextArea;
+	JTextArea jTextArea,jTextArea1;
 	DBConnection conn_query, conn_insertLiunxCommdToDatabase,
 			conn_insertCommdToDatabase, conn_querySysConfig, conn_getFilePath,
 			conn_getUtil;
@@ -625,18 +626,35 @@ public class MainPanel implements ActionListener {
 		jTextArea = new JTextArea(9, 42);
 		jTextArea.setMargin(new Insets(5, 5, 5, 5));
 		jTextArea.setEditable(false);
+		
+		jTextArea1 = new JTextArea(9, 42);
+		jTextArea1.setMargin(new Insets(5, 5, 5, 5));
+		jTextArea1.setEditable(false);
+		
 		jScrollPanel = new JScrollPane(jTextArea);
+		jScrollPanel1 = new JScrollPane(jTextArea1);
 
 		mainLabel = new JLabel("欢迎使用磁盘空间查询系统");
 		mainLabel.setFont(new Font("华文楷体", Font.ITALIC, 24));
 		ptop.add(mainLabel);
-		ptop.add(jScrollPanel);
+		//ptop.add(jScrollPanel);
 
 		bar = new JProgressBar(0, 100);
 		bar.setIndeterminate(true);
 		bar.setString("正在查询中，请稍等！");
 		bar.setStringPainted(true);// 设置在进度条中显示百分比
 		bar.setVisible(true);
+		
+		tabbedPane = new JTabbedPane(JTabbedPane.NORTH);
+		tabbedPane.setBounds(0, 0, 445, 250);
+		
+		tabbedPane.addTab("磁盘信息查询", jScrollPanel);
+		ptop.add(tabbedPane);
+		
+		tabbedPane.addTab("内存信息查询", jScrollPanel1);
+		ptop.add(tabbedPane);
+		
+		
 
 		pcenter = new JPanel(); // 第二个Panel
 

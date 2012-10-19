@@ -181,11 +181,26 @@ public class DeviceConfig extends JFrame {
 		addButton.addActionListener(new ActionListener() {// 添加事件
 					public void actionPerformed(ActionEvent e) {
 					
-						System.out.println("获得Jcombox的当前值："+cb.getSelectedItem());
 						if(aTextField.getText().length()==0){
 							JOptionPane.showMessageDialog(null, "请输入查询设备的IP地址！");
 							return;
 						}
+//						对IP地址进行验证
+						 if (aTextField.getText() != null && !aTextField.getText().isEmpty()) {
+					            // 定义正则表达式
+					            String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+					                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+					                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+					                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+					            // 判断ip地址是否与正则表达式匹配
+					            if (!aTextField.getText().matches(regex))  {
+					                // 返回判断信息
+					            	JOptionPane.showMessageDialog(null,aTextField.getText()+"不是一个合法的IP地址！");
+					                return;
+					            }
+					        }					
+						System.out.println("获得Jcombox的当前值："+cb.getSelectedItem());
+
 						if(bTextField.getText().length()==0){
 							JOptionPane.showMessageDialog(null, "请输入查询设备的用户名！");
 							return;
@@ -270,10 +285,20 @@ public class DeviceConfig extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(aTextField.getText().length()==0&&bTextField.getText().length()==0&&cTextField.getText().length()==0){
-					JOptionPane.showMessageDialog(null, "请先选择要修改的设备！");
-					return;
-				}
+//				对IP地址进行验证
+				 if (aTextField.getText() != null && !aTextField.getText().isEmpty()) {
+			            // 定义正则表达式
+			            String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+			                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+			                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+			                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+			            // 判断ip地址是否与正则表达式匹配
+			            if (!aTextField.getText().matches(regex))  {
+			                // 返回判断信息
+			            	JOptionPane.showMessageDialog(null,aTextField.getText()+"不是一个合法的IP地址！");
+			                return;
+			            }
+			        }
 				else{
 					
 					
@@ -297,7 +322,10 @@ public class DeviceConfig extends JFrame {
 			}
 		});
 		panel.add(updateButton);
+		
+		
 	}
+
 	
 	public static void main(String [] args){
 		

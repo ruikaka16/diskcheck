@@ -136,16 +136,17 @@ public class SystemConfig extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						if (aTextField.getText().length() == 0) {
 							JOptionPane
-									.showMessageDialog(null, "请输入查询设备的IP地址！");
+									.showMessageDialog(null, "请输入配置编号！");
 							return;
 						}
+
 						if (bTextField.getText().length() == 0) {
-							JOptionPane.showMessageDialog(null, "请输入查询设备的用户名！");
+							JOptionPane.showMessageDialog(null, "请输入配置参数值！");
 							return;
 						}
 						if (cTextField.getText().length() == 0) {
 							JOptionPane
-									.showMessageDialog(null, "请输入查询设备的登录密码！");
+									.showMessageDialog(null, "请输入参数说明！");
 							return;
 						} else {
 							String[] rowValues = { aTextField.getText(),
