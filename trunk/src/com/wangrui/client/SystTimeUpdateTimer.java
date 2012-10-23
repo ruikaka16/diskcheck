@@ -12,24 +12,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class SystTimeUpdateTimer implements ActionListener {
-	public final int ONE_SECOND = 1000; // 1ÃëÖÓ¸üĞÂÒ»´Î
-	private JLabel timeLabel = null; // ÔÚ´ËlabelÉÏÏÔÊ¾Ê±¼äÓÉÍâ²¿´«Èë
-	private Calendar calendar = null; // »ñÈ¡µ±Ç°Ê±¼äµÄÈÕÀúÀà
-	private DateFormat dateFormat = null; // Ê±¼ä¸ñÊ½Àà ÓÃÀ´¸ñÊ½»¯Ê±¼äÓÃ
-	private Timer timeTimer = null; // ¼ÆÊ±Æ÷
-	private TimeZone currentTimeZone; // *µ±Ç°µÄÊ±Çø Ö»ËùÒÔ
+	public final int ONE_SECOND = 1000; // 1ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+	private JLabel timeLabel = null; // ï¿½Ú´ï¿½labelï¿½ï¿½ï¿½ï¿½Ê¾Ê±ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
+	private Calendar calendar = null; // ï¿½ï¿½È¡ï¿½ï¿½Ç°Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private DateFormat dateFormat = null; // Ê±ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	private Timer timeTimer = null; // ï¿½ï¿½Ê±ï¿½ï¿½
+	private TimeZone currentTimeZone; // *ï¿½ï¿½Ç°ï¿½ï¿½Ê±ï¿½ï¿½ Ö»ï¿½ï¿½ï¿½ï¿½
 
-	// ÓÃËüÊÇÒòÎª·µ»ØµÄÊ±¼ä¿ÉÄÜ¸úÊ±ÇøÓĞ¹Ø¶ø¸úÄã»úÆ÷ÉÏµÄÏà²î¼¸Ğ¡Ê±ÎÒ¾ÍÓöµ½¹ı*/
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Øµï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ü¸ï¿½Ê±ï¿½ï¿½ï¿½Ğ¹Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½î¼¸Ğ¡Ê±ï¿½Ò¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 
 	public SystTimeUpdateTimer(JLabel jLabel) {
 		// TODO Auto-generated constructor stub
 		this.timeLabel = jLabel;
-		this.currentTimeZone = TimeZone.getDefault();// ´Ë·½·¨·µ»Ø±¾µØÊ±Çø ³ÌĞòÔËĞĞµÄµØ·½
+		this.currentTimeZone = TimeZone.getDefault();// ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ĞµÄµØ·ï¿½
 		this.dateFormat = DateFormat.getDateTimeInstance(2, 2,
 				java.util.Locale.getDefault());
 
-		// this.dateFormat= //ÉÏÃæµÄÊÇ¼òĞ´ÏÂÃæµÄÊÇ´øºº×ÖµÄÈç 2007Äê4ÔÂ 3µã4·Ö5Ãë ×Ô¼ºÊÔÊÔ
-		// DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,java.util.Locale.getDefault());//´ËÎªÍêÕûµÄÊ±¼ä¸ñÊ½
+		// this.dateFormat= //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½Öµï¿½ï¿½ï¿½ 2007ï¿½ï¿½4ï¿½ï¿½ 3ï¿½ï¿½4ï¿½ï¿½5ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
+		// DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG,java.util.Locale.getDefault());//ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ê½
 		this.timeTimer = new Timer(this.ONE_SECOND, this);
 		this.timeTimer.setRepeats(true);
 		this.timeTimer.start();
@@ -43,28 +43,28 @@ public class SystTimeUpdateTimer implements ActionListener {
 		this.timeTimer.restart();
 	}
 
-	// ÏÂÃæ¾ÍÊÇ¼ÆÊ±Æ÷Ã¿¸ôÒ»¶¨Ê±¼ä×öµÄÊÂ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½Ê±ï¿½ï¿½Ã¿ï¿½ï¿½Ò»ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		this.calendar = Calendar.getInstance(this.currentTimeZone);
 		this.timeLabel.setText(""
 				+ this.dateFormat.format(this.calendar.getTime()));
 
-		// ÏÂÃæµÄÒ²¿ÉÒÔ ¸ü¾«È·Ğ© ²»¹ı°Ñ¼ÆÊ±Æ÷µÄÊ±¼ä¼ä¸ôÅªĞ¡Ğ©²»È»Ë¢ĞÂ¸ú²»ÉÏºÀÃë¾Í²»ÏÔÊ¾ÁË
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È·Ğ© ï¿½ï¿½ï¿½ï¿½Ñ¼ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ÅªĞ¡Ğ©ï¿½ï¿½È»Ë¢ï¿½Â¸ï¿½ï¿½Ïºï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½
 		// java.sql.Timestamp timeStamp=new
 		// java.sql.Timestamp(System.currentTimeMillis());
 		// this.timeLabel.setText(timeStamp.toString());
 	}
-//	public static void main(String[] args){
-//		
-//		JFrame j = new JFrame("test");
-//		JPanel p = new JPanel();
-//		p.setSize(490, 310);
-//		JLabel a = new JLabel("time");
-//		SystTimeUpdateTimer s = new SystTimeUpdateTimer(a);
-//		p.add(a);
-//		j.add(p);
-//		j.setVisible(true);
-//
-//	}
+	public static void main(String[] args){
+		
+		JFrame j = new JFrame("test");
+		JPanel p = new JPanel();
+		p.setSize(490, 310);
+		JLabel a = new JLabel("time");
+		SystTimeUpdateTimer s = new SystTimeUpdateTimer(a);
+		p.add(a);
+		j.add(p);
+		j.setVisible(true);
+
+	}
 }
