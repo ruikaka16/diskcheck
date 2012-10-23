@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Properties;
-
 import javax.swing.JOptionPane;
+import com.wangrui.client.DataValue;
 
 /**
  * @param args
@@ -26,6 +28,7 @@ public class DBConnection {
 	private String driver = null;
 	private String dbSid = null;
 	private Statement stmt;
+	private PreparedStatement pm;
 
 	public DBConnection() {
 		try {
@@ -37,7 +40,7 @@ public class DBConnection {
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				JOptionPane.showMessageDialog(null,"请联系系统开发人员，报错信息为："+e1);
+				JOptionPane.showMessageDialog(null, "请联系系统开发人员，报错信息为：" + e1);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -62,6 +65,8 @@ public class DBConnection {
 			}
 			try {
 				conn = c.createStatement();
+				stmt=c.createStatement();
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -119,7 +124,7 @@ public class DBConnection {
 
 		try {
 
-			stmt=c.createStatement();
+			stmt = c.createStatement();
 			stmt.executeUpdate(sql);
 			return true;
 
@@ -131,7 +136,6 @@ public class DBConnection {
 
 			return false;
 		}
-
 
 	}
 
@@ -146,6 +150,52 @@ public class DBConnection {
 
 	}
 
+	public ArrayList executeQuery1(String sql) {
+		ResultSet res = null;
+		ArrayList list = null;
+		try {
+			res = stmt.executeQuery(sql);
+			list = this.getResult(res);
+			System.out.println(list.size());
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return list;
+	}
+
+	public ResultSet executeQuery2(String sql) {
+		ResultSet res = null;
+		ArrayList list = null;
+		try {
+			res = stmt.executeQuery(sql);
+			// list=this.getResult(res);
+			// System.out.println(list.size());
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return res;
+	}
+
+	public ArrayList getResult(ResultSet rs) {
+		ArrayList result = new ArrayList();
+		try {
+			while (rs.next()) {
+				DataValue value = new DataValue();
+				value.setDate(rs.getString("date"));
+				value.setIp(rs.getString("ip"));
+				value.setDeviceid(rs.getString("deviceid"));
+				value.setFreespace(rs.getString("freespace"));
+				value.setSize(rs.getString("size"));
+				value.setUtil(rs.getString("util"));
+				value.setType(rs.getString("type"));
+				result.add(value);
+			}
+		} catch (Exception e) {
+
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// newjdbc.testPorpertiesFile();
@@ -153,12 +203,15 @@ public class DBConnection {
 		// ConnectOracle newjdbc = new ConnectOracle();
 		DBConnection newjdbc = new DBConnection();
 
-		System.out.println(newjdbc.getdbName());
-		System.out.println(newjdbc.getdbPsw());
-		System.out.println(newjdbc.getdbSid());
-		System.out.println("connect sucess");
-
-		newjdbc.close();
+		try {
+			String sql5 = "insert into test.device (ip,username,password,os) values('168.100.8.48','a','a','')";
+			newjdbc = new DBConnection();
+			newjdbc.executeUpdate(sql5);
+       
+		}
+		finally {
+			newjdbc.close(); 
+			} 
 	}
 
 }

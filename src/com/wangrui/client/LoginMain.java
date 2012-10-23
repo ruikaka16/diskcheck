@@ -94,11 +94,11 @@ public class LoginMain extends JFrame {
 				// TODO Auto-generated method stub
 				if(usernameField.getText().length()==0){
 					
-					JOptionPane.showMessageDialog(null,"请输入用户名!");
+					JOptionPane.showMessageDialog(null,"请输入用户名!","",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				else if(passwordField.getText().length()==0){
-					JOptionPane.showMessageDialog(null, "请输入密码");
+					JOptionPane.showMessageDialog(null, "请输入密码","",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
@@ -174,6 +174,8 @@ public class LoginMain extends JFrame {
 		rs_login = conn_login.executeQuery(sql);
 		if(rs_login.next()){
 
+			MainPanel.userLabel = new JLabel();
+			MainPanel.userLabel.setText(username);
 			setVisible(false);
 			appPanel = new MainPanel();
 		rs_login.close();
@@ -181,7 +183,7 @@ public class LoginMain extends JFrame {
 		}
 
 		else {
-			JOptionPane.showMessageDialog(null,"用户名或密码错误，请重新输入！");
+			JOptionPane.showMessageDialog(null,"用户名或密码错误，请重新输入！","",JOptionPane.ERROR_MESSAGE);
 		    usernameField.setText("");
 		    passwordField.setText("");
 		}
