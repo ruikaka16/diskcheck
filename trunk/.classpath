@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="D:/jars/expect4j-1.0.jar"/>
 	<classpathentry kind="lib" path="D:/jars/easydbo-0.9.1.jar"/>
 	<classpathentry kind="lib" path="D:/jars/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="D:/jars/swing-layout-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
