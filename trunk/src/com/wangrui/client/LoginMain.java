@@ -8,14 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.net.URL;
 import java.sql.ResultSet;
 import javax.swing.*;
-
-import com.jtattoo.plaf.aero.AeroLookAndFeel;
 import com.wangrui.server.DBConnection;
-
-
 
 public class LoginMain extends JFrame {
 
@@ -28,12 +23,17 @@ public class LoginMain extends JFrame {
 	private ResultSet rs_login;
 	private MainPanel appPanel;
 
-
 	/**
 	 * Auto-generated main method to display this JFrame
 	 */
 	public static void main(String[] args) {
-
+		//Windows风格界面
+		try{     
+			javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");   
+			}catch(Exception e){       
+				e.printStackTrace(); 
+				}
+			
 		LoginMain inst = 
 			new LoginMain();
 		inst.setLocationRelativeTo(null);
@@ -47,6 +47,7 @@ public class LoginMain extends JFrame {
 
 	private void initGUI() {
 
+	
 		
 		Image icon = (new ImageIcon("D:/Program Files/DiskCheck/disk.gif")).getImage();
 		setIconImage(icon);
@@ -166,16 +167,20 @@ public class LoginMain extends JFrame {
 
 	}
 	
+	
+	
 	public void login(String username, String password) throws Exception{
 		// TODO Auto-generated constructor stub
-		String sql = "select * from device where username = '"+username+"' and  password = '"+password+"'";
+		String sql = "select * from user where name = '"+username+"' and  password = '"+password+"'";
 		DBConnection conn_login = new DBConnection();
 		
 		rs_login = conn_login.executeQuery(sql);
 		if(rs_login.next()){
 
 			MainPanel.userLabel = new JLabel();
+			MainPanel.userType = new JLabel();
 			MainPanel.userLabel.setText(username);
+			MainPanel.userType.setText(rs_login.getString("classes"));
 			setVisible(false);
 			appPanel = new MainPanel();
 		rs_login.close();
