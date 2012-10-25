@@ -179,6 +179,8 @@ public class DeviceConfig extends JFrame {
 		final JButton addButton = new JButton("添加"); // 添加按钮
 		addButton.addActionListener(new ActionListener() {// 添加事件
 					public void actionPerformed(ActionEvent e) {
+						
+						System.out.println("ip="+aTextField.getText());
 
 						if (aTextField.getText().length() == 0) {
 							JOptionPane
@@ -213,42 +215,49 @@ public class DeviceConfig extends JFrame {
 							JOptionPane
 									.showMessageDialog(null, "请输入查询设备的登录密码！");
 							return;
-						} else {
-
-							String sql6 = "select count(*) from test.device where ip = '"
-									+ aTextField.getText() + "'";
-
-							// 后台数据库操作
-							try {
-								String sql5 = "insert into test.device (ip,username,password,os) values('"
-										+ aTextField.getText()
-										+ "','"
-										+ bTextField.getText()
-										+ "','"
-										+ password.getText()
-										+ "','"
-										+ cb.getSelectedItem() + "')";
-								conn_insert = new DBConnection();
-								conn_insert.executeUpdate(sql5);
-								JOptionPane.showMessageDialog(null, "该设备"
-										+ aTextField.getText() + "已添加");
-								String[] rowValues = { aTextField.getText(),
-										bTextField.getText(),
-										password.getText(),
-										cb.getSelectedItem().toString() };
-								tableModel.addRow(rowValues); // 添加一行
-								int rowCount = table.getRowCount() + 1;// 行数加上1
-
-							}
-
-							catch (Exception e1) {
-								e1.printStackTrace();
-								JOptionPane.showMessageDialog(null,"插入数据失败！");
-								
-							}
-							conn_insert.close();
-
 						}
+						if(aTextField.getText()!=null&&bTextField.getText()!=null&&password.getText()!=null)
+							{
+							   if(vaildInsert(aTextField.getText())){
+								   aTextField.setText("");
+								   bTextField.setText("");
+								   password.setText("");
+								   return ;
+							   }
+							   else {
+
+								// 后台数据库操作
+								try {
+									String sql5 = "insert into test.device (ip,username,password,os) values('"
+											+ aTextField.getText()
+											+ "','"
+											+ bTextField.getText()
+											+ "','"
+											+ password.getText()
+											+ "','"
+											+ cb.getSelectedItem() + "')";
+									conn_insert = new DBConnection();
+									conn_insert.executeUpdate(sql5);
+									JOptionPane.showMessageDialog(null, "该设备"
+											+ aTextField.getText() + "已添加");
+									String[] rowValues = { aTextField.getText(),
+											bTextField.getText(),
+											password.getText(),
+											cb.getSelectedItem().toString() };
+									tableModel.addRow(rowValues); // 添加一行
+									int rowCount = table.getRowCount() + 1;// 行数加上1
+
+								}
+
+								catch (Exception e1) {
+									e1.printStackTrace();
+									JOptionPane.showMessageDialog(null,"插入数据失败！");
+									
+								}
+								
+								conn_insert.close();
+							   }
+							}					
 
 					}
 				});
@@ -345,6 +354,30 @@ public class DeviceConfig extends JFrame {
 
 	}
 
+	public Boolean vaildInsert(String ip){
+		
+		try{
+			int i=0;
+			String sql = "select * from test.devicedisk1 where ip = '"+ip+"'";
+			DBConnection conn_vaildInsert = new DBConnection();
+			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
+			if(rs_vaildInsert.next()){
+				//System.out.println("i="+i);
+				JOptionPane.showMessageDialog(null, "该设备已存在,请重新输入设备ip地址！");
+				return true;
+			}
+	
+			else {
+				
+				return false;
+			}
+		}catch(Exception e){
+			
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 
 		new DeviceConfig();

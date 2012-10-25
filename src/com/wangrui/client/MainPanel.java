@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,7 +55,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -873,7 +879,7 @@ public class MainPanel implements ActionListener {
 
 	private JFrame frame;
 	private JPanel ptop, pwest, pndisk;
-	private JButton button;
+	private JButton button, button1;
 	private JMenuBar menuBar;
 	private JTree jTree;
 	private JScrollPane jScrollPanel, jScrollPanel1, jScrollTreePanel,
@@ -883,7 +889,8 @@ public class MainPanel implements ActionListener {
 	private T1 t1;
 	private JTabbedPane tabbedPane;
 	private SystTimeUpdateTimer s;
-	public static JLabel userLabel;
+	public static JLabel userLabel, userType;
+	private LoginMain login;
 
 	// 因为要在类外部访问以下标签，所以要声明为包类型
 	JProgressBar bar;
@@ -938,23 +945,38 @@ public class MainPanel implements ActionListener {
 	private JMenuBar getMenu() {
 		if (menuBar == null) {
 			menuBar = new JMenuBar();
-			JMenu m1 = new JMenu();
+			final JMenu m1 = new JMenu();
 			m1.setText("文件");
 
-			JMenu m6 = new JMenu();
+			final JMenu m6 = new JMenu();
 			m6.setText("帮助");
 
-			JMenu m2 = new JMenu();
+			final JMenu m2 = new JMenu();
 			m2.setText("查询");
 
-			JMenu m4 = new JMenu();
+			final JMenu m4 = new JMenu();
 			m4.setText("配置");
+
+			final JMenu m3 = new JMenu();
+			m3.setText("用户管理");
+
+			JMenuItem item3_1 = new JMenuItem();
+			item3_1.setText("修改密码");
+
+			JMenuItem item3_2 = new JMenuItem();
+			item3_2.setText("增加用户");
 
 			JMenuItem item11 = new JMenuItem();
 			item11.setText("退出");
+			item11.setAccelerator(KeyStroke.getKeyStroke('Q', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
+
+			JMenuItem item1_1 = new JMenuItem();
+			item1_1.setText("注销");
+			item1_1.setAccelerator(KeyStroke.getKeyStroke('O', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
 
 			JMenuItem item12 = new JMenuItem();
-			item12.setText("磁盘信息查询");
+			item12.setText("磁盘信息查询");			
+			item12.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));  
 
 			JMenuItem item31 = new JMenuItem();
 			item31.setText("配置查询设备");
@@ -970,7 +992,7 @@ public class MainPanel implements ActionListener {
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
 					JOptionPane.showMessageDialog(null,
-							"磁盘查询程序V2.1，支持Windows、Linux系统！");
+							"磁盘查询程序V2.1，支持Windows、Linux系统！" + "CopyRight 2012");
 				}
 			});
 
@@ -983,6 +1005,20 @@ public class MainPanel implements ActionListener {
 				}
 			});
 
+			item1_1.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+
+					// JOptionPane.showMessageDialog(null, "已退出！");
+					frame.setVisible(false);
+					login = new LoginMain();
+					login.setLocationRelativeTo(null);
+					login.setVisible(true);
+				}
+			});
+
 			item12.addActionListener(new ActionListener() {
 
 				@Override
@@ -990,8 +1026,8 @@ public class MainPanel implements ActionListener {
 
 					// 未分页表格
 					ChkResult t = new ChkResult();
-					t.setVisible(true);
 					t.setLocationRelativeTo(null);
+					t.setVisible(true);
 
 					// 分页表格
 					// ChkResultTable t = new ChkResultTable();
@@ -1005,8 +1041,8 @@ public class MainPanel implements ActionListener {
 				public void actionPerformed(ActionEvent arg0) {
 
 					DeviceConfig deviceConfig = new DeviceConfig();
-					deviceConfig.setVisible(true);
 					deviceConfig.setLocationRelativeTo(null);
+					deviceConfig.setVisible(true);
 				}
 			});
 
@@ -1016,23 +1052,52 @@ public class MainPanel implements ActionListener {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					SystemConfig systemConfig = new SystemConfig();
-					systemConfig.setVisible(true);
 					systemConfig.setLocationRelativeTo(null);
+					systemConfig.setVisible(true);
 
 				}
 			});
-			m2.add(item12);
-			m1.addSeparator();
-			m1.add(item11);
-			m6.add(item21);
-			m4.add(item41);
-			m4.addSeparator();
-			m4.add(item31);
 
-			menuBar.add(m1);
-			menuBar.add(m2);
-			menuBar.add(m4);
-			menuBar.add(m6);
+			if (userType.getText().equals("a")) {
+
+				m2.add(item12);
+				m1.add(item1_1);
+				m1.addSeparator();
+				m1.add(item11);
+				m6.add(item21);
+				m4.add(item41);
+				m4.addSeparator();
+				m4.add(item31);
+				m3.add(item3_1);
+				m3.addSeparator();
+				m3.add(item3_2);
+
+				menuBar.add(m1);
+				menuBar.add(m3);
+				menuBar.add(m2);				
+				menuBar.add(m4);
+				menuBar.add(m6);
+
+			} else if (userType.getText().equals("b")) {
+
+				m2.add(item12);
+				m1.add(item1_1);
+				m1.addSeparator();
+				m1.add(item11);
+				m6.add(item21);
+				m4.add(item41);
+				m4.addSeparator();
+				m4.add(item31);
+				m3.add(item3_1);
+				m3.addSeparator();
+				m3.add(item3_2);
+
+				menuBar.add(m1);
+				menuBar.add(m2);
+				// menuBar.add(m4);
+				menuBar.add(m6);
+			}
+
 		}
 		return menuBar;
 	}
@@ -1097,7 +1162,6 @@ public class MainPanel implements ActionListener {
 						jScrollPanel1.setName(str);
 						tabbedPane.setSelectedComponent(jScrollPanel1);// 新建后默认显示新建的tab
 						tabbedPane.getName();
-
 					}
 
 				}
@@ -1116,17 +1180,18 @@ public class MainPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		ptop = new JPanel(); // 第一个Panel
 		button = new JButton("开始查询");
+		button1 = new JButton("开始查询1");
 		pwest = new JPanel();
-		pwest.setSize(100, 200);
-		pwest.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-		pwest.setBorder(new TitledBorder(""));
-		pndisk = new JPanel(new BorderLayout());
+		// pwest.setSize(100, 400);
+		// pwest.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+		// pwest.setBorder(new TitledBorder(""));
+		pndisk = new JPanel(new BorderLayout(5, 5));
 
-		jTextArea = new JTextArea(19, 48);
+		jTextArea = new JTextArea(14, 48);
 		jTextArea.setMargin(new Insets(5, 5, 5, 5));
 		jTextArea.setEditable(false);
 
-		jTextArea1 = new JTextArea(19, 48);
+		jTextArea1 = new JTextArea(14, 48);
 		jTextArea1.setMargin(new Insets(5, 5, 5, 5));
 		jTextArea1.setEditable(false);
 
@@ -1136,7 +1201,7 @@ public class MainPanel implements ActionListener {
 		mainLabel = new JLabel("欢迎使用磁盘空间查询系统");
 		mainLabel.setFont(new Font("华文楷体", Font.ITALIC, 24));
 		// ptop.add(mainLabel);
-		pndisk.add(jScrollPanel, BorderLayout.CENTER);
+		pndisk.add(jScrollPanel);
 		pndisk.add(button, BorderLayout.SOUTH);
 
 		systimeLabel = new JLabel("时间", Label.RIGHT);
@@ -1150,7 +1215,7 @@ public class MainPanel implements ActionListener {
 		bar.setVisible(true);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.NORTH);
-		tabbedPane.setBounds(0, 0, 500, 300);
+		// tabbedPane.setBounds(0, 0, 500, 300);
 		// tabbedPane.setToolTipText("双击关闭");
 		tabbedPane.addMouseListener(new MouseListener() {
 			@Override
@@ -1189,12 +1254,15 @@ public class MainPanel implements ActionListener {
 		userTile = new JLabel("当前用户：");
 		// pcenter.setSize(300, 80);
 		// pcenter.add(systimeLabel);
-		// pcenter.setLayout(new BoxLayout(pcenter, BoxLayout.Y_AXIS));
-		pcenter.add(userTile);
+		Box box = Box.createHorizontalBox();
+		box.add(userTile);
+		pcenter.setLayout(new FlowLayout());
+		pcenter.add(box);
 		pcenter.add(userLabel);
+		pcenter.add(userType);
 
 		jScrollTreePanel = new JScrollPane();
-		jScrollTreePanel.getViewport().add(getTree(), null);
+		jScrollTreePanel.setViewportView(getTree());
 		pwest.add(jScrollTreePanel);
 
 		// TreeDemo t = new TreeDemo();
@@ -1213,7 +1281,7 @@ public class MainPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		frame = new JFrame("磁盘空间查询");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(700, 460);
+		frame.setSize(550, 400);
 		frame.setLocationRelativeTo(null); // setLocationRelativeTo必须在setSize()下面
 		frame.setResizable(false);
 
@@ -1227,7 +1295,7 @@ public class MainPanel implements ActionListener {
 			t1.start();
 			jdiaLog = new JDialog(frame, "searching!", true);
 			jdiaLog.add(bar);
-			jdiaLog.setSize(300, 20);
+			jdiaLog.setSize(300, 24);
 			jdiaLog.setLocationRelativeTo(null);// 必须放到setSize()后面
 			jdiaLog.setAlwaysOnTop(true);
 			jdiaLog.setUndecorated(true); // 取消对话框上的关闭按钮
