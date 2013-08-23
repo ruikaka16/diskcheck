@@ -413,7 +413,7 @@ public class DiskCheck extends JFrame {
 			while (null != (str = bf.readLine())) {
 				if(!str.trim().isEmpty()){
 				String s[] = str.split(" ");
-				String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"+ip+"','"
+				String sql = "insert into devicedisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"+ip+"','"
 					+ s[5]
 					+ "',"
 					+ "'"
@@ -472,7 +472,7 @@ public class DiskCheck extends JFrame {
 					while (null != (str = bf.readLine())) {
 						if(!str.trim().isEmpty()){
 						String s[] = str.split(",");
-						String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+						String sql = "insert into devicedisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
 								+ s[0]
 								+ "','"
 								+ s[1]

@@ -43,6 +43,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -64,6 +65,7 @@ import javax.swing.event.MenuKeyListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 import com.easyjf.util.FileCopyUtils;
 import com.jcraft.jsch.Channel;
@@ -71,6 +73,9 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.wangrui.client.window.AddUser;
+import com.wangrui.client.window.ModifedPswd;
+import com.wangrui.client.window.UpdateLog;
 import com.wangrui.server.DBConnection;
 import com.wangrui.test.TreeDemo;
 
@@ -99,8 +104,7 @@ class T1 extends Thread {
 		String[] cmd = new String[] { "wscript",
 				CollectSysConfig.filePathresult + "\\vbsCommd.vbs" };
 
-		System.out.println("vbs目录：" + CollectSysConfig.filePathresult
-				+ "\\vbsCommd.vbs");
+		System.out.println("vbs目录：" + CollectSysConfig.filePathresult	+ "\\vbsCommd.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -159,7 +163,7 @@ class T1 extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(",");
-					String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
 							+ s[0]
 							+ "','"
 							+ s[1]
@@ -167,17 +171,7 @@ class T1 extends Thread {
 							+ s[2]
 							+ "'/1024/1024/1024,'"
 							+ s[3]
-							+ "'/1024/1024/1024,100-round('"
-							+ s[2]
-							+ "'*100/'"
-							+ s[3]
-							+ "',2),case when 100-round('"
-							+ s[2]
-							+ "'*100/'"
-							+ s[3]
-							+ "',0)>= '"
-							+ CollectSysConfig.utilresult
-							+ "' then '1'else '0' end)";
+							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ CollectSysConfig.utilresult+ "' then '1'else '0' end)";
 
 					System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
@@ -215,7 +209,7 @@ class T1 extends Thread {
 	 */
 	public void changeTxtType() {
 		File bakfile = new File(CollectSysConfig.filePathresult + "//");
-		System.out.println(CollectSysConfig.filePathresult + "//");
+		//System.out.println(CollectSysConfig.filePathresult + "//");
 		File[] bakFiles = bakfile.listFiles();
 		String content = ""; // content保存文件内容，　　　　
 		BufferedReader reader = null; // 定义BufferedReader
@@ -365,7 +359,7 @@ class T1 extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(" ");
-					String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
 							+ ip
 							+ "','"
 							+ s[5]
@@ -382,9 +376,9 @@ class T1 extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= 40 then '1'else '0' end)";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end)";
 
-					System.out.println(s[0]);
+					System.out.println("s5="+s[5]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
 
 				}
@@ -436,6 +430,7 @@ class T1 extends Thread {
 	/*
 	 * 将Windows设备查询命令写入到vbs文件中
 	 */
+	
 	public void WriteVbsCommd(String ip, String username, String password) {
 		// 写入新的vbs文件
 		try {
@@ -473,8 +468,18 @@ class T1 extends Thread {
 		}
 
 	}
+	
+	/**
+	 * 
+	 * @author wangrui
+	 * 将升级导入命令写入批处理文件
+	 */
+	public void WriteUpdateCommd(String ip, String username, String password){
+		
+	}
 
 }
+	
 
 class OSSearch extends Thread {
 
@@ -558,7 +563,7 @@ class OSSearch extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(",");
-					String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
 							+ s[0]
 							+ "','"
 							+ s[1]
@@ -764,7 +769,7 @@ class OSSearch extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(" ");
-					String sql = "insert into deviceDisk1 (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
 							+ ip
 							+ "','"
 							+ s[5]
@@ -781,7 +786,7 @@ class OSSearch extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= 40 then '1'else '0' end)";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end)";
 
 					System.out.println(s[0]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
@@ -878,19 +883,19 @@ class OSSearch extends Thread {
 public class MainPanel implements ActionListener {
 
 	private JFrame frame;
-	private JPanel ptop, pwest, pndisk;
+	private JPanel ptop, pwest, pndisk,pmenu;
 	private JButton button, button1;
 	private JMenuBar menuBar;
 	private JTree jTree;
-	private JScrollPane jScrollPanel, jScrollPanel1, jScrollTreePanel,
+	private JScrollPane jScrollPanel, jScrollPanel1, jScrollPanel2,jScrollTreePanel,
 			jScrollPanel3;
 	private JLabel mainLabel, systimeLabel, userTile;
 	private JPanel pcenter;
 	private T1 t1;
-	private JTabbedPane tabbedPane;
+	static JTabbedPane tabbedPane;
 	private SystTimeUpdateTimer s;
-	public static JLabel userLabel, userType;
 	private LoginMain login;
+	public static String str="";
 
 	// 因为要在类外部访问以下标签，所以要声明为包类型
 	JProgressBar bar;
@@ -906,11 +911,7 @@ public class MainPanel implements ActionListener {
 	RandomAccessFile dos_vbs = null;
 
 	public MainPanel() {
-
-		// 从systemconfig表中去参数配置
-
-		final CollectSysConfig collectSysConfig = new CollectSysConfig();
-		System.out.println(CollectSysConfig.filePathresult);
+		//System.out.println(CollectSysConfig.filePathresult);
 
 		// 先删除已存在的临时文件
 		File delbatFile = new File(CollectSysConfig.filePathresult + "//"); // 生成bat的目录
@@ -918,7 +919,8 @@ public class MainPanel implements ActionListener {
 		for (int j = 0; j < delbatFiles.length; j++) {
 			if (delbatFiles[j].getName().endsWith(".vbs")
 					|| delbatFiles[j].getName().endsWith(".bak")
-					|| delbatFiles[j].getName().endsWith(".txt")) {
+					|| delbatFiles[j].getName().endsWith(".txt")
+					|| delbatFiles[j].getName().endsWith(".bat")) {
 
 				delbatFiles[j].delete();
 			}
@@ -962,37 +964,65 @@ public class MainPanel implements ActionListener {
 
 			JMenuItem item3_1 = new JMenuItem();
 			item3_1.setText("修改密码");
+			ImageIcon logo3_1=new ImageIcon(CollectSysConfig.filePathresult+"/image/application_key.png");   //这里定义一个Icon图片
+			item3_1.setIcon(logo3_1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item3_2 = new JMenuItem();
 			item3_2.setText("增加用户");
+			ImageIcon logo3_2=new ImageIcon(CollectSysConfig.filePathresult+"/image/user_add.png");   //这里定义一个Icon图片
+			item3_2.setIcon(logo3_2);  //这里设置Icon图片到JMenu
 
 			JMenuItem item11 = new JMenuItem();
 			item11.setText("退出");
 			item11.setAccelerator(KeyStroke.getKeyStroke('Q', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
+			ImageIcon logo1=new ImageIcon(CollectSysConfig.filePathresult+"/image/exit.png");   //这里定义一个Icon图片
+			item11.setIcon(logo1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item1_1 = new JMenuItem();
 			item1_1.setText("注销");
 			item1_1.setAccelerator(KeyStroke.getKeyStroke('O', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
+			ImageIcon logo1_1=new ImageIcon(CollectSysConfig.filePathresult+"/image/user_go.png");   //这里定义一个Icon图片
+			item1_1.setIcon(logo1_1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item12 = new JMenuItem();
 			item12.setText("磁盘信息查询");			
 			item12.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));  
+			ImageIcon logo12=new ImageIcon(CollectSysConfig.filePathresult+"/image/drive_disk.png");   //这里定义一个Icon图片
+			item12.setIcon(logo12);  //这里设置Icon图片到JMenu
+			
+			JMenuItem item13 = new JMenuItem();
+			item13.setText("升级记录查询");			
+			item13.setAccelerator(KeyStroke.getKeyStroke('U', ActionEvent.CTRL_MASK)); 
+			ImageIcon logo13=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");   //这里定义一个Icon图片
+			item13.setIcon(logo13);  //这里设置Icon图片到JMenu
 
 			JMenuItem item31 = new JMenuItem();
-			item31.setText("配置查询设备");
+			item31.setText("查询设备");
+			ImageIcon logo31=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");   //这里定义一个Icon图片
+			item31.setIcon(logo31);  //这里设置Icon图片到JMenu
 
 			JMenuItem item41 = new JMenuItem();
-			item41.setText("配置系统参数");
+			item41.setText("系统参数");
+			ImageIcon logo41=new ImageIcon(CollectSysConfig.filePathresult+"/image/config.png");   //这里定义一个Icon图片
+			item41.setIcon(logo41);  //这里设置Icon图片到JMenu
+			
+			JMenuItem item51 = new JMenuItem();
+			item51.setText("升级设备");
+			ImageIcon logo51=new ImageIcon(CollectSysConfig.filePathresult+"/image/computer.png");   //这里定义一个Icon图片
+			item51.setIcon(logo51);  //这里设置Icon图片到JMenu
 
 			JMenuItem item21 = new JMenuItem();
 			item21.setText("版本信息");
+			ImageIcon logo21=new ImageIcon(CollectSysConfig.filePathresult+"/image/information.png");   //这里定义一个Icon图片
+			item21.setIcon(logo21);  //这里设置Icon图片到JMenu
+			
 			item21.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
 					JOptionPane.showMessageDialog(null,
-							"磁盘查询程序V2.1，支持Windows、Linux系统！" + "CopyRight 2012");
+							"欢迎使用运维管理程序"+LoginMain.RIGHTINFO+"   Designed by wangrui16@gmail.com");
 				}
 			});
 
@@ -1034,6 +1064,21 @@ public class MainPanel implements ActionListener {
 					// t.setLocationRelativeTo(null);
 				}
 			});
+			
+			item13.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+					if(LoginMain.userType.getText().equals("0")){
+					UpdateLog updateLogWin = new UpdateLog(0);
+					updateLogWin.setVisible(true);
+					}else if(LoginMain.userType.getText().equals("1")){
+						UpdateLog updateLogWin = new UpdateLog(1);
+						updateLogWin.setVisible(true);
+					}
+				}
+			});
 
 			item31.addActionListener(new ActionListener() {
 
@@ -1046,7 +1091,17 @@ public class MainPanel implements ActionListener {
 				}
 			});
 
-			item41.addActionListener(new ActionListener() {
+			item3_2.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+					AddUser addUserWin = new AddUser();
+					addUserWin.setVisible(true);
+				}
+			});
+			
+			item41.addActionListener(new ActionListener() {   
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -1056,11 +1111,34 @@ public class MainPanel implements ActionListener {
 					systemConfig.setVisible(true);
 
 				}
+			});   
+			
+			item51.addActionListener(new ActionListener() {   
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					UpdateDeviceConfig systemConfig = new UpdateDeviceConfig();
+					systemConfig.setLocationRelativeTo(null);
+					systemConfig.setVisible(true);
+
+				}
+			});
+			
+			item3_1.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					ModifedPswd modifedPswWin= new ModifedPswd();
+					modifedPswWin.setVisible(true);
+				}
 			});
 
-			if (userType.getText().equals("a")) {
+			if (LoginMain.userType.getText().equals("0")) {
 
 				m2.add(item12);
+				m2.add(item13);
 				m1.add(item1_1);
 				m1.addSeparator();
 				m1.add(item11);
@@ -1068,6 +1146,8 @@ public class MainPanel implements ActionListener {
 				m4.add(item41);
 				m4.addSeparator();
 				m4.add(item31);
+				m4.addSeparator();
+				m4.add(item51);
 				m3.add(item3_1);
 				m3.addSeparator();
 				m3.add(item3_2);
@@ -1078,9 +1158,11 @@ public class MainPanel implements ActionListener {
 				menuBar.add(m4);
 				menuBar.add(m6);
 
-			} else if (userType.getText().equals("b")) {
+			} else if (LoginMain.userType.getText().equals("1")) {
 
 				m2.add(item12);
+				m1.addSeparator();
+				m2.add(item13);
 				m1.add(item1_1);
 				m1.addSeparator();
 				m1.add(item11);
@@ -1089,12 +1171,12 @@ public class MainPanel implements ActionListener {
 				m4.addSeparator();
 				m4.add(item31);
 				m3.add(item3_1);
-				m3.addSeparator();
-				m3.add(item3_2);
+				//m3.addSeparator();
+				//m3.add(item3_2);
 
 				menuBar.add(m1);
+				menuBar.add(m3);
 				menuBar.add(m2);
-				// menuBar.add(m4);
 				menuBar.add(m6);
 			}
 
@@ -1104,64 +1186,112 @@ public class MainPanel implements ActionListener {
 
 	private JTree getTree() {
 		if (jTree == null) {
-			DefaultMutableTreeNode root = new DefaultMutableTreeNode("功能");
-			DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("磁盘空间查询");
-			DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("内存信息查询");
-			DefaultMutableTreeNode node3 = new DefaultMutableTreeNode("CPU信息查询");
-			// DefaultMutableTreeNode node4 = new
-			// DefaultMutableTreeNode("Readme");
-			root.add(node1);
-			root.add(node2);
-			root.add(node3);
-			// root.add(node4);
+			//根节点
+			DefaultMutableTreeNode Root= new DefaultMutableTreeNode();	
+			//第二节点
+			DefaultMutableTreeNode root1 = new DefaultMutableTreeNode("其他功能");  
+			DefaultMutableTreeNode root = new DefaultMutableTreeNode("系统升级");		
+			//第三节点
+			DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("磁盘空间查询"); 
+			DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("账户系统升级");
+			DefaultMutableTreeNode node3 = new DefaultMutableTreeNode("账户测试环境准备");
+			DefaultMutableTreeNode node4 = new DefaultMutableTreeNode("账户测试环境恢复");
+			DefaultMutableTreeNode node5 = new DefaultMutableTreeNode("行情查询");
+			DefaultMutableTreeNode node6 = new DefaultMutableTreeNode("Excel文件导入");
+			DefaultMutableTreeNode node7 = new DefaultMutableTreeNode("融资融券系统升级");
+			DefaultMutableTreeNode node8 = new DefaultMutableTreeNode("升级记录查询");
+			
+						
+			
+			
 
-			// DefaultMutableTreeNode leafnode = new
-			// DefaultMutableTreeNode("公司文件");
-			// node1.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("私人文件");
-			// node1.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("个人信件");
-			//
-			// leafnode = new DefaultMutableTreeNode("本机磁盘(C:)");
-			// node2.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("本机磁盘(D:)");
-			// node2.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("本机磁盘(E:)");
-			// node2.add(leafnode);
-			//
-			// DefaultMutableTreeNode node31 = new
-			// DefaultMutableTreeNode("网站列表");
-			// node3.add(node31);
-			//
-			// leafnode = new DefaultMutableTreeNode("奇摩站");
-			// node31.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("职棒消息");
-			// node31.add(leafnode);
-			// leafnode = new DefaultMutableTreeNode("网络书店");
-			// node31.add(leafnode);
+			if(LoginMain.userType.getText().equals("0")){
+				Root.add(root);
+				Root.add(root1);
+				root1.add(node1);
+				root.add(node2);
+				root.add(node8);
+				//root1.add(node4);
+				root1.add(node5);
+				root1.add(node6);
+			}else if(LoginMain.userType.getText().equals("1")){
+				Root.add(root);
+				//Root.add(root1);
+				root.add(node7);
+			}
 
-			jTree = new JTree(root);
-			jTree.addTreeSelectionListener(new TreeSelectionListener() {
+			jTree = new JTree(Root);
+			jTree.setRootVisible(false); //设置跟节点不可见
+			jTree.expandRow(1);//设置节点数全部展开
+			jTree.expandRow(0);//设置节点数全部展开
+			
+			DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
+
+	        cellRenderer.setOpenIcon(new ImageIcon(CollectSysConfig.filePathresult+"/image/node.gif"));
+	        //cellRenderer.setOpenIcon(openIcon);
+	        cellRenderer.setLeafIcon(new ImageIcon(CollectSysConfig.filePathresult+"/image/items.gif")); 
+	        
+	        jTree.setCellRenderer(cellRenderer);
+			
+	        jTree.addTreeSelectionListener(new TreeSelectionListener() {
 
 				@Override
 				public void valueChanged(TreeSelectionEvent e) {
 
-					DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) jTree
-							.getLastSelectedPathComponent();
-					String str = selectNode.toString();
+					DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
+					str = selectNode.toString();
 
 					if (str.equals("功能")) {
 						return;
-					} else {
-						jScrollPanel1 = new JScrollPane(jTextArea1);
-						jScrollPanel1.setName("内存");
+					} else if(str.equals("账户系统升级")){
 
-						System.out.println("str=" + str);
-
-						tabbedPane.addTab(str, jScrollPanel1);
-						jScrollPanel1.setName(str);
-						tabbedPane.setSelectedComponent(jScrollPanel1);// 新建后默认显示新建的tab
+						UpdateSummaryPanel updateSummaryPanel = new UpdateSummaryPanel();
+						updateSummaryPanel.setVisible(true);
+						// UpdatePanel updatePanel = new UpdatePanel();
+			            // tabbedPane.addTab(str, new ImageIcon(CollectSysConfig.filePathresult+"/items.gif"),updatePanel);
+			            // tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
+						// tabbedPane.getName();
+						 
+					}else if(str.equals("账户测试环境准备")){
+						
+						PreparePanel preparePanel = new PreparePanel();
+						tabbedPane.add(str,preparePanel);
+						tabbedPane.setSelectedComponent(preparePanel);
 						tabbedPane.getName();
+					}else if(str.equals("行情查询")){
+						
+						HqQuery hqQueryPanel = new HqQuery();
+						hqQueryPanel.setVisible(true);
+						//tabbedPane.add(str,hqQueryPanel);
+						//tabbedPane.setSelectedComponent(hqQueryPanel);
+						//tabbedPane.getName();
+					}else if(str.equals("Excel文件导入")){
+						
+						ImportDBF importDBFPanel = new ImportDBF();
+						importDBFPanel.setVisible(true);
+
+					}else if(str.equals("融资融券系统升级")){
+						
+						UpdateSummaryRzrqPanel updateSummaryRzrqPanel = new UpdateSummaryRzrqPanel();
+						updateSummaryRzrqPanel.setVisible(true);
+						
+						//UpdatePanel updatePanel = new UpdatePanel(1);
+						//tabbedPane.add(str,updatePanel);
+						//tabbedPane.setSelectedComponent(updatePanel);
+						//tabbedPane.getName();
+
+					}else if(str.equals("磁盘空间查询")){
+						
+						tabbedPane.addTab(str, pndisk);
+						tabbedPane.setSelectedComponent(pndisk);
+						tabbedPane.getName();
+					}else if(str.equals("升级记录查询")){
+						
+						UpdateLog updateLog = new UpdateLog(0);
+						updateLog.setVisible(true);
+						//tabbedPane.addTab(str, updateLog);
+						//tabbedPane.setSelectedComponent(updateLog);
+						//tabbedPane.getName();
 					}
 
 				}
@@ -1182,10 +1312,12 @@ public class MainPanel implements ActionListener {
 		button = new JButton("开始查询");
 		button1 = new JButton("开始查询1");
 		pwest = new JPanel();
-		// pwest.setSize(100, 400);
+		pmenu = new JPanel();
 		// pwest.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 		// pwest.setBorder(new TitledBorder(""));
-		pndisk = new JPanel(new BorderLayout(5, 5));
+		pndisk = new JPanel(new BorderLayout(10, 10));
+		pmenu.add(getMenu());
+		ptop.setSize(600, 500);
 
 		jTextArea = new JTextArea(14, 48);
 		jTextArea.setMargin(new Insets(5, 5, 5, 5));
@@ -1198,7 +1330,7 @@ public class MainPanel implements ActionListener {
 		jScrollPanel = new JScrollPane(jTextArea);
 		jScrollPanel.setName("磁盘");
 
-		mainLabel = new JLabel("欢迎使用磁盘空间查询系统");
+		mainLabel = new JLabel("欢迎使用账户系统升级程序");
 		mainLabel.setFont(new Font("华文楷体", Font.ITALIC, 24));
 		// ptop.add(mainLabel);
 		pndisk.add(jScrollPanel);
@@ -1210,11 +1342,12 @@ public class MainPanel implements ActionListener {
 
 		bar = new JProgressBar(0, 100);
 		bar.setIndeterminate(true);
-		bar.setString("正在查询中，请稍等！");
+		bar.setString("正在查询，请稍等！");
 		bar.setStringPainted(true);// 设置在进度条中显示百分比
 		bar.setVisible(true);
 
-		tabbedPane = new JTabbedPane(JTabbedPane.NORTH);
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setSize(600, 380);
 		// tabbedPane.setBounds(0, 0, 500, 300);
 		// tabbedPane.setToolTipText("双击关闭");
 		tabbedPane.addMouseListener(new MouseListener() {
@@ -1244,33 +1377,31 @@ public class MainPanel implements ActionListener {
 				}
 			}
 		});
-		tabbedPane.addTab("磁盘信息查询", pndisk);
-		ptop.add(tabbedPane);
-
-		// tabbedPane.addTab("内存信息查询", jScrollPanel1);
-		// ptop.add(tabbedPane);
-
+		//if(LoginMain.userType.equals("0")){
+		//	tabbedPane.addTab("磁盘信息查询", pndisk);
+		//}
+		
 		pcenter = new JPanel(); // 第二个Panel
 		userTile = new JLabel("当前用户：");
-		// pcenter.setSize(300, 80);
-		// pcenter.add(systimeLabel);
+
 		Box box = Box.createHorizontalBox();
 		box.add(userTile);
 		pcenter.setLayout(new FlowLayout());
 		pcenter.add(box);
-		pcenter.add(userLabel);
-		pcenter.add(userType);
+		pcenter.add(LoginMain.userLabel);
+		pcenter.add(LoginMain.userName);
 
 		jScrollTreePanel = new JScrollPane();
 		jScrollTreePanel.setViewportView(getTree());
 		pwest.add(jScrollTreePanel);
+		frame.setJMenuBar(getMenu());
 
 		// TreeDemo t = new TreeDemo();
 
-		frame.add(getMenu(), BorderLayout.NORTH);
-		frame.add(ptop, BorderLayout.CENTER);
+		frame.add(pmenu, BorderLayout.NORTH);
+		frame.add(tabbedPane, BorderLayout.CENTER);
 		frame.add(pcenter, BorderLayout.SOUTH);
-		frame.add(pwest, BorderLayout.WEST);
+		frame.add(getTree(), BorderLayout.WEST);
 
 	}
 
@@ -1279,9 +1410,12 @@ public class MainPanel implements ActionListener {
 	 */
 	private void setWindow() {
 		// TODO Auto-generated method stub
-		frame = new JFrame("磁盘空间查询");
+		
+		frame = new JFrame("运维管理程序");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(550, 400);
+		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/application_form.png");//图标路径
+	    frame.setIconImage(icon.getImage());
+		frame.setSize(790, 440);
 		frame.setLocationRelativeTo(null); // setLocationRelativeTo必须在setSize()下面
 		frame.setResizable(false);
 

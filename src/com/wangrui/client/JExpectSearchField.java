@@ -84,7 +84,7 @@ public class JExpectSearchField extends JTextField {
 	private class myPopupMenu extends JPopupMenu {
 		private JList showList;
 		private List<Object> listModel;
-		private int maxShowItem = 20;   //最大显示条数
+		private int maxShowItem = 5;   //最大显示条数
 
 		public myPopupMenu() {
 			super();
@@ -209,15 +209,15 @@ public class JExpectSearchField extends JTextField {
 			String url = "jdbc:mysql://localhost:3306/test";
 			conn = DriverManager.getConnection(url, "root", "wangrui");
 			stmt = conn.createStatement();
-			String sql = "SELECT distinct date From devicedisk1;";
+			String sql = "SELECT hqzqdm From szhq;";
 			rs = stmt.executeQuery(sql);
 
 			List<Object> value1 = new ArrayList<Object>();
 			try {
 				while (rs.next()) {
-					value1.add(rs.getString("date"));
+					value1.add(rs.getString("hqzqdm"));
 
-					cb1 = new JExpectSearchField(value1, 30);
+					cb1 = new JExpectSearchField(value1, 5);
 				}
 			} catch (Exception e) {
 
