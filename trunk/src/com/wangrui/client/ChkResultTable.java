@@ -43,7 +43,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 
 		  
 		     conn_num = new DBConnection();
-			 String sql3 = "select count(*) from test.deviceDisk1 ";
+			 String sql3 = "select count(*) from test.deviceDisk ";
 			 rs = conn_num.executeQuery(sql3);
 			 try {
 				while(rs.next()){num = rs.getInt(1);}
@@ -55,7 +55,7 @@ public class ChkResultTable extends JFrame implements ActionListener{
 			}
 		 
 			conn_table = new DBConnection();
-			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk1 where deviceid not in ('/boot') and date = date_format(now(),'%Y%m%d') order by date desc ";
+			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk where deviceid not in ('/boot') and date = date_format(now(),'%Y%m%d') order by date desc ";
 			rs1 = conn_table.executeQuery(sql4);
 			tableVales= new String [num][8];
 			try {
@@ -139,22 +139,23 @@ public class ChkResultTable extends JFrame implements ActionListener{
 	
 	  label1.setText("当前"+table.currentPage+"页|总共"+table.totalRowCount+"条记录");	
 	  
-//    table.setDefaultRenderer(Object.class, new TableCellRenderer() {   
-//	public Component getTableCellRendererComponent(JTable table,  	
-//			Object value, boolean isSelected, boolean hasFocus, int row, int column) 
-//		{  				
-//		JTextField text = new JTextField(value.toString());  
-//		//当第6列的值（利用率）>60%时设置红色
-//		if (Float.parseFloat(table.getValueAt(row, 5).toString())>2.00) {    				
-//			text.setBackground(Color.RED);  		
-//			text.setForeground(Color.BLACK); 
-//			} else {  			
-//				text.setBackground(Color.WHITE);  	
-//				//text.setForeground(Color.CYAN);    
-//				}    			
-//		return text;  		
-//		}    		
-//	}); 
+    table.setDefaultRenderer(Object.class, new TableCellRenderer() {   
+	public Component getTableCellRendererComponent(JTable table,  	
+			Object value, boolean isSelected, boolean hasFocus, int row, int column) 
+		{  				
+		JTextField text = new JTextField(value.toString());  
+		//当第6列的值（利用率）>60%时设置红色
+		if (Integer.parseInt(table.getValueAt(row, 6).toString()) == 1) {    				
+			//text.setText("超出阀值");  		
+			text.setBackground(Color.RED); 
+			} else {  			
+				//text.setText("正常");  
+				text.setBackground(Color.WHITE);  	
+				//text.setForeground(Color.CYAN);    
+				}    			
+		return text;  		
+		}    		
+	}); 
 
 	 }
 	 /**

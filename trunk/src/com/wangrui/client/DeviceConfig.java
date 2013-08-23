@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.logging.ErrorManager;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -46,7 +47,7 @@ public class DeviceConfig extends JFrame {
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
 	private JComboBox cb; // 20121011 增加下拉框
-	private static String[] data = { "Windwos", "Linux" };// 20121011增加下拉框中的默认数据
+	private static String[] data = { "Windows", "Linux" };// 20121011增加下拉框中的默认数据
 	int num; // 记录条数
 	int i = 0;
 	private Object tableVales[][];
@@ -54,6 +55,8 @@ public class DeviceConfig extends JFrame {
 	public DeviceConfig() {
 		// 界面部分
 		super();
+		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");//图标路径
+        setIconImage(icon.getImage());
 		setTitle("查询设备配置");
 		setBounds(100, 100, 800, 600);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -131,7 +134,7 @@ public class DeviceConfig extends JFrame {
 					cb.removeAllItems();
 					cb.addItem(data[0]);
 					cb.addItem(data[1]);
-					cb.setSelectedItem("Windwos");
+					cb.setSelectedItem("Windows");
 				} else if (od.toString().equals("Linux")) {
 					cb.removeAllItems();
 					cb.addItem(data[0]);
@@ -310,8 +313,7 @@ public class DeviceConfig extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				// 对IP地址进行验证
-				if (aTextField.getText() != null
-						&& !aTextField.getText().isEmpty()) {
+				
 					// 定义正则表达式
 					String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
 							+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
@@ -323,8 +325,7 @@ public class DeviceConfig extends JFrame {
 						JOptionPane.showMessageDialog(null,
 								aTextField.getText() + "不是一个合法的IP地址！");
 						return;
-					}
-				} else {
+					} else {
 
 					try {
 						String sql = "update device set username = '"
@@ -358,7 +359,7 @@ public class DeviceConfig extends JFrame {
 		
 		try{
 			int i=0;
-			String sql = "select * from test.devicedisk1 where ip = '"+ip+"'";
+			String sql = "select * from test.device where ip = '"+ip+"'";
 			DBConnection conn_vaildInsert = new DBConnection();
 			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
 			if(rs_vaildInsert.next()){

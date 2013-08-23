@@ -12,7 +12,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.JOptionPane;
+
+import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.DataValue;
+import com.wangrui.client.DTO.UpdateLogDateValue;
 
 /**
  * @param args
@@ -37,6 +40,7 @@ public class DBConnection {
 			try {
 				pro.load(new FileInputStream(
 						"C:/Program Files/mysql/mysql.properties"));
+						//CollectSysConfig.filePathresult+"/properties/mysql.properties"));
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -156,7 +160,8 @@ public class DBConnection {
 		try {
 			res = stmt.executeQuery(sql);
 			list = this.getResult(res);
-			System.out.println(list.size());
+			System.out.println("res="+res.getString("oc_date"));
+			System.out.println("List="+list.size());
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -175,6 +180,20 @@ public class DBConnection {
 		}
 		return res;
 	}
+	
+	public ArrayList executeQuery3(String sql) {
+		ResultSet res = null;
+		ArrayList list = null;
+		try {
+			res = stmt.executeQuery(sql);
+			list = this.getUpdateLogResult(res);
+			System.out.println(list.size());
+			
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return list;
+	}
 
 	public ArrayList getResult(ResultSet rs) {
 		ArrayList result = new ArrayList();
@@ -188,6 +207,23 @@ public class DBConnection {
 				value.setSize(rs.getString("size"));
 				value.setUtil(rs.getString("util"));
 				value.setType(rs.getString("type"));
+				result.add(value);
+			}
+		} catch (Exception e) {
+
+		}
+		return result;
+	}
+	
+	public ArrayList getUpdateLogResult(ResultSet rs) {
+		ArrayList result = new ArrayList();
+		try {
+			while (rs.next()) {
+				UpdateLogDateValue value = new UpdateLogDateValue();
+				value.setOc_date(rs.getString("oc_date"));
+				value.setRemark(rs.getString("remark"));
+				value.setUpdate_content(rs.getString("update_content"));
+				value.setOperator(rs.getString("operator"));
 				result.add(value);
 			}
 		} catch (Exception e) {
@@ -212,6 +248,24 @@ public class DBConnection {
 		finally {
 			newjdbc.close(); 
 			} 
+	}
+
+	public Statement execute(String sql) {
+		// TODO Auto-generated method stub
+		Statement stmt;
+		try {
+
+			stmt = c.createStatement();
+			stmt.executeUpdate(sql);
+			return stmt;
+
+		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

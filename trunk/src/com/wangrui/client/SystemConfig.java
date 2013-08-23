@@ -14,7 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,7 +32,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import com.wangrui.server.DBConnection;
 
-public class SystemConfig extends JFrame {
+public class SystemConfig extends JDialog {
 
 	private DefaultTableModel tableModel; // 表格模型对象
 	private JTable table;
@@ -51,8 +53,11 @@ public class SystemConfig extends JFrame {
 	public SystemConfig() {
 		// 界面部分
 		super();
+		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/config.png");//图标路径
+        setIconImage(icon.getImage());
 		setTitle("系统参数配置");
-		setBounds(100, 100, 800, 600);
+		setModal(true);
+		setBounds(100, 100, 600, 400);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		String[] columnNames = { "编号", "参数值", "备注" }; // 列名
 
@@ -93,7 +98,12 @@ public class SystemConfig extends JFrame {
 
 		// 添加数据和表到jtable中
 		tableModel = new DefaultTableModel(tableVales, columnNames);
-		table = new JTable(tableModel);
+		table = new JTable(tableModel){ // 表格不允许被编辑
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+
+		};
 		
 		 DefaultTableCellRenderer cellRanderer = new DefaultTableCellRenderer();  
          cellRanderer.setHorizontalAlignment(JLabel.CENTER);
@@ -112,8 +122,10 @@ public class SystemConfig extends JFrame {
 				Object ob = tableModel.getValueAt(selectedRow, 1);
 				Object oc = tableModel.getValueAt(selectedRow, 2);
 				aTextField.setText(oa.toString()); // 给文本框赋值
+				aTextField.setEnabled(false);
 				bTextField.setText(ob.toString());
 				cTextField.setText(oc.toString());
+				cTextField.setEnabled(false);
 			}
 		});
 
@@ -167,18 +179,19 @@ public class SystemConfig extends JFrame {
 							conn_insertSysConfig.executeUpdate(sql5);
 							conn_insertSysConfig.close();
 
-							JOptionPane.showMessageDialog(null, "该参数已添加！");
+							//JOptionPane.showMessageDialog(null, "该参数已添加！");
 							bTextField.setText("");
 							aTextField.setText("");
 							cTextField.setText("");
 
 						} catch (Exception e1) {
 							e1.printStackTrace();
+							JOptionPane.showMessageDialog(null, "设备信息修改失败，请联系开发人员！");
 						}
 
 					}
 				});
-		panel.add(addButton);
+		//panel.add(addButton);
 
 		final JButton delButton = new JButton("删除");
 		delButton.addActionListener(new ActionListener() {// 添加事件
@@ -214,7 +227,7 @@ public class SystemConfig extends JFrame {
 						}
 					}
 				});
-		panel.add(delButton);
+		//panel.add(delButton);
 
 		final JButton updateButton = new JButton("修改");
 		updateButton.addActionListener(new ActionListener() {
