@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -228,28 +229,42 @@ public class UpdateDeviceConfig extends JDialog {
 							JOptionPane.showMessageDialog(null, "请先选择删除的内容！");
 
 						} else {
-							int selectedRow = table.getSelectedRow();// 获得选中行的索引
-							if (selectedRow != -1) // 存在选中行
-							{
-								tableModel.removeRow(selectedRow); // 删除行
-							}
-							// 后台数据库操作
-							try {
-								conn_del = new DBConnection();
-								String sql1 = "delete from test.update_device where ip ='"
-										+ aTextField.getText() + "'";
-								conn_del.executeUpdate(sql1);
-								conn_del.close();
+							
+							Object[] options = { "确定", "取消" };
+							int n = JOptionPane.showOptionDialog(null,
+									"是否要删除该设备？", "提示",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE, null, // do not use a
+																		// custom Icon
+									options, // the titles of buttons
+									options[1]);
+							if (n == 0) {
+								// 后台数据库操作
+								try {
+									conn_del = new DBConnection();
+									String sql1 = "delete from test.update_device where ip ='"
+											+ aTextField.getText() + "'";
+									conn_del.executeUpdate(sql1);
+									conn_del.close();
 
-								JOptionPane.showMessageDialog(null, "该表"
-										+ aTextField.getText() + "已删除");
-								aTextField.setText("");
+									JOptionPane.showMessageDialog(null, "该表"
+											+ aTextField.getText() + "已删除");
+									aTextField.setText("");
+									int selectedRow = table.getSelectedRow();// 获得选中行的索引
+									if (selectedRow != -1) // 存在选中行
+									{
+										tableModel.removeRow(selectedRow); // 删除行
+									}
 
-							} catch (Exception e1) {
-								e1.printStackTrace();
-								JOptionPane.showMessageDialog(null,
-										"查询设备删除失败，请联系开发人员！");
+								} catch (Exception e1) {
+									e1.printStackTrace();
+									JOptionPane.showMessageDialog(null,
+											"查询设备删除失败，请联系开发人员！");
+								}
+							} else {
+								return;
 							}
+						
 
 						}
 					}

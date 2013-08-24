@@ -39,7 +39,7 @@ public class LoginMain extends JFrame {
 	private MainPanel appPanel;
 	private ReadHQ readHQ;
 	private Image background;  //背景图片
-	static String RIGHTINFO = "V3.8.2"; //版本信息
+	static String RIGHTINFO = "V3.8.3"; //版本信息
 	static int count_device=0;
 
 	/**
