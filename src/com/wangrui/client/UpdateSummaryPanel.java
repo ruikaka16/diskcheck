@@ -269,11 +269,11 @@ public class UpdateSummaryPanel extends JDialog{
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
 					//insertUpdateLog();
-					setVisible(false);
-					UpdatePanel updatePanel = new UpdatePanel(0);
-		            MainPanel.tabbedPane.addTab(MainPanel.str, new ImageIcon(CollectSysConfig.filePathresult+"/image/items.gif"),updatePanel);
-		            MainPanel.tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
-		            MainPanel.tabbedPane.getName();
+					dispose();
+					//UpdatePanel updatePanel = new UpdatePanel(0);
+		            //MainPanel.tabbedPane.addTab(MainPanel.str, new ImageIcon(CollectSysConfig.filePathresult+"/image/items.gif"),updatePanel);
+		           // MainPanel.tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
+		           // MainPanel.tabbedPane.getName();
 		            
 				}
 			});

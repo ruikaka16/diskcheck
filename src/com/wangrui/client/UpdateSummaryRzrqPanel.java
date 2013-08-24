@@ -152,11 +152,11 @@ public class UpdateSummaryRzrqPanel extends JDialog{
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				//insertUpdateLog();
-				setVisible(false);
-				UpdatePanel updatePanel = new UpdatePanel(1);
-	            MainPanel.tabbedPane.addTab("融资融券系统升级", new ImageIcon(CollectSysConfig.filePathresult+"/items.gif"),updatePanel);
-	            MainPanel.tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
-	            MainPanel.tabbedPane.getName();
+				dispose();
+				//UpdatePanel updatePanel = new UpdatePanel(1);
+	            //MainPanel.tabbedPane.addTab("融资融券系统升级", new ImageIcon(CollectSysConfig.filePathresult+"/items.gif"),updatePanel);
+	            //MainPanel.tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
+	            //MainPanel.tabbedPane.getName();
             
 			}
 		});

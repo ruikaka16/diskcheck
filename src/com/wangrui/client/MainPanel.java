@@ -73,6 +73,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.wangrui.client.window.AboutInfo;
 import com.wangrui.client.window.AddUser;
 import com.wangrui.client.window.ModifedPswd;
 import com.wangrui.client.window.UpdateLog;
@@ -1021,8 +1022,10 @@ public class MainPanel implements ActionListener {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					JOptionPane.showMessageDialog(null,
-							"欢迎使用运维管理程序"+LoginMain.RIGHTINFO+"   Designed by wangrui16@gmail.com");
+					//JOptionPane.showMessageDialog(null,
+					///	"欢迎使用运维管理程序"+LoginMain.RIGHTINFO+"   Designed by wangrui16@gmail.com");
+					AboutInfo aboutInfo = new AboutInfo();
+					aboutInfo.setVisible(true);
 				}
 			});
 
