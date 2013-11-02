@@ -18,7 +18,7 @@ public class ConnectUtil {
 		}
 	}
 	public static Connection getConnection(){
-		String url = "jdbc:mysql://127.0.0.1:3306/test";
+		String url = "jdbc:mysql://168.100.8.47:3306/test";
 		String username = "root";
 		String password = "wangrui";
 		Connection con = null;

@@ -6,19 +6,26 @@ import com.wangrui.client.JExpectSearchField;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.print.PrinterException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -46,7 +53,7 @@ public class UpdateLog extends JDialog{
 	private DefaultTableModel tableModel; // 表格模型对象
 	private JTable table;
 	private JPanel jp;
-	private JButton searchBt;
+	private JButton searchBt,printBt;
 	private DBConnection conn_num, conn_getUpdateLog;
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
@@ -77,6 +84,7 @@ public class UpdateLog extends JDialog{
 		String[] columnNames = { "升级日期", "升级系统", "升级摘要", "操作员"}; // 列名
 		jp = new JPanel();
 		searchBt = new JButton("搜索");
+		printBt = new JButton("打印");
 		searchCombox = new JComboBox();
 		searchLable = new JLabel("输入升级日期:");
 		searchComboxLable = new JLabel("升级系统 ：");
@@ -338,6 +346,29 @@ public class UpdateLog extends JDialog{
 				
 				}
 			});
+			
+			printBt.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+
+					MessageFormat footer = new MessageFormat("- {0} -"); //页脚加页码
+					MessageFormat header = new MessageFormat("Printed: " + new Date()); //页眉加时间
+					PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+					aset.add(OrientationRequested.PORTRAIT); //横排列打印，改为OrientationRequested.LANDSCAPE为竖排列
+					 
+					try {
+						table.print(JTable.PrintMode.FIT_WIDTH, header, footer, true, aset, true);
+					} catch (HeadlessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (PrinterException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 
 			JScrollPane scrollPane = new JScrollPane(table); // 支持滚动
 			jp.add(searchLable);
@@ -346,6 +377,7 @@ public class UpdateLog extends JDialog{
 			jp.add(searchCombox);
 			// jp.add(jExpectSearchField1);
 			jp.add(searchBt);
+			jp.add(printBt);
 			add(jp, BorderLayout.NORTH);
 			add(scrollPane, BorderLayout.CENTER);
 			scrollPane.setViewportView(table);

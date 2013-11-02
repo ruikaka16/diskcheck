@@ -697,7 +697,8 @@ public class UpdatePanel extends JPanel {
 				}
 			});
 			
-		}else if(system_type==1){
+		}//如果是融资融券系统
+		else if(system_type==1){
 			
 			rdbtnNewRadioButton_3 = new JRadioButton("灾备配置文件");
 			rdbtnNewRadioButton_3.setBounds(260, 20, 121, 23);
@@ -1218,7 +1219,7 @@ public class UpdatePanel extends JPanel {
 		// "mkdir Backup/"+getCurrentDay()+"; cp -a appcom Backup/"+getCurrentDay()+"; cp -a workspace/*.xml Backup/"+getCurrentDay()+";cp -a workspace/updatedir/HsClient Backup/"+getCurrentDay()+";";
 		String COMMAND = "mkdir Backup/" + getCurrentDay() + ";" + comm_appcom
 				+ comm_xml + comm_client;
-		System.out.println("执行备份命令=" + COMMAND);
+		System.out.println("备份命令：" + COMMAND);
 		conn_query = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where backup_flag=1 and system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where backup_flag=1 and system_type = 1";
@@ -1231,7 +1232,7 @@ public class UpdatePanel extends JPanel {
 		UpdateDevice updateDeviceBean = new UpdateDevice();// // 实例化一个Bean
 		try {
 			while (rs_getBackupDeviceInfo.next()) {
-				System.out.println("得到的设备信息：" + rs_getBackupDeviceInfo.getString("ip"));
+				System.out.println("备份设备：" + rs_getBackupDeviceInfo.getString("ip"));
 
 				try {
 					runSSH(rs_getBackupDeviceInfo.getString("ip"),
@@ -1332,10 +1333,7 @@ public class UpdatePanel extends JPanel {
 
 	/****
 	 * 生成上传命令
-	 * 
 	 * @throws IOException
-	 * 
-	 * 
 	 */
 	public void createUploadComm(String ip, String username, String password,
 			String localpath, String remotepath,int system_type) throws IOException {
@@ -1359,7 +1357,7 @@ public class UpdatePanel extends JPanel {
 					+ CollectSysConfig.filePathresult + "\\log\\"
 					+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 					+ "_log.txt";
-			System.out.println("打印账户bat命令:\r\n" + upload_comm+"\r\n"+endflag);
+			System.out.println("升级设备上传命令:\r\n" + upload_comm+"\r\n"+endflag);
 			//System.out.println(ip.replaceAll("\\.", "_"));
 			dos_bat_zh.writeBytes(new String(upload_comm.getBytes(), "iso8859-1")
 					+ "\r\n");
@@ -1432,7 +1430,7 @@ public class UpdatePanel extends JPanel {
 
 	public void excuteUploadComm(final int system_type) throws IOException {
 
-		System.out.println("excuteUploadComm中updatedevice_count="+updatedevice_count);
+		System.out.println("升级设备数量："+updatedevice_count);
 		File batFile = new File(CollectSysConfig.filePathresult + "/log/"
 				+ getCurrentDay()); // bat的目录
 		final File[] batFiles = batFile.listFiles();
@@ -1523,7 +1521,6 @@ public class UpdatePanel extends JPanel {
 												j++; // 完成后完成个数J参数加1
 											}
 										}
-
 									}
 								}
 								if(system_type==0){
@@ -1542,7 +1539,7 @@ public class UpdatePanel extends JPanel {
 										    options1,  //the titles of buttons
 										    options1[1]);
 									if(m == 0){
-										
+									
 										UpdateReport updateReport = new UpdateReport(0);
 										updateReport.setVisible(true);
 									}else{
@@ -1944,7 +1941,7 @@ public class UpdatePanel extends JPanel {
 		try {
 			while(rs_deviceCount.next()){
 				count_device = rs_deviceCount.getInt("count_device");
-				System.out.println("获得账户升级设备数量="+count_device);
+				//System.out.println("设备数量："+count_device);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

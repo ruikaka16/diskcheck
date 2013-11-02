@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +50,8 @@ public class UpdateReport extends JFrame {
 		editorPane.setEditable(false);
 		// 要能响应网页中的链接，则必须加上超链监听器
 		// editorPane.addHyperlinkListener(this);
-		String path = "file:///"+CollectSysConfig.filePathresult+"/report/"+MainPanel.str+"文件报告.html";
-		System.out.println(path);
+		String path = "file:///"+CollectSysConfig.filePathresult+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html";
+		System.out.println("升级报告文件路径："+path);
 		try {
 			if(system_type==0){
 				System.out.println("-----取账户系统升级报告----");
@@ -102,7 +105,7 @@ public class UpdateReport extends JFrame {
 				//}
 			
 		        jasperPrint = JasperFillManager.fillReport(inputStream, parameters, conn);  
-		        JasperExportManager.exportReportToHtmlFile(jasperPrint, CollectSysConfig.filePathresult+"/report/"+MainPanel.str+"文件报告.html");
+		        JasperExportManager.exportReportToHtmlFile(jasperPrint, CollectSysConfig.filePathresult+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html");
 		       // 
 		}catch (JRException e) {
 			// TODO Auto-generated catch block
@@ -127,5 +130,12 @@ public class UpdateReport extends JFrame {
 		}
 		return summary;
 	
+	}
+	
+	public static String getSystime() {
+
+		Date date = new Date();
+		DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		return format.format(date);
 	}
 }
