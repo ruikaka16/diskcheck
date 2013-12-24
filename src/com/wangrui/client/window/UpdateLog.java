@@ -63,7 +63,7 @@ public class UpdateLog extends JDialog{
 	private Object tableVales[][];
 	private JExpectSearchField jExpectSearchField, jExpectSearchField1;
 	private JLabel searchLable, searchComboxLable;
-	private JComboBox searchCombox;
+	private JComboBox searchCombox,searchCombox1;
 	
 	public UpdateLog(int system_type){
 		
@@ -89,6 +89,10 @@ public class UpdateLog extends JDialog{
 		searchLable = new JLabel("输入升级日期:");
 		searchComboxLable = new JLabel("升级系统 ：");
 
+		searchCombox1 = new JComboBox();
+		searchCombox1.addItem("账户系统升级");
+		searchCombox1.addItem("转融通升级");
+		
 		searchCombox.addActionListener(new ActionListener() {
 
 			@Override
@@ -371,6 +375,7 @@ public class UpdateLog extends JDialog{
 			});
 
 			JScrollPane scrollPane = new JScrollPane(table); // 支持滚动
+			//jp.add(searchCombox1);
 			jp.add(searchLable);
 			jp.add(jExpectSearchField);
 			jp.add(searchComboxLable);
