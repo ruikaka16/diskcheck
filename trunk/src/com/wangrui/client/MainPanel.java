@@ -76,6 +76,7 @@ import com.jcraft.jsch.Session;
 import com.wangrui.client.window.AboutInfo;
 import com.wangrui.client.window.AddUser;
 import com.wangrui.client.window.ModifedPswd;
+import com.wangrui.client.window.SoFileCompare;
 import com.wangrui.client.window.UpdateLog;
 import com.wangrui.server.DBConnection;
 import com.wangrui.test.TreeDemo;
@@ -1203,6 +1204,7 @@ public class MainPanel implements ActionListener {
 			DefaultMutableTreeNode node6 = new DefaultMutableTreeNode("Excel文件导入");
 			DefaultMutableTreeNode node7 = new DefaultMutableTreeNode("融资融券系统升级");
 			DefaultMutableTreeNode node8 = new DefaultMutableTreeNode("升级记录查询");
+			DefaultMutableTreeNode node9 = new DefaultMutableTreeNode("文件比较");
 			
 						
 			
@@ -1214,6 +1216,7 @@ public class MainPanel implements ActionListener {
 				root1.add(node1);
 				root.add(node2);
 				root.add(node8);
+				root.add(node9);
 				//root1.add(node4);
 				root1.add(node5);
 				root1.add(node6);
@@ -1221,6 +1224,7 @@ public class MainPanel implements ActionListener {
 				Root.add(root);
 				//Root.add(root1);
 				root.add(node7);
+				root.add(node9);
 			}
 
 			jTree = new JTree(Root);
@@ -1295,6 +1299,10 @@ public class MainPanel implements ActionListener {
 						//tabbedPane.addTab(str, updateLog);
 						//tabbedPane.setSelectedComponent(updateLog);
 						//tabbedPane.getName();
+					}else if(str.equals("文件比较")){
+						
+						SoFileCompare soFileCompare = new SoFileCompare(0);
+						soFileCompare.setVisible(true);
 					}
 
 				}

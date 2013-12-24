@@ -22,7 +22,7 @@
 	<classpathentry kind="lib" path="R:/wangrui/jars/barcode4j-2.0.jar"/>
 	<classpathentry kind="lib" path="R:/wangrui/jars/groovy-2.1.2.jar"/>
 	<classpathentry kind="lib" path="R:/wangrui/jars/asm-4.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/wangrui/Downloads/javadbf-0.4.0.jar"/>
+	<classpathentry kind="lib" path="E:/Downloads/javadbf-0.4.0.jar"/>
 	<classpathentry kind="lib" path="D:/jars/poi-3.0.1-FINAL-20070705.jar"/>
 	<classpathentry kind="lib" path="D:/jars/poi-contrib-3.0.1-FINAL-20070705.jar"/>
 	<classpathentry kind="lib" path="D:/jars/poi-scratchpad-3.0.1-FINAL-20070705.jar"/>

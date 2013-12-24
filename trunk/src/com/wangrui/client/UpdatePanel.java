@@ -73,13 +73,13 @@ public class UpdatePanel extends JPanel {
 	RandomAccessFile dos_bat_zh = null;
 	RandomAccessFile dos_bat_rzrq = null;
 	int selected_flag = 0;
-	private String ZH_REMOTE_APPCOM_PATH = "/home/hundsun";
-	private String ZH_REMOTE_XML_PATH = "/home/hundsun";
-	private String ZH_REMOTE_CLIENT_PATH = "/home/hundsun/workspace/updatedir";
-	private String ZH_REMOTE_Linux386_PATH = "/home/hundsun";
-	private String RZRQ_REMOTE_APPCOM_PATH="/home/handsome";
-	private String RZRQ_REMOTE_XML_PATH = "/home/handsome";
-	private String RZRQ_REMOTE_Linux386_PATH="/home/handsome";
+	private String ZH_REMOTE_APPCOM_PATH = "/home/hundsun/Backup";
+	private String ZH_REMOTE_XML_PATH = "/home/hundsun/Backup";
+	private String ZH_REMOTE_CLIENT_PATH = "/home/hundsun/Backup/workspace/updatedir";
+	private String ZH_REMOTE_Linux386_PATH = "/home/hundsun/Backup";
+	private String RZRQ_REMOTE_APPCOM_PATH="/home/handsome/Backup";
+	private String RZRQ_REMOTE_XML_PATH = "/home/handsome/Backup";
+	private String RZRQ_REMOTE_Linux386_PATH="/home/handsome/Backup";
 	private int exitValue = 0;
 	static int count_device=0;
 	private int updatedevice_count = 0;
@@ -697,7 +697,7 @@ public class UpdatePanel extends JPanel {
 				}
 			});
 			
-		}//如果是融资融券系统
+		}//如果是融资融券
 		else if(system_type==1){
 			
 			rdbtnNewRadioButton_3 = new JRadioButton("灾备配置文件");
