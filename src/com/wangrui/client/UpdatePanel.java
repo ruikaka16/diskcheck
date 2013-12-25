@@ -1528,7 +1528,7 @@ public class UpdatePanel extends JPanel {
 									timer.cancel();
 									btnNewButton_4.setEnabled(false);
 									btnNewButton_4.setText("升级完成");
-									JOptionPane.showMessageDialog(null,"升级成功！");
+									JOptionPane.showMessageDialog(null,"升级成功，请使用文件比较功能进行文件比较！");
 									Object[] options1 = {"确定","取消"};
 									int m = JOptionPane.showOptionDialog(null,
 										    "是否需要打印升级报告？",

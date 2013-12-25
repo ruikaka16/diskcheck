@@ -3,14 +3,28 @@ package com.wangrui.server;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Savepoint;
 import java.sql.Statement;
+import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
+
 import javax.swing.JOptionPane;
 
 import com.wangrui.client.CollectSysConfig;
@@ -22,6 +36,7 @@ import com.wangrui.client.DTO.UpdateLogDateValue;
  */
 
 public class DBConnection {
+	
 	private static String dbUrl = null;
 	private String theUser = null;// 用户�?
 	private String thePw = null;// 密码
@@ -86,6 +101,10 @@ public class DBConnection {
 			e.printStackTrace();
 		}
 	}
+	
+	public Connection getConnection() throws Exception {  
+        return DriverManager.getConnection(dbUrl, theUser, thePw);  
+    }  
 
 	public void setdbName(String theUser) {
 		this.theUser = theUser;
@@ -267,5 +286,6 @@ public class DBConnection {
 		}
 		return null;
 	}
+
 
 }

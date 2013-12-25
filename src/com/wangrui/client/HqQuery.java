@@ -23,6 +23,7 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -303,6 +304,8 @@ public class HqQuery extends javax.swing.JFrame {
 						.addContainerGap(37, Short.MAX_VALUE)));
 
 		// setAlwaysOnTop(true);
+		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/hq.gif");//图标路径
+        setIconImage(icon.getImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setLocation(500, 300);
