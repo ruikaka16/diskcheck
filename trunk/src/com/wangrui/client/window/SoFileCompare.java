@@ -8,12 +8,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -25,7 +28,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.MainPanel;
+import com.wangrui.client.ReadLinuxFile;
 import com.wangrui.server.DBConnection;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -34,6 +39,7 @@ import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 
 public class SoFileCompare extends javax.swing.JDialog {
 
@@ -49,8 +55,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 	private ResultSet rs3;
 
 	/** Creates new form SoFileCompare */
-	public SoFileCompare(int system_type) {
-		setAlwaysOnTop(true);
+	public SoFileCompare(final int system_type) {
 
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
@@ -129,12 +134,6 @@ public class SoFileCompare extends javax.swing.JDialog {
 			}
 		});
 
-		
-//		DefaultTableModel tableModel = new DefaultTableModel(getFileInfo("168.100.102.22"), columnNames);
-//		jTable1 = new JTable(tableModel);
-//		jScrollPane1.setViewportView(jTable1);
-//		jLabel3.setText(String.valueOf(getNum("168.100.102.22")));
-
 		org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(
 				jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
@@ -173,26 +172,22 @@ public class SoFileCompare extends javax.swing.JDialog {
 				jButton4ActionPerformed(evt);
 				
 				if((Integer.parseInt(jLabel3.getText()))==(Integer.parseInt(jLabel4.getText()))){				
-					label_3.setText("数量一致");
+					label_3.setText("文件数量一致");
 					if(compareFileName(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())==0){
-						label_3.setText("数量一致,文件名一致，");
-//							if(compareSize(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString(), executeCompare(jComboBox4.getSelectedItem().toString()))==0){
-//								label_3.setText("数量一致,文件名一致,文件大小一致");
-//							}else{
-//								label_3.setText("数量一致,文件名一致,文件大小存在不一致");
-//							}
+						label_3.setText("文件数量一致,文件名一致");
+						    if(executeCompare(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())==0){		
+						    		label_3.setText("文件数量一致,文件名一致,文件大小一致");
+							}else{
+								label_3.setText("文件数量一致,文件名一致,有"+executeCompare(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())+"个文件大小存在不一致");
+							}
 					}else{
-						label_3.setText("数量一致,有"+compareFileName(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())+"个文件名不一致");
+						label_3.setText("文件数量一致,有"+compareFileName(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())+"个文件名不一致");
 					}
 				}else{
-					label_3.setText("数量不一致");
+					label_3.setText("文件数量不一致");
 				}
-				
-				System.out.println(executeCompare(jComboBox3.getSelectedItem().toString()));
 			}
 		});
-
-		
 
 		jLabel1.setText("IP地址：");
 
@@ -201,6 +196,51 @@ public class SoFileCompare extends javax.swing.JDialog {
 		JLabel label = new JLabel("总计数量：");
 		
 		JLabel label_1 = new JLabel("总计数量：");
+		
+		final JButton button = new JButton("数据归集");
+		
+		button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				if(isSoFileIn()){
+					System.out.println("判断结果"+isSoFileIn());
+					Object[] options = { "确定", "取消" };
+					int n = JOptionPane.showOptionDialog(null,
+							"已存在当天数据，是否要重新归集？", "提示",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, options,options[1]);
+					if(n==0){
+						CallableStatement cstmt = null;
+						DBConnection c = new DBConnection();
+						try {
+							Connection conn = c.getConnection();						  
+							cstmt = conn.prepareCall("{call del_soinfo()}");
+							cstmt.execute();
+							new ReadLinuxFile(system_type);
+							button.setText("数据归集完成");
+							button.setEnabled(false);
+							
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} //				
+						catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}else{
+						return;
+					}
+									
+				}else{
+					new ReadLinuxFile(system_type);
+					button.setText("数据归集完成");
+					button.setEnabled(false);
+				}
+			}
+		});
 
 		GroupLayout layout = new GroupLayout(
 
@@ -223,23 +263,25 @@ public class SoFileCompare extends javax.swing.JDialog {
 							.addComponent(label)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(jLabel3)
-							.addPreferredGap(ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
 							.addComponent(jButton4)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(jButton3)
 							.addGap(27))
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(0, 29, Short.MAX_VALUE)))
+							.addGap(0, 0, Short.MAX_VALUE)))
 					.addContainerGap())
 				.addGroup(layout.createSequentialGroup()
-					.addGap(163)
+					.addGap(34)
+					.addComponent(button)
+					.addGap(34)
 					.addComponent(jLabel1)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(jComboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(95)
+					.addGap(10)
 					.addComponent(label_3)
-					.addPreferredGap(ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
 					.addComponent(jLabel2)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(jComboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -254,7 +296,8 @@ public class SoFileCompare extends javax.swing.JDialog {
 						.addComponent(jComboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(jLabel1)
 						.addComponent(jLabel2)
-						.addComponent(label_3))
+						.addComponent(label_3)
+						.addComponent(button))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(jPanel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -278,6 +321,8 @@ public class SoFileCompare extends javax.swing.JDialog {
 		getContentPane().setLayout(layout);
 		this.setTitle("文件比较");
 		//pack();
+		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/report.gif");//图标路径
+        setIconImage(icon.getImage());
 			setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
 	        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	        setSize(927, 560);
@@ -295,29 +340,6 @@ public class SoFileCompare extends javax.swing.JDialog {
 	 */
 	public static void main(String args[]) {
 
-//		try {
-//			javax.swing.UIManager.LookAndFeelInfo[] installedLookAndFeels = javax.swing.UIManager
-//					.getInstalledLookAndFeels();
-//			for (int idx = 0; idx < installedLookAndFeels.length; idx++)
-//				if ("Nimbus".equals(installedLookAndFeels[idx].getName())) {
-//					javax.swing.UIManager
-//							.setLookAndFeel(installedLookAndFeels[idx]
-//									.getClassName());
-//					break;
-//				}
-//		} catch (ClassNotFoundException ex) {
-//			java.util.logging.Logger.getLogger(SoFileCompare.class.getName())
-//					.log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (InstantiationException ex) {
-//			java.util.logging.Logger.getLogger(SoFileCompare.class.getName())
-//					.log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (IllegalAccessException ex) {
-//			java.util.logging.Logger.getLogger(SoFileCompare.class.getName())
-//					.log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//			java.util.logging.Logger.getLogger(SoFileCompare.class.getName())
-//					.log(java.util.logging.Level.SEVERE, null, ex);
-//		}
 		try{     
 			//JFrame.setDefaultLookAndFeelDecorated(true); //加上此语句连同窗体外框也改变
 			//JDialog.setDefaultLookAndFeelDecorated(true); //加上此语句会使弹出的对话框也改变
@@ -328,8 +350,6 @@ public class SoFileCompare extends javax.swing.JDialog {
 			}catch(Exception e){       
 				e.printStackTrace(); 
 				}
-		// </editor-fold>
-
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -388,7 +408,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 	/****
 	 * 获取表的数据内容
 	 * @param ip
-	 * @return
+	 * @return 返回所有文件
 	 */
 	private  Object[][] getFileInfo(String ip){
 		
@@ -421,14 +441,13 @@ public class SoFileCompare extends javax.swing.JDialog {
 	/****
 	 * 获取表记录数量
 	 * @param ip
-	 * @return
+	 * @return 返回当天当前ip的文件个数
 	 */
-	
 	private int getNum(String ip){
 		
 		int number = 0;
 		DBConnection conn_num = new DBConnection();
-		String sql3 = "select count(*) from test.update_sofilelist where ip = '"+ip+"'";
+		String sql3 = "select count(*) from test.update_sofilelist where ip = '"+ip+"' and calc_time = '"+getSystime()+"'";
 		ResultSet rs = conn_num.executeQuery(sql3);
 		try {
 			while (rs.next()) {
@@ -445,16 +464,16 @@ public class SoFileCompare extends javax.swing.JDialog {
 		return number;
 	}
 	/****
-	 * 比较文件大小
+	 * 比较单一文件大小
 	 * @param ip1
 	 * @param ip2
 	 * @param file_name
-	 * @return
+	 * @return 返回1为不一致 返回0为一致
 	 */
 	public int compareSize(String ip1,String ip2,String file_name){
 		int i=0;
 		DBConnection conn = new DBConnection();
-		String sql1 = "select count(*) from (select * from update_sofilelist where file_name = '"+executeCompare(ip1)+"' and ip = '"+ip1+"') a where a.file_size in (select b.file_size from update_sofilelist b where b.file_name = file_name and b.ip = '"+ip2+"')";
+		String sql1 = "select count(*) from (select * from update_sofilelist where file_name = '"+file_name+"' and ip = '"+ip1+"' and calc_time = '"+getSystime()+"') a where a.file_size not in (select b.file_size from update_sofilelist b where b.file_name = file_name and b.ip = '"+ip2+"' and calc_time = '"+getSystime()+"')";
 		ResultSet rs = conn.executeQuery(sql1);
 		try {
 			while(rs.next()){
@@ -467,18 +486,17 @@ public class SoFileCompare extends javax.swing.JDialog {
 			e.printStackTrace();
 		}	
 		return i;
-	}
-	
+	}	
 	/****
 	 * 比较文件名
 	 * @param ip1
 	 * @param ip2
-	 * @return
+	 * @return 返回不一致记录数
 	 */	
 	public int compareFileName(String ip1,String ip2){
 		int i=0;
 		DBConnection conn = new DBConnection();
-		String sql1 = "select count(*) from update_sofilelist where ip='"+ip1+"' and file_name not in (select file_name from update_sofilelist where ip = '"+ip2+"')";
+		String sql1 = "select count(*) from update_sofilelist where ip='"+ip1+"' and calc_time = '"+getSystime()+"' and file_name not in (select file_name from update_sofilelist where ip = '"+ip2+"' and calc_time = '"+getSystime()+"')";
 		ResultSet rs = conn.executeQuery(sql1);
 		try {
 			while(rs.next()){
@@ -492,30 +510,60 @@ public class SoFileCompare extends javax.swing.JDialog {
 		}	
 		return i;
 	}
-	
-	public String  executeCompare(String ip){
+	/****
+	 * 比较所有文件的大小
+	 * @param ip1
+	 * @param ip2
+	 * @return 返回不一致记录数
+	 */
+	public  int  executeCompare(String ip1,String ip2){
 		String file_name = "";
 		DBConnection conn = new DBConnection();
-		String sql = "select file_name from update_sofilelist where ip = '"+ip+"' ";
+		int i=0;
+		String sql = "select file_name from update_sofilelist where ip = '"+ip1+"' and calc_time = '"+getSystime()+"'";
 		ResultSet rs = conn.executeQuery(sql);
 		try {
 			while(rs.next()){
 				file_name = rs.getString("file_name");
+				i=i+compareSize(ip1,ip2,file_name);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		return file_name;
-		
+		}		
+		return i;
 	}
+	/****
+	 * 获取当前时间
+	 * @return
+	 */
 	public static String getSystime() {
 
 		Date date = new Date();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println(format.format(date));
-		return format.format(date);
+		DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		return format.format(date);	
+	}
 	
+	public boolean isSoFileIn(){
+		try{
+			int i=0;
+			String sql = "select count(*) from test.update_sofilelist where calc_time = date_format(now(),'%Y%m%d')";
+			System.out.println(sql);
+			DBConnection conn_vaildInsert = new DBConnection();
+			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
+			while(rs_vaildInsert.next()){
+				//System.out.println("i="+i);
+				if(rs_vaildInsert.getString("count(*)").equals("0")){
+					//JOptionPane.showMessageDialog(null, "该操作员已被占用");
+					return false;
+				}else{
+					return true;
+				}				
+			}	return false;
+		}catch(Exception e){
+			
+			e.printStackTrace();
+			return true;
+		}
 	}
 }

@@ -25,6 +25,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 
+import com.wangrui.server.DBConnection;
+
 public class JExpectSearchField extends JTextField {
 	private CaretListener careLis;
 	private myPopupMenu popupMenu;
@@ -205,9 +207,8 @@ public class JExpectSearchField extends JTextField {
 		// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		try {
 
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost:3306/test";
-			conn = DriverManager.getConnection(url, "root", "wangrui");
+			DBConnection c = new DBConnection();
+			Connection conn = c.getConnection();
 			stmt = conn.createStatement();
 			String sql = "SELECT hqzqdm From szhq;";
 			rs = stmt.executeQuery(sql);
