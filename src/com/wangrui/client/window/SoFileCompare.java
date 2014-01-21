@@ -12,6 +12,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.sun.xml.internal.ws.org.objectweb.asm.Type;
 import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.MainPanel;
 import com.wangrui.client.ReadLinuxFile;
@@ -72,6 +74,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 		jLabel4 = new JLabel();
 		label_3 = new JLabel("比较结果");
 		label_3.setForeground(Color.RED);
+		label_3.setFont(new Font("仿宋", Font.CENTER_BASELINE, 12));
 
 		final String[] columnNames = { "文件名", "文件大小", "修改时间" };
 
@@ -170,7 +173,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 		jButton4.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				jButton4ActionPerformed(evt);
-				
+				label_3.setText(" ");
 				if((Integer.parseInt(jLabel3.getText()))==(Integer.parseInt(jLabel4.getText()))){				
 					label_3.setText("文件数量一致");
 					if(compareFileName(jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString())==0){
@@ -205,7 +208,6 @@ public class SoFileCompare extends javax.swing.JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				if(isSoFileIn()){
-					System.out.println("判断结果"+isSoFileIn());
 					Object[] options = { "确定", "取消" };
 					int n = JOptionPane.showOptionDialog(null,
 							"已存在当天数据，是否要重新归集？", "提示",
@@ -230,9 +232,8 @@ public class SoFileCompare extends javax.swing.JDialog {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}else{
+					}else
 						return;
-					}
 									
 				}else{
 					new ReadLinuxFile(system_type);
@@ -526,7 +527,8 @@ public class SoFileCompare extends javax.swing.JDialog {
 			while(rs.next()){
 				file_name = rs.getString("file_name");
 				i=i+compareSize(ip1,ip2,file_name);
-			}
+			}rs.close();
+			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -545,25 +547,36 @@ public class SoFileCompare extends javax.swing.JDialog {
 	}
 	
 	public boolean isSoFileIn(){
+		CallableStatement cstmt = null;
+		Connection  conn = null;
 		try{
-			int i=0;
-			String sql = "select count(*) from test.update_sofilelist where calc_time = date_format(now(),'%Y%m%d')";
-			System.out.println(sql);
-			DBConnection conn_vaildInsert = new DBConnection();
-			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
-			while(rs_vaildInsert.next()){
-				//System.out.println("i="+i);
-				if(rs_vaildInsert.getString("count(*)").equals("0")){
-					//JOptionPane.showMessageDialog(null, "该操作员已被占用");
-					return false;
-				}else{
-					return true;
-				}				
-			}	return false;
+			 DBConnection c = new DBConnection();
+			 conn = c.getConnection();
+			 String sql = "{call get_count(?)}";	
+			 cstmt = conn.prepareCall(sql);
+			 cstmt.registerOutParameter(1, Types.INTEGER);
+		     cstmt.execute();
+		     System.out.println("通过存储过程获得的当天存在数量="+cstmt.getString(1));
+		     if(cstmt.getString(1).equals("0")){
+		    	 return false;
+		     }else {
+		    	 return true;
+		     }	    
 		}catch(Exception e){
 			
 			e.printStackTrace();
 			return true;
 		}
+		finally{  
+		      try {  		         
+		          if(cstmt!=null){  
+		        	  cstmt.close();  
+		          }  
+		          if(conn!=null){  
+		            conn.close();  
+		          }   
+		      }catch (SQLException ex1) {  
+		      }  
+		}     
 	}
 }

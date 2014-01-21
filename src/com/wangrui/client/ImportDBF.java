@@ -38,7 +38,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
-import com.wangrui.server.ConnectUtil;
 import com.wangrui.server.DBConnection;
 
 
@@ -212,6 +211,9 @@ public class ImportDBF extends JFrame {
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (Exception e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
 				}
 			}
 
@@ -219,11 +221,12 @@ public class ImportDBF extends JFrame {
 	}
 
 
-	private void importDBF(String filePath) throws SQLException {
+	private void importDBF(String filePath) throws Exception {
 		// TODO Auto-generated method stub
+		DBConnection c = new DBConnection();
 		Connection conn = null;
 		PreparedStatement pst = null;
-		conn = ConnectUtil.getConnection();
+		conn = c.getConnection();
 
 		try {
 			pst = (PreparedStatement) conn
