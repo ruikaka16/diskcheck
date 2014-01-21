@@ -1607,12 +1607,13 @@ public class UpdatePanel extends JPanel {
 										oneComplete = true;
 										j++; // 完成后完成个数J参数加1
 									}
-								}
+								}    System.out.println("已经升级的设备个数="+j);
 							}
 						}
 						if (system_type == 0) {
 							if (oneZero && oneComplete
 									&& j == updatedevice_count) {
+								System.out.println("升级完成数量="+j);
 								timer.cancel();
 								btnNewButton_4.setEnabled(false);
 								btnNewButton_4.setText("升级完成");
