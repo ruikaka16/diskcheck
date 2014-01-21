@@ -3,6 +3,7 @@ package com.wangrui.client;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -58,9 +59,12 @@ import ch.ethz.ssh2.StreamGobbler;
 public class UpdatePanel extends JPanel {
 
 	public JLabel lblNewLabel, lblL, lblHsclient, zbLabel, linux386Lable;
-	public JTextField textField, textField_1, textField_2, textField_3,textField_4;
-	private JRadioButton rdbtnNewRadioButton_2,rdbtnNewRadioButton_3,rdbtnNewRadioButton_4;
-	private JButton btnNewButton,btnNewButton_1,btnNewButton_2,btnNewButton_3,btnNewButton_4,btnNewButton_5,btnNewButton_6;
+	public JTextField textField, textField_1, textField_2, textField_3,
+			textField_4;
+	private JRadioButton rdbtnNewRadioButton_2, rdbtnNewRadioButton_3,
+			rdbtnNewRadioButton_4;
+	private JButton btnNewButton, btnNewButton_1, btnNewButton_2,
+			btnNewButton_3, btnNewButton_4, btnNewButton_5, btnNewButton_6;
 	private static final Logger logger = Logger.getLogger(UpdatePanel.class);
 	private String comm_client = "", comm_xml = "", comm_appcom = "",
 			comm_linux386 = "";
@@ -73,15 +77,15 @@ public class UpdatePanel extends JPanel {
 	RandomAccessFile dos_bat_zh = null;
 	RandomAccessFile dos_bat_rzrq = null;
 	int selected_flag = 0;
-	private String ZH_REMOTE_APPCOM_PATH = "/home/hundsun/Backup";
-	private String ZH_REMOTE_XML_PATH = "/home/hundsun/Backup";
-	private String ZH_REMOTE_CLIENT_PATH = "/home/hundsun/Backup/workspace/updatedir";
-	private String ZH_REMOTE_Linux386_PATH = "/home/hundsun/Backup";
-	private String RZRQ_REMOTE_APPCOM_PATH="/home/handsome/Backup";
-	private String RZRQ_REMOTE_XML_PATH = "/home/handsome/Backup";
-	private String RZRQ_REMOTE_Linux386_PATH="/home/handsome/Backup";
+	private String ZH_REMOTE_APPCOM_PATH = "/home/hundsun";
+	private String ZH_REMOTE_XML_PATH = "/home/hundsun";
+	private String ZH_REMOTE_CLIENT_PATH = "/home/hundsun/workspace/updatedir";
+	private String ZH_REMOTE_Linux386_PATH = "/home/hundsun";
+	private String RZRQ_REMOTE_APPCOM_PATH = "/home/handsome";
+	private String RZRQ_REMOTE_XML_PATH = "/home/handsome";
+	private String RZRQ_REMOTE_Linux386_PATH = "/home/handsome";
 	private int exitValue = 0;
-	static int count_device=0;
+	static int count_device = 0;
 	private int updatedevice_count = 0;
 
 	class T1 extends Thread {
@@ -165,12 +169,12 @@ public class UpdatePanel extends JPanel {
 		btnNewButton_4.setEnabled(false);
 		btnNewButton_4.setBounds(400, 18, 105, 23);
 		panel_3.add(btnNewButton_4);
-		if(system_type==0){
-		
+		if (system_type == 0) {
+
 			rdbtnNewRadioButton_2 = new JRadioButton("HsClient文件");
 			rdbtnNewRadioButton_2.setBounds(260, 20, 121, 23);
 			panel_1.add(rdbtnNewRadioButton_2);
-		
+
 			rdbtnNewRadioButton_3 = new JRadioButton("灾备配置文件");
 			rdbtnNewRadioButton_3.setBounds(375, 20, 121, 23);
 			panel_1.add(rdbtnNewRadioButton_3);
@@ -178,7 +182,7 @@ public class UpdatePanel extends JPanel {
 			rdbtnNewRadioButton_4 = new JRadioButton("linux.i386");
 			rdbtnNewRadioButton_4.setBounds(20, 50, 121, 23);
 			panel_1.add(rdbtnNewRadioButton_4);
-			
+
 			btnNewButton_1 = new JButton("生成上传命令1");
 			btnNewButton_1.setBounds(500, 18, 115, 23);
 			btnNewButton_1.setEnabled(false);
@@ -203,7 +207,7 @@ public class UpdatePanel extends JPanel {
 			btnNewButton_6.setBounds(500, 114, 115, 23);
 			btnNewButton_6.setEnabled(false);
 			panel_2.add(btnNewButton_6);
-			
+
 			lblNewLabel = new JLabel("appcom\u6587\u4EF6\uFF1A");
 			lblNewLabel.setBounds(30, 21, 80, 15);
 			panel_2.add(lblNewLabel);
@@ -237,24 +241,24 @@ public class UpdatePanel extends JPanel {
 			zbLabel = new JLabel("灾备配置文件\uFF1A");
 			zbLabel.setBounds(30, 96, 84, 15);
 			panel_2.add(zbLabel);
-			//灾备textField_3
+			// 灾备textField_3
 			textField_3 = new JTextField();
 			textField_3.setBounds(130, 93, 280, 21);
 			textField_3.setVisible(false);
 			panel_2.add(textField_3);
 			textField_3.setColumns(10);
-			//textField_3.setText("what");
+			// textField_3.setText("what");
 
 			linux386Lable = new JLabel("linux.i386\uFF1A");
 			linux386Lable.setBounds(30, 121, 84, 15);
 			panel_2.add(linux386Lable);
-			//灾备linux.i386
+			// 灾备linux.i386
 			textField_4 = new JTextField();
 			textField_4.setBounds(130, 118, 280, 21);
 			textField_4.setVisible(false);
 			panel_2.add(textField_4);
 			textField_4.setColumns(10);
-			//textField_4.setText("what");
+			// textField_4.setText("what");
 
 			// 单选按钮设置
 			rdbtnNewRadioButton.addItemListener(new ItemListener() {
@@ -367,7 +371,7 @@ public class UpdatePanel extends JPanel {
 					}
 				}
 			});
-			
+
 			// 文件路径栏设置
 			textField.addMouseListener(new MouseListener() {
 
@@ -391,7 +395,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -425,7 +430,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -459,7 +465,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -494,7 +501,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -529,7 +537,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -541,33 +550,44 @@ public class UpdatePanel extends JPanel {
 
 				}
 			});
-			
+
 			btnNewButton.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 
-					if (selected_flag == 0) {
-						JOptionPane.showMessageDialog(null, "请选择需要备份的项目");
-					} else {
-						Object[] options = { "确定", "取消" };
-						int n = JOptionPane.showOptionDialog(null,
-								"请确定需备份文件选择是否正确？", "提示", JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, // do not use a
-																	// custom Icon
-								options, // the titles of buttons
-								options[1]);
-						if (n == 0) {
-							getBackupDeviceInfo(comm_appcom, comm_xml, comm_client,0);
-							btnNewButton.setText("已完成");
-							btnNewButton.setEnabled(false);
-							btnNewButton_4.setEnabled(true);
+					Object[] options1 = { "确定", "取消" };
+					int m = JOptionPane.showOptionDialog(null,
+							"请先检查升级设备的状态是否正常？", "提示",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, // do not use a
+																// custom Icon
+							options1, // the titles of buttons
+							options1[1]);
+					if (m == 0) {
+						if (selected_flag == 0) {
+							JOptionPane.showMessageDialog(null, "请选择需要备份的项目");
 						} else {
-							return;
+							Object[] options = { "确定", "取消" };
+							int n = JOptionPane.showOptionDialog(null,
+									"请确定需备份文件选择是否正确？", "提示",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE, null,
+									options, 
+									options[1]);
+							if (n == 0) {
+								getBackupDeviceInfo(comm_appcom, comm_xml,
+										comm_client, 0);
+								btnNewButton.setText("已完成");
+								btnNewButton.setEnabled(false);
+								btnNewButton_4.setEnabled(true);
+							} else {
+								return;
+							}
 						}
+					}else{
+						return;
 					}
-
 				}
 			});
 
@@ -578,17 +598,21 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_1.setText("已完成");
 					btnNewButton_1.setEnabled(false);
-					//System.out.println("获取文件路径" + textField.getText());
-					if(system_type == 0){
-					getUpdateDeviceInfo(textField.getText().toString(),ZH_REMOTE_APPCOM_PATH,0);
-					}else if(system_type == 1){
-						getUpdateDeviceInfo(textField.getText().toString(),RZRQ_REMOTE_APPCOM_PATH,1);
+					// System.out.println("获取文件路径" + textField.getText());
+					if (system_type == 0) {
+						getUpdateDeviceInfo(textField.getText().toString(),
+								ZH_REMOTE_APPCOM_PATH, 0);
+					} else if (system_type == 1) {
+						getUpdateDeviceInfo(textField.getText().toString(),
+								RZRQ_REMOTE_APPCOM_PATH, 1);
 					}
 					textField.setEnabled(false);
 					// System.out.println(textField.getText());
-					//System.out.println(str_replace("\\", "\\\\",textField.getText()));
-					//System.out.println(countFile(str_replace("\\", "\\\\",textField.getText())));
-					insertUpdateFileInfo(textField.getText(),0);
+					// System.out.println(str_replace("\\",
+					// "\\\\",textField.getText()));
+					// System.out.println(countFile(str_replace("\\",
+					// "\\\\",textField.getText())));
+					insertUpdateFileInfo(textField.getText(), 0);
 
 				}
 			});
@@ -600,14 +624,16 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_2.setText("已完成");
 					btnNewButton_2.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_1.getText());
-					if(system_type == 0){
-					getZXUpdateDeviceInfo(textField_1.getText().toString(),ZH_REMOTE_XML_PATH,0);
-					}else if(system_type ==1){
-						getZXUpdateDeviceInfo(textField_1.getText().toString(),RZRQ_REMOTE_XML_PATH,1);
+					// System.out.println("获取文件路径" + textField_1.getText());
+					if (system_type == 0) {
+						getZXUpdateDeviceInfo(textField_1.getText().toString(),
+								ZH_REMOTE_XML_PATH, 0);
+					} else if (system_type == 1) {
+						getZXUpdateDeviceInfo(textField_1.getText().toString(),
+								RZRQ_REMOTE_XML_PATH, 1);
 					}
 					textField_1.setEnabled(false);
-					insertUpdateFileInfo(textField_1.getText(),0);
+					insertUpdateFileInfo(textField_1.getText(), 0);
 
 				}
 			});
@@ -619,11 +645,11 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_3.setText("已完成");
 					btnNewButton_3.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_2.getText());
-					getHsClientUpdateDeviceInfo(textField_2.getText().toString(),
-							ZH_REMOTE_CLIENT_PATH,0);
+					// System.out.println("获取文件路径" + textField_2.getText());
+					getHsClientUpdateDeviceInfo(textField_2.getText()
+							.toString(), ZH_REMOTE_CLIENT_PATH, 0);
 					textField_2.setEnabled(false);
-					insertUpdateFileInfo(textField_2.getText(),0);
+					insertUpdateFileInfo(textField_2.getText(), 0);
 				}
 			});
 
@@ -636,9 +662,9 @@ public class UpdatePanel extends JPanel {
 					btnNewButton_5.setEnabled(false);
 					System.out.println("获取文件路径" + textField_3.getText());
 					getZBUpdateDeviceInfo(textField_3.getText().toString(),
-							ZH_REMOTE_XML_PATH,0);
+							ZH_REMOTE_XML_PATH, 0);
 					textField_3.setEnabled(false);
-					insertUpdateFileInfo(textField_3.getText(),0);
+					insertUpdateFileInfo(textField_3.getText(), 0);
 				}
 			});
 
@@ -649,31 +675,50 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_6.setText("已完成");
 					btnNewButton_6.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_4.getText());
-					if(system_type==0){
-					getlinux386(textField_4.getText().toString(),ZH_REMOTE_Linux386_PATH,0);
-					}else if(system_type == 1){
-						getlinux386(textField_4.getText().toString(),RZRQ_REMOTE_Linux386_PATH,1);	
+					// System.out.println("获取文件路径" + textField_4.getText());
+					if (system_type == 0) {
+						getlinux386(textField_4.getText().toString(),
+								ZH_REMOTE_Linux386_PATH, 0);
+					} else if (system_type == 1) {
+						getlinux386(textField_4.getText().toString(),
+								RZRQ_REMOTE_Linux386_PATH, 1);
 					}
 					textField_4.setEnabled(false);
-					insertUpdateFileInfo(textField_4.getText(),0);
+					insertUpdateFileInfo(textField_4.getText(), 0);
 				}
 			});
-			
+
 			btnNewButton_4.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					if(rdbtnNewRadioButton.isSelected()||rdbtnNewRadioButton_1.isSelected()||rdbtnNewRadioButton_4.isSelected()){
-						checkEndFlag("select ip from update_device where system_type=0", 0);
-						updatedevice_count=getDeviceCount("select count(*) as count_device from update_device where system_type=0", 0);
-						System.out.println("appcom被选择,或者配置被选择，或者linux.i386被选择是需升级的数量="+updatedevice_count);
-					}else if(!rdbtnNewRadioButton.isSelected()&&!rdbtnNewRadioButton_1.isSelected()&&!rdbtnNewRadioButton_4.isSelected()&&!rdbtnNewRadioButton_3.isSelected()&&rdbtnNewRadioButton_2.isSelected()){
+					if (rdbtnNewRadioButton.isSelected()
+							|| rdbtnNewRadioButton_1.isSelected()
+							|| rdbtnNewRadioButton_4.isSelected()) {
+						checkEndFlag(
+								"select ip from update_device where system_type=0",
+								0);
+						updatedevice_count = getDeviceCount(
+								"select count(*) as count_device from update_device where system_type=0",
+								0);
+						System.out
+								.println("appcom被选择,或者配置被选择，或者linux.i386被选择是需升级的数量="
+										+ updatedevice_count);
+					} else if (!rdbtnNewRadioButton.isSelected()
+							&& !rdbtnNewRadioButton_1.isSelected()
+							&& !rdbtnNewRadioButton_4.isSelected()
+							&& !rdbtnNewRadioButton_3.isSelected()
+							&& rdbtnNewRadioButton_2.isSelected()) {
 						System.out.println("只用HsClient");
-						checkEndFlag("select ip from update_device where updatedir_flag = 1 and system_type=0", 0);
-						updatedevice_count=getDeviceCount("select count(*) as count_device from update_device where updatedir_flag = 1 and system_type=0", 0);
-						System.out.println("只用HsClient是需升级的数量="+updatedevice_count);
+						checkEndFlag(
+								"select ip from update_device where updatedir_flag = 1 and system_type=0",
+								0);
+						updatedevice_count = getDeviceCount(
+								"select count(*) as count_device from update_device where updatedir_flag = 1 and system_type=0",
+								0);
+						System.out.println("只用HsClient是需升级的数量="
+								+ updatedevice_count);
 					}
 					Object[] options = { "确定", "取消" };
 					int n = JOptionPane.showOptionDialog(null,
@@ -696,10 +741,10 @@ public class UpdatePanel extends JPanel {
 					}
 				}
 			});
-			
-		}//如果是融资融券
-		else if(system_type==1){
-			
+
+		}// 如果是融资融券
+		else if (system_type == 1) {
+
 			rdbtnNewRadioButton_3 = new JRadioButton("灾备配置文件");
 			rdbtnNewRadioButton_3.setBounds(260, 20, 121, 23);
 			panel_1.add(rdbtnNewRadioButton_3);
@@ -707,7 +752,7 @@ public class UpdatePanel extends JPanel {
 			rdbtnNewRadioButton_4 = new JRadioButton("linux.i386");
 			rdbtnNewRadioButton_4.setBounds(375, 20, 121, 23);
 			panel_1.add(rdbtnNewRadioButton_4);
-			
+
 			btnNewButton_1 = new JButton("生成上传命令");
 			btnNewButton_1.setBounds(500, 18, 105, 23);
 			btnNewButton_1.setEnabled(false);
@@ -727,7 +772,7 @@ public class UpdatePanel extends JPanel {
 			btnNewButton_6.setBounds(500, 90, 105, 23);
 			btnNewButton_6.setEnabled(false);
 			panel_2.add(btnNewButton_6);
-			
+
 			lblNewLabel = new JLabel("appcom\u6587\u4EF6\uFF1A");
 			lblNewLabel.setBounds(30, 21, 80, 15);
 			panel_2.add(lblNewLabel);
@@ -855,7 +900,7 @@ public class UpdatePanel extends JPanel {
 					}
 				}
 			});
-			
+
 			// 文件路径栏设置
 			textField.addMouseListener(new MouseListener() {
 
@@ -879,7 +924,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -913,7 +959,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -946,7 +993,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -981,7 +1029,8 @@ public class UpdatePanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 
-					JFileChooser jf = new JFileChooser(CollectSysConfig.updatePath);
+					JFileChooser jf = new JFileChooser(
+							CollectSysConfig.updatePath);
 					jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);// 只选择文件夹
 					int flag = jf.showOpenDialog(null);
 					File f = null;
@@ -993,33 +1042,47 @@ public class UpdatePanel extends JPanel {
 
 				}
 			});
-			
+
 			btnNewButton.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-
-					if (selected_flag == 0) {
-						JOptionPane.showMessageDialog(null, "请选择需要备份的项目");
-					} else {
-						Object[] options = { "确定", "取消" };
-						int n = JOptionPane.showOptionDialog(null,
-								"请确定需备份文件选择是否正确？", "提示", JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, // do not use a
-																	// custom Icon
-								options, // the titles of buttons
-								options[1]);
-						if (n == 0) {
-							getBackupDeviceInfo(comm_appcom, comm_xml, comm_client,1);
-							btnNewButton.setText("已完成");
-							btnNewButton.setEnabled(false);
-							btnNewButton_4.setEnabled(true);
+					Object[] options1 = { "确定", "取消" };
+					int m = JOptionPane.showOptionDialog(null,
+							"请先检查升级设备的状态是否正常？", "提示",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, // do not use a
+																// custom Icon
+							options1, // the titles of buttons
+							options1[1]);
+					if(m==0){
+						if (selected_flag == 0) {
+							JOptionPane.showMessageDialog(null, "请选择需要备份的项目");
 						} else {
-							return;
+							Object[] options = { "确定", "取消" };
+							int n = JOptionPane.showOptionDialog(null,
+									"请确定需备份文件选择是否正确？", "提示",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE, null, // do not
+																		// use a
+																		// custom
+																		// Icon
+									options, // the titles of buttons
+									options[1]);
+							if (n == 0) {
+								getBackupDeviceInfo(comm_appcom, comm_xml,
+										comm_client, 1);
+								btnNewButton.setText("已完成");
+								btnNewButton.setEnabled(false);
+								btnNewButton_4.setEnabled(true);
+							} else {
+								return;
+							}
 						}
+					}else{
+						return;
 					}
-
+					
 				}
 			});
 
@@ -1030,17 +1093,21 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_1.setText("已完成");
 					btnNewButton_1.setEnabled(false);
-					//System.out.println("获取文件路径" + textField.getText());
-					if(system_type == 0){
-					getUpdateDeviceInfo(textField.getText().toString(),ZH_REMOTE_APPCOM_PATH,0);
-					}else if(system_type == 1){
-						getUpdateDeviceInfo(textField.getText().toString(),RZRQ_REMOTE_APPCOM_PATH,1);
+					// System.out.println("获取文件路径" + textField.getText());
+					if (system_type == 0) {
+						getUpdateDeviceInfo(textField.getText().toString(),
+								ZH_REMOTE_APPCOM_PATH, 0);
+					} else if (system_type == 1) {
+						getUpdateDeviceInfo(textField.getText().toString(),
+								RZRQ_REMOTE_APPCOM_PATH, 1);
 					}
 					textField.setEnabled(false);
 					// System.out.println(textField.getText());
-					//System.out.println(str_replace("\\", "\\\\",textField.getText()));
-					//System.out.println(countFile(str_replace("\\", "\\\\",textField.getText())));
-					insertUpdateFileInfo(textField.getText(),1);
+					// System.out.println(str_replace("\\",
+					// "\\\\",textField.getText()));
+					// System.out.println(countFile(str_replace("\\",
+					// "\\\\",textField.getText())));
+					insertUpdateFileInfo(textField.getText(), 1);
 
 				}
 			});
@@ -1052,14 +1119,16 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_2.setText("已完成");
 					btnNewButton_2.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_1.getText());
-					if(system_type == 0){
-					getZXUpdateDeviceInfo(textField_1.getText().toString(),ZH_REMOTE_XML_PATH,0);
-					}else if(system_type ==1){
-						getZXUpdateDeviceInfo(textField_1.getText().toString(),RZRQ_REMOTE_XML_PATH,1);
+					// System.out.println("获取文件路径" + textField_1.getText());
+					if (system_type == 0) {
+						getZXUpdateDeviceInfo(textField_1.getText().toString(),
+								ZH_REMOTE_XML_PATH, 0);
+					} else if (system_type == 1) {
+						getZXUpdateDeviceInfo(textField_1.getText().toString(),
+								RZRQ_REMOTE_XML_PATH, 1);
 					}
 					textField_1.setEnabled(false);
-					insertUpdateFileInfo(textField_1.getText(),1);
+					insertUpdateFileInfo(textField_1.getText(), 1);
 
 				}
 			});
@@ -1071,11 +1140,11 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_5.setText("已完成");
 					btnNewButton_5.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_3.getText());
+					// System.out.println("获取文件路径" + textField_3.getText());
 					getZBUpdateDeviceInfo(textField_3.getText().toString(),
-							ZH_REMOTE_XML_PATH,1);
+							ZH_REMOTE_XML_PATH, 1);
 					textField_3.setEnabled(false);
-					insertUpdateFileInfo(textField_3.getText(),1);
+					insertUpdateFileInfo(textField_3.getText(), 1);
 				}
 			});
 
@@ -1086,24 +1155,30 @@ public class UpdatePanel extends JPanel {
 					// TODO Auto-generated method stub
 					btnNewButton_6.setText("已完成");
 					btnNewButton_6.setEnabled(false);
-					//System.out.println("获取文件路径" + textField_4.getText());
-					if(system_type==0){
-					getlinux386(textField_4.getText().toString(),ZH_REMOTE_Linux386_PATH,0);
-					}else if(system_type == 1){
-						getlinux386(textField_4.getText().toString(),RZRQ_REMOTE_Linux386_PATH,1);	
+					// System.out.println("获取文件路径" + textField_4.getText());
+					if (system_type == 0) {
+						getlinux386(textField_4.getText().toString(),
+								ZH_REMOTE_Linux386_PATH, 0);
+					} else if (system_type == 1) {
+						getlinux386(textField_4.getText().toString(),
+								RZRQ_REMOTE_Linux386_PATH, 1);
 					}
 					textField_4.setEnabled(false);
-					insertUpdateFileInfo(textField_4.getText(),1);
+					insertUpdateFileInfo(textField_4.getText(), 1);
 				}
 			});
-			
+
 			btnNewButton_4.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					checkEndFlag("select ip from update_device where system_type=1", 1);
-					updatedevice_count=getDeviceCount("select count(*) as count_device from update_device where system_type=1", 1);
+					checkEndFlag(
+							"select ip from update_device where system_type=1",
+							1);
+					updatedevice_count = getDeviceCount(
+							"select count(*) as count_device from update_device where system_type=1",
+							1);
 					Object[] options = { "确定", "取消" };
 					int n = JOptionPane.showOptionDialog(null,
 							"升级前，请先检查文件备份和生成导入命令文件是否正确！是否确定升级？", "提示",
@@ -1214,7 +1289,8 @@ public class UpdatePanel extends JPanel {
 	/***
 	 * 获取需要备份的设备信息并执行备份命令
 	 */
-	public List getBackupDeviceInfo(String comm_appcom, String comm_xml,String comm_client,int system_type) {
+	public List getBackupDeviceInfo(String comm_appcom, String comm_xml,
+			String comm_client, int system_type) {
 		// String COMMAND =
 		// "mkdir Backup/"+getCurrentDay()+"; cp -a appcom Backup/"+getCurrentDay()+"; cp -a workspace/*.xml Backup/"+getCurrentDay()+";cp -a workspace/updatedir/HsClient Backup/"+getCurrentDay()+";";
 		String COMMAND = "mkdir Backup/" + getCurrentDay() + ";" + comm_appcom
@@ -1223,16 +1299,17 @@ public class UpdatePanel extends JPanel {
 		conn_query = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where backup_flag=1 and system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where backup_flag=1 and system_type = 1";
-		if(system_type==0){
-		rs_getBackupDeviceInfo = conn_query.executeQuery(sql_zh);
-		}else if(system_type==1){
+		if (system_type == 0) {
+			rs_getBackupDeviceInfo = conn_query.executeQuery(sql_zh);
+		} else if (system_type == 1) {
 			rs_getBackupDeviceInfo = conn_query.executeQuery(sql_rzrq);
 		}
 		List updatedeviceInfoList = new ArrayList();// 定义一个List
 		UpdateDevice updateDeviceBean = new UpdateDevice();// // 实例化一个Bean
 		try {
 			while (rs_getBackupDeviceInfo.next()) {
-				System.out.println("备份设备：" + rs_getBackupDeviceInfo.getString("ip"));
+				System.out.println("备份设备："
+						+ rs_getBackupDeviceInfo.getString("ip"));
 
 				try {
 					runSSH(rs_getBackupDeviceInfo.getString("ip"),
@@ -1258,7 +1335,8 @@ public class UpdatePanel extends JPanel {
 	/***
 	 * 获取需要升级的设备信息并生成上传命令
 	 */
-	public List getUpdateDeviceInfo(String localpath, String remotepath,int system_type) {
+	public List getUpdateDeviceInfo(String localpath, String remotepath,
+			int system_type) {
 
 		// String COMMAND =
 		// "mkdir Backup/"+getCurrentDay()+"; cp -a appcom Backup/"+getCurrentDay()+"; cp -a workspace/*.xml Backup/"+getCurrentDay()+";cp -a workspace/updatedir/HsClient Backup/"+getCurrentDay()+";";
@@ -1268,10 +1346,11 @@ public class UpdatePanel extends JPanel {
 		conn_updateDeviceInfo = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where system_type = 1";
-		if(system_type==0){
-		rs_getUpdateDeviceInfo = conn_updateDeviceInfo.executeQuery(sql_zh);
-		}else if(system_type==1){
-			rs_getUpdateDeviceInfo = conn_updateDeviceInfo.executeQuery(sql_rzrq);
+		if (system_type == 0) {
+			rs_getUpdateDeviceInfo = conn_updateDeviceInfo.executeQuery(sql_zh);
+		} else if (system_type == 1) {
+			rs_getUpdateDeviceInfo = conn_updateDeviceInfo
+					.executeQuery(sql_rzrq);
 		}
 		List updatedeviceInfoList = new ArrayList();// 定义一个List
 		UpdateDevice updateDeviceBean = new UpdateDevice();// // 实例化一个Bean
@@ -1290,16 +1369,18 @@ public class UpdatePanel extends JPanel {
 					// runSSH(rs_getBackupDeviceInfo.getString("ip"),
 					// rs_getBackupDeviceInfo.getString("username"),
 					// rs_getBackupDeviceInfo.getString("password"), COMMAND);
-					if(system_type==0){
-					createUploadComm(rs_getUpdateDeviceInfo.getString("ip"),
-							rs_getUpdateDeviceInfo.getString("username"),
-							rs_getUpdateDeviceInfo.getString("password"),
-							localpath, remotepath,0);
-					}else if(system_type==1){
-						createUploadComm(rs_getUpdateDeviceInfo.getString("ip"),
+					if (system_type == 0) {
+						createUploadComm(
+								rs_getUpdateDeviceInfo.getString("ip"),
 								rs_getUpdateDeviceInfo.getString("username"),
 								rs_getUpdateDeviceInfo.getString("password"),
-								localpath, remotepath,1);
+								localpath, remotepath, 0);
+					} else if (system_type == 1) {
+						createUploadComm(
+								rs_getUpdateDeviceInfo.getString("ip"),
+								rs_getUpdateDeviceInfo.getString("username"),
+								rs_getUpdateDeviceInfo.getString("password"),
+								localpath, remotepath, 1);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1333,37 +1414,42 @@ public class UpdatePanel extends JPanel {
 
 	/****
 	 * 生成上传命令
+	 * 
 	 * @throws IOException
 	 */
 	public void createUploadComm(String ip, String username, String password,
-			String localpath, String remotepath,int system_type) throws IOException {
+			String localpath, String remotepath, int system_type)
+			throws IOException {
 
-		//System.out.println("-------进入生成导入命令阶段-------");
-		
-			if(system_type==0){
-				try {
-			dos_bat_zh = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "/log/" + getCurrentDay() + "/" + "zh_batCommd" + ".bat",
-					"rw");
-			dos_bat_zh.seek(dos_bat_zh.length());
+		// System.out.println("-------进入生成导入命令阶段-------");
 
-			String upload_comm = "pscp -l " + username + " -pw " + password
-					+ " -p -r " + localpath + " " + username + "@" + ip + ":"
-					+ remotepath + " |mtee /c /+ "
-					+ CollectSysConfig.filePathresult + "\\log\\"
-					+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
-					+ "_log.txt";
-			String endflag = "@echo end |mtee /c /+ "
-					+ CollectSysConfig.filePathresult + "\\log\\"
-					+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
-					+ "_log.txt";
-			System.out.println("升级设备上传命令:\r\n" + upload_comm+"\r\n"+endflag);
-			//System.out.println(ip.replaceAll("\\.", "_"));
-			dos_bat_zh.writeBytes(new String(upload_comm.getBytes(), "iso8859-1")
-					+ "\r\n");
-			//dos_bat_zh.writeBytes(new String(endflag.getBytes(), "iso8859-1")
-			//		+ "\r\n");
-			}catch (FileNotFoundException e) {
+		if (system_type == 0) {
+			try {
+				dos_bat_zh = new RandomAccessFile(
+						CollectSysConfig.filePathresult + "/log/"
+								+ getCurrentDay() + "/" + "zh_batCommd"
+								+ ".bat", "rw");
+				dos_bat_zh.seek(dos_bat_zh.length());
+
+				String upload_comm = "pscp -l " + username + " -pw " + password
+						+ " -p -r " + localpath + " " + username + "@" + ip
+						+ ":" + remotepath + " |mtee /c /+ "
+						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
+						+ "_log.txt";
+				String endflag = "@echo end |mtee /c /+ "
+						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
+						+ "_log.txt";
+				System.out.println("升级设备上传命令:\r\n" + upload_comm + "\r\n"
+						+ endflag);
+				// System.out.println(ip.replaceAll("\\.", "_"));
+				dos_bat_zh.writeBytes(new String(upload_comm.getBytes(),
+						"iso8859-1") + "\r\n");
+				// dos_bat_zh.writeBytes(new String(endflag.getBytes(),
+				// "iso8859-1")
+				// + "\r\n");
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "写入导入命令失败！");
 				e.printStackTrace();
@@ -1377,17 +1463,17 @@ public class UpdatePanel extends JPanel {
 					}
 				}
 			}
-			}
-			else if(system_type==1){
-				try{
-				dos_bat_rzrq = new RandomAccessFile(CollectSysConfig.filePathresult
-						+ "/log/" + getCurrentDay() + "/" + "rzrq_batCommd" + ".bat",
-						"rw");
+		} else if (system_type == 1) {
+			try {
+				dos_bat_rzrq = new RandomAccessFile(
+						CollectSysConfig.filePathresult + "/log/"
+								+ getCurrentDay() + "/" + "rzrq_batCommd"
+								+ ".bat", "rw");
 				dos_bat_rzrq.seek(dos_bat_rzrq.length());
 
 				String upload_comm = "pscp -l " + username + " -pw " + password
-						+ " -p -r " + localpath + " " + username + "@" + ip + ":"
-						+ remotepath + " |mtee /c /+ "
+						+ " -p -r " + localpath + " " + username + "@" + ip
+						+ ":" + remotepath + " |mtee /c /+ "
 						+ CollectSysConfig.filePathresult + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
@@ -1395,27 +1481,27 @@ public class UpdatePanel extends JPanel {
 						+ CollectSysConfig.filePathresult + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
-				System.out.println("打印融资融券bat命令:\r\n" +endflag);
-				//System.out.println(ip.replaceAll("\\.", "_"));
-				dos_bat_rzrq.writeBytes(new String(upload_comm.getBytes(), "iso8859-1")
-						+ "\r\n");
-				//dos_bat_rzrq.writeBytes(new String(endflag.getBytes(), "iso8859-1")
-				//		+ "\r\n");
-			}
-				catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null, "写入导入命令失败！");
-			e.printStackTrace();
-		} finally { // finally中将reader对象关闭　　　　　
+				System.out.println("打印融资融券bat命令:\r\n" + endflag);
+				// System.out.println(ip.replaceAll("\\.", "_"));
+				dos_bat_rzrq.writeBytes(new String(upload_comm.getBytes(),
+						"iso8859-1") + "\r\n");
+				// dos_bat_rzrq.writeBytes(new String(endflag.getBytes(),
+				// "iso8859-1")
+				// + "\r\n");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "写入导入命令失败！");
+				e.printStackTrace();
+			} finally { // finally中将reader对象关闭　　　　　
 
-			if (dos_bat_rzrq != null) {
-				try {
-					dos_bat_rzrq.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (dos_bat_rzrq != null) {
+					try {
+						dos_bat_rzrq.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		 }
 
 		}
 	}
@@ -1430,181 +1516,210 @@ public class UpdatePanel extends JPanel {
 
 	public void excuteUploadComm(final int system_type) throws IOException {
 
-		System.out.println("升级设备数量："+updatedevice_count);
+		System.out.println("升级设备数量：" + updatedevice_count);
 		File batFile = new File(CollectSysConfig.filePathresult + "/log/"
 				+ getCurrentDay()); // bat的目录
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
-					if(system_type==0){
-						Runtime rn = Runtime.getRuntime();
-						Process p = null;
+			if (system_type == 0) {
+				Runtime rn = Runtime.getRuntime();
+				Process p = null;
 
-						try {
-							p = rn.exec("cmd.exe /c start " + CollectSysConfig.filePathresult + "/log/"
-									+ getCurrentDay()+"//zh_batCommd.bat");
-							//System.out.println(batFiles[i].getPath());
-							try {
-								exitValue = p.waitFor();
-
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							if (p.exitValue() != 0) {
-								p.destroy();
-							}
-
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}else if(system_type==1){
-						Runtime rn = Runtime.getRuntime();
-						Process p = null;
-
-						try {
-							p = rn.exec("cmd.exe /c start " + CollectSysConfig.filePathresult + "/log/"
-									+ getCurrentDay()+"//rzrq_batCommd.bat");
-							//System.out.println(batFiles[i].getPath());
-							try {
-								exitValue = p.waitFor();
-
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							if (p.exitValue() != 0) {
-								p.destroy();
-							}
-
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
-				
-
-					// 设置等待一下，不让立即执行，以免找不到log文件
+				try {
+					p = rn.exec("cmd.exe /c start "
+							+ CollectSysConfig.filePathresult + "/log/"
+							+ getCurrentDay() + "//zh_batCommd.bat");
+					// System.out.println(batFiles[i].getPath());
 					try {
-						Thread.sleep(1000);
-						//System.out.println("等待一下！");
-					} catch (InterruptedException e2) {
+						exitValue = p.waitFor();
 
-						e2.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					//设置计时器，遍历日志，根据上传完成的数量来判断批处理是否执行完毕，完毕后计时器cancel
-					final Timer timer = new Timer();
-					timer.schedule(new TimerTask() {
-						public void run() {
-							int j = 0;
-							long length1 = 0;
-							boolean oneZero = true; // 判断日志是否为空的标志
-							boolean oneComplete = true; // 判断日志导入完成的标志，true代表完成
-							File file = new File(CollectSysConfig.filePathresult + "//log//"+ getCurrentDay() + "//");
-							File[] files = file.listFiles();
-							if (files != null && files.length != 0) {
-								for (int i = 0; i < files.length; i++) {
-									if (files[i].getName().endsWith(".txt")) {
-										length1 = files[i].length();
-										length1 = length1 % 1024 == 0 ? length1 / 1024
-												: length1 / 1024 + 1;
-										//System.out.println("----------------------------");
-										//System.out.println("文件大小：" + length1+ "K");
-										//System.out.println(files[i].getPath());
-										if (length1 == 0) { // 日志文件为空时，置标志oneZero为false
-											oneZero = false;
-										} else {
-											// 读日志文件，判断时候正常导入完成，完成返回false，未完成返回true
-											if (readFileByChars(files[i]
-													.getPath()) == true) {
-												oneComplete = false; // 日志检查未完成，置标志oneComplete为false
-											} else {
-												oneComplete = true;
-												j++; // 完成后完成个数J参数加1
-											}
-										}
-									}
-								}
-								if(system_type==0){
-								if (oneZero && oneComplete && j == updatedevice_count) {
-									timer.cancel();
-									btnNewButton_4.setEnabled(false);
-									btnNewButton_4.setText("升级完成");
-									JOptionPane.showMessageDialog(null,"升级成功，请使用文件比较功能进行文件比较！");
-									Object[] options1 = {"确定","取消"};
-									int m = JOptionPane.showOptionDialog(null,
-										    "是否需要打印升级报告？",
-										    "提示",
-										    JOptionPane.YES_NO_OPTION,
-										    JOptionPane.QUESTION_MESSAGE,
-										    null,     //do not use a custom Icon
-										    options1,  //the titles of buttons
-										    options1[1]);
-									if(m == 0){
-									
-										UpdateReport updateReport = new UpdateReport(0);
-										updateReport.setVisible(true);
-									}else{
-										return;
-									}
-								}
-								}else if(system_type==1){
-									if (oneZero && oneComplete && j == updatedevice_count) {
-										timer.cancel();
-										btnNewButton_4.setEnabled(false);
-										btnNewButton_4.setText("升级完成");
-										JOptionPane.showMessageDialog(null,"升级成功！");
-										Object[] options1 = {"确定","取消"};
-										int m = JOptionPane.showOptionDialog(null,
-											    "是否需要打印升级报告？",
-											    "提示",
-											    JOptionPane.YES_NO_OPTION,
-											    JOptionPane.QUESTION_MESSAGE,
-											    null,     //do not use a custom Icon
-											    options1,  //the titles of buttons
-											    options1[1]);
-										if(m == 0){
-											
-											UpdateReport updateReport = new UpdateReport(1);
-											updateReport.setVisible(true);
-										}else{
-											return;
-										}
-									}
-								}
+					if (p.exitValue() != 0) {
+						p.destroy();
+					}
 
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} else if (system_type == 1) {
+				Runtime rn = Runtime.getRuntime();
+				Process p = null;
+
+				try {
+					p = rn.exec("cmd.exe /c start "
+							+ CollectSysConfig.filePathresult + "/log/"
+							+ getCurrentDay() + "//rzrq_batCommd.bat");
+					// System.out.println(batFiles[i].getPath());
+					try {
+						exitValue = p.waitFor();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					if (p.exitValue() != 0) {
+						p.destroy();
+					}
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			// 设置等待一下，不让立即执行，以免找不到log文件
+			try {
+				Thread.sleep(1000);
+				// System.out.println("等待一下！");
+			} catch (InterruptedException e2) {
+
+				e2.printStackTrace();
+			}
+			// 设置计时器，遍历日志，根据上传完成的数量来判断批处理是否执行完毕，完毕后计时器cancel
+			final Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				public void run() {
+					int j = 0;
+					long length1 = 0;
+					boolean oneZero = true; // 判断日志是否为空的标志
+					boolean oneComplete = true; // 判断日志导入完成的标志，true代表完成
+					File file = new File(CollectSysConfig.filePathresult
+							+ "//log//" + getCurrentDay() + "//");
+					File[] files = file.listFiles();
+					if (files != null && files.length != 0) {
+						for (int i = 0; i < files.length; i++) {
+							if (files[i].getName().endsWith(".txt")) {
+								length1 = files[i].length();
+								length1 = length1 % 1024 == 0 ? length1 / 1024
+										: length1 / 1024 + 1;
+								// System.out.println("----------------------------");
+								// System.out.println("文件大小：" + length1+ "K");
+								// System.out.println(files[i].getPath());
+								if (length1 == 0) { // 日志文件为空时，置标志oneZero为false
+									oneZero = false;
+								} else {
+									// 读日志文件，判断时候正常导入完成，完成返回false，未完成返回true
+									if (readFileByChars(files[i].getPath()) == true) {
+										oneComplete = false; // 日志检查未完成，置标志oneComplete为false
+									} else {
+										oneComplete = true;
+										j++; // 完成后完成个数J参数加1
+									}
+								}
+							}
+						}
+						if (system_type == 0) {
+							if (oneZero && oneComplete
+									&& j == updatedevice_count) {
+								timer.cancel();
+								btnNewButton_4.setEnabled(false);
+								btnNewButton_4.setText("升级完成");
+								JOptionPane.showMessageDialog(null,
+										"升级成功，请使用文件比较功能进行文件比较！");
+								Object[] options1 = { "确定", "取消" };
+								int m = JOptionPane.showOptionDialog(null,
+										"是否需要打印升级报告？", "提示",
+										JOptionPane.YES_NO_OPTION,
+										JOptionPane.QUESTION_MESSAGE, null, // do
+																			// not
+																			// use
+																			// a
+																			// custom
+																			// Icon
+										options1, // the titles of buttons
+										options1[1]);
+								if (m == 0) {
+
+									UpdateReport updateReport;
+									try {
+										updateReport = new UpdateReport(0);
+										updateReport.setVisible(true);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+
+								} else {
+									return;
+								}
+							}
+						} else if (system_type == 1) {
+							if (oneZero && oneComplete
+									&& j == updatedevice_count) {
+								timer.cancel();
+								btnNewButton_4.setEnabled(false);
+								btnNewButton_4.setText("升级完成");
+								JOptionPane.showMessageDialog(null, "升级成功！");
+								Object[] options1 = { "确定", "取消" };
+								int m = JOptionPane.showOptionDialog(null,
+										"是否需要打印升级报告？", "提示",
+										JOptionPane.YES_NO_OPTION,
+										JOptionPane.QUESTION_MESSAGE, null, // do
+																			// not
+																			// use
+																			// a
+																			// custom
+																			// Icon
+										options1, // the titles of buttons
+										options1[1]);
+								if (m == 0) {
+
+									UpdateReport updateReport;
+									try {
+										updateReport = new UpdateReport(1);
+										updateReport.setVisible(true);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+
+								} else {
+									return;
+								}
 							}
 						}
 
-					}, 0, 2000);
+					}
+				}
+
+			}, 0, 2000);
 
 		} else {
 			JOptionPane.showMessageDialog(null, "没有可执行的上传批处理命令！");
 		}
 	}
 
-	public void getZBUpdateDeviceInfo(String localpath, String remotepath,int system_type) {
+	public void getZBUpdateDeviceInfo(String localpath, String remotepath,
+			int system_type) {
 
 		conn_updateZBDeviceInfo = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where bdb_flag = 1 and system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where bdb_flag = 1 and system_type = 1";
-		if(system_type==0){
-		rs_getUpdateZBDeviceInfo = conn_updateZBDeviceInfo.executeQuery(sql_zh);
-		}else if(system_type==1){
-			rs_getUpdateZBDeviceInfo = conn_updateZBDeviceInfo.executeQuery(sql_rzrq);
+		if (system_type == 0) {
+			rs_getUpdateZBDeviceInfo = conn_updateZBDeviceInfo
+					.executeQuery(sql_zh);
+		} else if (system_type == 1) {
+			rs_getUpdateZBDeviceInfo = conn_updateZBDeviceInfo
+					.executeQuery(sql_rzrq);
 		}
 		try {
 			while (rs_getUpdateZBDeviceInfo.next()) {
 
 				try {
-					if(system_type==0){
-					createUploadComm(rs_getUpdateZBDeviceInfo.getString("ip"),
-							rs_getUpdateZBDeviceInfo.getString("username"),
-							rs_getUpdateZBDeviceInfo.getString("password"),
-							localpath, remotepath,0);
-					}else if(system_type==1){
-						createUploadComm(rs_getUpdateZBDeviceInfo.getString("ip"),
+					if (system_type == 0) {
+						createUploadComm(
+								rs_getUpdateZBDeviceInfo.getString("ip"),
 								rs_getUpdateZBDeviceInfo.getString("username"),
 								rs_getUpdateZBDeviceInfo.getString("password"),
-								localpath, remotepath,1);
+								localpath, remotepath, 0);
+					} else if (system_type == 1) {
+						createUploadComm(
+								rs_getUpdateZBDeviceInfo.getString("ip"),
+								rs_getUpdateZBDeviceInfo.getString("username"),
+								rs_getUpdateZBDeviceInfo.getString("password"),
+								localpath, remotepath, 1);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1619,30 +1734,35 @@ public class UpdatePanel extends JPanel {
 		}
 	}
 
-	public void getZXUpdateDeviceInfo(String localpath, String remotepath,int system_type) {
+	public void getZXUpdateDeviceInfo(String localpath, String remotepath,
+			int system_type) {
 
 		conn_updateZXDeviceInfo = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where bdb_flag = 0 and system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where bdb_flag = 0 and system_type = 1";
-		if(system_type == 0){
-		rs_getUpdateZXDeviceInfo = conn_updateZXDeviceInfo.executeQuery(sql_zh);
-		}else if(system_type == 1){
-			rs_getUpdateZXDeviceInfo = conn_updateZXDeviceInfo.executeQuery(sql_rzrq);
+		if (system_type == 0) {
+			rs_getUpdateZXDeviceInfo = conn_updateZXDeviceInfo
+					.executeQuery(sql_zh);
+		} else if (system_type == 1) {
+			rs_getUpdateZXDeviceInfo = conn_updateZXDeviceInfo
+					.executeQuery(sql_rzrq);
 		}
 		try {
 			while (rs_getUpdateZXDeviceInfo.next()) {
 
 				try {
-					if(system_type==0){
-					createUploadComm(rs_getUpdateZXDeviceInfo.getString("ip"),
-							rs_getUpdateZXDeviceInfo.getString("username"),
-							rs_getUpdateZXDeviceInfo.getString("password"),
-							localpath, remotepath,0);
-					}else if(system_type==1){
-						createUploadComm(rs_getUpdateZXDeviceInfo.getString("ip"),
+					if (system_type == 0) {
+						createUploadComm(
+								rs_getUpdateZXDeviceInfo.getString("ip"),
 								rs_getUpdateZXDeviceInfo.getString("username"),
 								rs_getUpdateZXDeviceInfo.getString("password"),
-								localpath, remotepath,1);
+								localpath, remotepath, 0);
+					} else if (system_type == 1) {
+						createUploadComm(
+								rs_getUpdateZXDeviceInfo.getString("ip"),
+								rs_getUpdateZXDeviceInfo.getString("username"),
+								rs_getUpdateZXDeviceInfo.getString("password"),
+								localpath, remotepath, 1);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1658,7 +1778,8 @@ public class UpdatePanel extends JPanel {
 
 	}
 
-	public void getHsClientUpdateDeviceInfo(String localpath, String remotepath,int system_type) {
+	public void getHsClientUpdateDeviceInfo(String localpath,
+			String remotepath, int system_type) {
 
 		conn_updateHsClientDeviceInfo = new DBConnection();
 		String sql = "select ip,username,password,backup_flag,updatedir_flag from update_device where updatedir_flag = 1 and system_type = 0";
@@ -1668,15 +1789,15 @@ public class UpdatePanel extends JPanel {
 			while (rs_getHsClientUpdateDeviceInfo.next()) {
 
 				try {
-					if(system_type==0){
-					createUploadComm(
-							rs_getHsClientUpdateDeviceInfo.getString("ip"),
-							rs_getHsClientUpdateDeviceInfo
-									.getString("username"),
-							rs_getHsClientUpdateDeviceInfo
-									.getString("password"), localpath,
-							remotepath,0);
-					}else 
+					if (system_type == 0) {
+						createUploadComm(
+								rs_getHsClientUpdateDeviceInfo.getString("ip"),
+								rs_getHsClientUpdateDeviceInfo
+										.getString("username"),
+								rs_getHsClientUpdateDeviceInfo
+										.getString("password"), localpath,
+								remotepath, 0);
+					} else
 						return;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1691,30 +1812,30 @@ public class UpdatePanel extends JPanel {
 		}
 	}
 
-	public void getlinux386(String localpath, String remotepath,int system_type) {
+	public void getlinux386(String localpath, String remotepath, int system_type) {
 
 		conn_linux386 = new DBConnection();
 		String sql_zh = "select ip,username,password,backup_flag,updatedir_flag from update_device where system_type = 0";
 		String sql_rzrq = "select ip,username,password,backup_flag,updatedir_flag from update_device where system_type = 1";
-		if(system_type==0){
-		rs_getLinux386 = conn_linux386.executeQuery(sql_zh);
-		}else if(system_type == 1){
+		if (system_type == 0) {
+			rs_getLinux386 = conn_linux386.executeQuery(sql_zh);
+		} else if (system_type == 1) {
 			rs_getLinux386 = conn_linux386.executeQuery(sql_rzrq);
 		}
 		try {
 			while (rs_getLinux386.next()) {
 
 				try {
-					if(system_type==0){
-					createUploadComm(rs_getLinux386.getString("ip"),
-							rs_getLinux386.getString("username"),
-							rs_getLinux386.getString("password"), localpath,
-							remotepath,0);
-					}else if(system_type==1){
+					if (system_type == 0) {
 						createUploadComm(rs_getLinux386.getString("ip"),
 								rs_getLinux386.getString("username"),
-								rs_getLinux386.getString("password"), localpath,
-								remotepath,1);
+								rs_getLinux386.getString("password"),
+								localpath, remotepath, 0);
+					} else if (system_type == 1) {
+						createUploadComm(rs_getLinux386.getString("ip"),
+								rs_getLinux386.getString("username"),
+								rs_getLinux386.getString("password"),
+								localpath, remotepath, 1);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1731,7 +1852,9 @@ public class UpdatePanel extends JPanel {
 
 	/****
 	 * 获得文件数量方法
-	 * @param path  文件路径      
+	 * 
+	 * @param path
+	 *            文件路径
 	 * @return 文件个数
 	 */
 	public static int countFile(String path) {
@@ -1754,6 +1877,7 @@ public class UpdatePanel extends JPanel {
 
 	/***
 	 * 字符串替换方法
+	 * 
 	 * @param from原字符
 	 * @param to替换字符
 	 * @param source字符串源
@@ -1778,7 +1902,7 @@ public class UpdatePanel extends JPanel {
 	 * 
 	 * @param filePath
 	 */
-	public void insertUpdateFileInfo(String filePath,int system_type) {
+	public void insertUpdateFileInfo(String filePath, int system_type) {
 
 		conn_insertUpdateFileInfo = new DBConnection();
 		File file = new File(filePath);
@@ -1788,92 +1912,100 @@ public class UpdatePanel extends JPanel {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String lastModifiedTime = df.format(date);
 			if (lf[i].getName().endsWith(".so")) {
-				try{
+				try {
 					String sql_zh = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',0,'so动态库',0)";
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',0,'so动态库',0)";
 					String sql_rzrq = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-						+ getCurrentDay()
-						+ "','"
-						+ lf[i].getName()
-						+ "','" + lastModifiedTime + "',0,'so动态库',1)";
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',0,'so动态库',1)";
 					System.out.println(sql_rzrq);
-					if(system_type==0){
+					if (system_type == 0) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_zh);
-					}else if(system_type==1){
+					} else if (system_type == 1) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_rzrq);
 					}
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(null,"shibai");
+					JOptionPane.showMessageDialog(null, "shibai");
 					System.out.println("so文件插入update_file表失败！");
 				}
 			} else if (lf[i].getName().endsWith(".dll")) {
-				try{
+				try {
 					String sql_zh = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',1,'dll动态库',0)";
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',1,'dll动态库',0)";
 					String sql_rzrq = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',1,'dll动态库',1)";
-					if(system_type==0){
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',1,'dll动态库',1)";
+					if (system_type == 0) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_zh);
-					}else if(system_type==1){
+					} else if (system_type == 1) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_rzrq);
 					}
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("dll文件插入update_file表失败！");
 				}
 			} else if (lf[i].getName().endsWith(".xml")) {
-				try{
+				try {
 					String sql_zh = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',2,'配置文件',0)";
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',2,'配置文件',0)";
 					String sql_rzrq = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',2,'配置文件',1)";
-					if(system_type==0){
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',2,'配置文件',1)";
+					if (system_type == 0) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_zh);
-					}else if(system_type==1){
+					} else if (system_type == 1) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_rzrq);
 					}
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("xml文件插入update_file表失败！");
 				}
 			} else {
-				try{
+				try {
 					String sql_zh = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',3,'其他文件',0)";
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',3,'其他文件',0)";
 					String sql_rzrq = "insert into update_file (oc_date,file_name,file_time,flag,remark,system_type)values('"
-								+ getCurrentDay()
-								+ "','"
-								+ lf[i].getName()
-								+ "','" + lastModifiedTime + "',3,'其他文件',1)";
-					if(system_type==0){
+							+ getCurrentDay()
+							+ "','"
+							+ lf[i].getName()
+							+ "','"
+							+ lastModifiedTime + "',3,'其他文件',1)";
+					if (system_type == 0) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_zh);
-					}else if(system_type==1){
+					} else if (system_type == 1) {
 						conn_insertUpdateFileInfo.executeUpdate(sql_rzrq);
 					}
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("其他文件插入update_file表失败！");
 				}
-					
+
 			}
 		}
 
@@ -1881,7 +2013,9 @@ public class UpdatePanel extends JPanel {
 
 	/****
 	 * 读生成的日志信息,判断上传是否完毕
-	 * @param fileName 文件名
+	 * 
+	 * @param fileName
+	 *            文件名
 	 * @return
 	 */
 	public static boolean readFileByChars(String fileName) {
@@ -1916,63 +2050,70 @@ public class UpdatePanel extends JPanel {
 		}
 		// System.out.println("文件内容：\n" + content);
 		// System.out.println("文件字符：" + content.length());
-		//System.out.println("文件最后一个字符："+ content.substring(content.length() - 5,content.length() - 2));
-		if (content.substring(content.length() - 5, content.length() - 2).equals("end")) {
-			//System.out.println("成功导入！");
+		// System.out.println("文件最后一个字符："+ content.substring(content.length() -
+		// 5,content.length() - 2));
+		if (content.substring(content.length() - 5, content.length() - 2)
+				.equals("end")) {
+			// System.out.println("成功导入！");
 			return false;
 		} else {
-			//System.out.println("导入还未完成！");
+			// System.out.println("导入还未完成！");
 			return true;
 		}
 
 	}
-	
+
 	/***
 	 * 获得升级设备数量
-	 * @param system_type 系统类别0：账户，1：融资融券
- 	 * @return
+	 * 
+	 * @param system_type
+	 *            系统类别0：账户，1：融资融券
+	 * @return
 	 */
-	public int getDeviceCount(String sql,int system_type){
-		
+	public int getDeviceCount(String sql, int system_type) {
+
 		DBConnection conn_deviceCount = new DBConnection();
-		//String sql = "select count(*) as count_device from  update_device where system_type = "+system_type+"";
-		
+		// String sql =
+		// "select count(*) as count_device from  update_device where system_type = "+system_type+"";
+
 		ResultSet rs_deviceCount = conn_deviceCount.executeQuery(sql);
 		try {
-			while(rs_deviceCount.next()){
+			while (rs_deviceCount.next()) {
 				count_device = rs_deviceCount.getInt("count_device");
-				//System.out.println("设备数量："+count_device);
+				// System.out.println("设备数量："+count_device);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("获得升级设备信息失败！");
 		}
-		
+
 		return count_device;
-		
+
 	}
 
-	public void writeUploadEndFlag(String ip,int system_type) throws IOException {
+	public void writeUploadEndFlag(String ip, int system_type)
+			throws IOException {
 
-		//System.out.println("-------进入生成导入命令阶段-------");
-		
-			if(system_type==0){
-				try {
-			dos_bat_zh = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "/log/" + getCurrentDay() + "/" + "zh_batCommd" + ".bat",
-					"rw");
-			dos_bat_zh.seek(dos_bat_zh.length());
+		// System.out.println("-------进入生成导入命令阶段-------");
 
-			String endflag = "@echo end |mtee /c /+ "
-					+ CollectSysConfig.filePathresult + "\\log\\"
-					+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
-					+ "_log.txt";
-			System.out.println("打印账户bat命令:\r\n" + endflag);
+		if (system_type == 0) {
+			try {
+				dos_bat_zh = new RandomAccessFile(
+						CollectSysConfig.filePathresult + "/log/"
+								+ getCurrentDay() + "/" + "zh_batCommd"
+								+ ".bat", "rw");
+				dos_bat_zh.seek(dos_bat_zh.length());
 
-			dos_bat_zh.writeBytes(new String(endflag.getBytes(), "iso8859-1")
-					+ "\r\n");
-			}catch (FileNotFoundException e) {
+				String endflag = "@echo end |mtee /c /+ "
+						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
+						+ "_log.txt";
+				System.out.println("打印账户bat命令:\r\n" + endflag);
+
+				dos_bat_zh.writeBytes(new String(endflag.getBytes(),
+						"iso8859-1") + "\r\n");
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "写入导入命令失败！");
 				e.printStackTrace();
@@ -1986,49 +2127,49 @@ public class UpdatePanel extends JPanel {
 					}
 				}
 			}
-			}
-			else if(system_type==1){
-				try{
-				dos_bat_rzrq = new RandomAccessFile(CollectSysConfig.filePathresult
-						+ "/log/" + getCurrentDay() + "/" + "rzrq_batCommd" + ".bat",
-						"rw");
+		} else if (system_type == 1) {
+			try {
+				dos_bat_rzrq = new RandomAccessFile(
+						CollectSysConfig.filePathresult + "/log/"
+								+ getCurrentDay() + "/" + "rzrq_batCommd"
+								+ ".bat", "rw");
 				dos_bat_rzrq.seek(dos_bat_rzrq.length());
 
 				String endflag = "@echo end |mtee /c /+ "
 						+ CollectSysConfig.filePathresult + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
-				System.out.println("打印融资融券bat命令:\r\n" +endflag);
-				//System.out.println(ip.replaceAll("\\.", "_"));
-				//dos_bat_rzrq.writeBytes(new String(upload_comm.getBytes(), "iso8859-1")
-				//		+ "\r\n");
-				dos_bat_rzrq.writeBytes(new String(endflag.getBytes(), "iso8859-1")
-						+ "\r\n");
-			}
-				catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(null, "写入导入命令失败！");
-			e.printStackTrace();
-		} finally { // finally中将reader对象关闭　　　　　
+				System.out.println("打印融资融券bat命令:\r\n" + endflag);
+				// System.out.println(ip.replaceAll("\\.", "_"));
+				// dos_bat_rzrq.writeBytes(new String(upload_comm.getBytes(),
+				// "iso8859-1")
+				// + "\r\n");
+				dos_bat_rzrq.writeBytes(new String(endflag.getBytes(),
+						"iso8859-1") + "\r\n");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "写入导入命令失败！");
+				e.printStackTrace();
+			} finally { // finally中将reader对象关闭　　　　　
 
-			if (dos_bat_rzrq != null) {
-				try {
-					dos_bat_rzrq.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (dos_bat_rzrq != null) {
+					try {
+						dos_bat_rzrq.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		 }
 
 		}
 	}
-	
-	public void checkEndFlag(String sql,int system_type){
-		
-		DBConnection conn_endflag = new DBConnection();		
+
+	public void checkEndFlag(String sql, int system_type) {
+
+		DBConnection conn_endflag = new DBConnection();
 		ResultSet rs_endflag = conn_endflag.executeQuery(sql);
 		try {
-			while(rs_endflag.next()){
+			while (rs_endflag.next()) {
 				writeUploadEndFlag(rs_endflag.getString("ip"), system_type);
 			}
 		} catch (SQLException e1) {
@@ -2038,6 +2179,36 @@ public class UpdatePanel extends JPanel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	
+
+	}
+
+	private boolean checkDeviceStatus(String host, String username,
+			String password) throws IOException {
+
+		if (logger.isDebugEnabled()) {
+
+			logger.debug("connecting to " + host + " with user " + username
+
+			+ " and pwd " + password);
+
+		}
+
+		Connection conn = new Connection(host);
+
+		conn.connect(); // make sure the connection is opened
+
+		boolean isAuthenticated = conn.authenticateWithPassword(username,
+
+		password);
+
+		if (isAuthenticated == false) {
+
+			JOptionPane.showMessageDialog(null, "升级设备认证失败或已关机，请检查！");
+			throw new IOException(host + "认证失败.");
+
+		} else {
+			return true;
+		}
+
 	}
 }

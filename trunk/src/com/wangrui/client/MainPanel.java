@@ -77,6 +77,7 @@ import com.wangrui.client.window.AboutInfo;
 import com.wangrui.client.window.AddUser;
 import com.wangrui.client.window.ModifedPswd;
 import com.wangrui.client.window.SoFileCompare;
+import com.wangrui.client.window.SoVersionSearch;
 import com.wangrui.client.window.UpdateLog;
 import com.wangrui.server.DBConnection;
 import com.wangrui.test.TreeDemo;
@@ -102,11 +103,11 @@ class T1 extends Thread {
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
-		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+getSystime()+""); // vbs的目录
+		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+""); // vbs的目录
 		String[] cmd = new String[] { "wscript",
-				CollectSysConfig.filePathresult + "\\log\\"+getSystime()+"\\vbsCommd.vbs" };
+				CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommd.vbs" };
 
-		System.out.println("vbs目录：" + CollectSysConfig.filePathresult + "\\log\\"+getSystime()+"\\vbsCommd.vbs");
+		System.out.println("vbs目录：" + CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommd.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -155,7 +156,7 @@ class T1 extends Thread {
 	 */
 	public void insertCommdToDatabase() {
 
-		File txtfile = new File(CollectSysConfig.filePathresult+ "//log//"+getSystime()+"//queryresult_windows.txt");
+		File txtfile = new File(CollectSysConfig.filePathresult+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -209,7 +210,7 @@ class T1 extends Thread {
 	 * 将windows查询结果的bak文件转换为txt文件，因为查询结果的格式存在问题，所以必须进行转换
 	 */
 	public void changeTxtType() {
-		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+getSystime()+"");
+		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+SoFileCompare.getSystime()+"");
 		//System.out.println(CollectSysConfig.filePathresult + "//");
 		File[] bakFiles = bakfile.listFiles();
 		String content = ""; // content保存文件内容，　　　　
@@ -253,7 +254,7 @@ class T1 extends Thread {
 		// 将转换后的数据写入新的txt文件中
 		try {
 			FileWriter fw = new FileWriter(CollectSysConfig.filePathresult
-					+ "//log//"+getSystime()+"//queryresult_windows.txt", true);
+					+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt", true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
 			bw.newLine();
@@ -349,7 +350,7 @@ class T1 extends Thread {
 	public void insertLinuxCommdToDatabase(String ip) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
-				+ "//log//"+getSystime()+"//queryresult_linux.txt");
+				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -412,7 +413,7 @@ class T1 extends Thread {
 			InputStream in = channel.getInputStream();
 			// 查询结果返回到queryresult_linux.txt文件中
 			File file = new File(CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\queryresult_linux.txt");
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\queryresult_linux.txt");
 			FileOutputStream fos = new FileOutputStream(file);
 			channel.connect();
 			FileCopyUtils.copy(in, fos);// 利用easydbo.jar将结果存放至文件
@@ -434,7 +435,7 @@ class T1 extends Thread {
 		// 写入新的vbs文件
 		try {
 			t.dos_vbs = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
 			t.dos_vbs.seek(t.dos_vbs.length());
 
 			String impSQL = "Set objWsh = CreateObject(\"WScript.Shell\")"
@@ -447,7 +448,7 @@ class T1 extends Thread {
 					+ password
 					+ " /output:"
 					+ CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\"
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
 			System.out.println("打印vbs命令:\r\n" + impSQL);
@@ -498,12 +499,12 @@ class OSSearch extends Thread {
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
-		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+getSystime()+"\\"); // vbs的目录
+		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\"); // vbs的目录
 		String[] cmd = new String[] { "wscript",
-				CollectSysConfig.filePathresult + "\\log\\"+getSystime()+"\\vbsCommdOS.vbs" };
+				CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommdOS.vbs" };
 
 		System.out.println("vbs目录：" + CollectSysConfig.filePathresult
-				+ "\\log\\"+getSystime()+"\\vbsCommdOS.vbs");
+				+ "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommdOS.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -553,7 +554,7 @@ class OSSearch extends Thread {
 	public void insertCommdToDatabase() {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
-				+ "//log//"+getSystime()+"//queryresult_windows_os.txt");
+				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows_os.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -617,7 +618,7 @@ class OSSearch extends Thread {
 	 * 将windows查询结果的bak文件转换为txt文件，因为查询结果的格式存在问题，所以必须进行转换
 	 */
 	public void changeTxtType() {
-		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+getSystime()+"//");
+		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+SoFileCompare.getSystime()+"//");
 		File[] bakFiles = bakfile.listFiles();
 		String content = ""; // content保存文件内容，　　　　
 		BufferedReader reader = null; // 定义BufferedReader
@@ -660,7 +661,7 @@ class OSSearch extends Thread {
 		// 将转换后的数据写入新的txt文件中
 		try {
 			FileWriter fw = new FileWriter(CollectSysConfig.filePathresult
-					+ "//log//"+getSystime()+"//queryresult_windows.txt", true);
+					+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt", true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
 			bw.newLine();
@@ -692,7 +693,7 @@ class OSSearch extends Thread {
 		// 生成执行命令并写入vbs中
 		try {
 			File bakfile = new File(CollectSysConfig.filePathresult
-					+ "//log//"+getSystime()+"//vbsCommdtest.vbs");
+					+ "//log//"+SoFileCompare.getSystime()+"//vbsCommdtest.vbs");
 			t.conn_query = new DBConnection();
 			String sql = "select * from test.device order by ip desc";
 			t.rs_queryDeviceInfo = t.conn_query.executeQuery(sql);
@@ -758,7 +759,7 @@ class OSSearch extends Thread {
 	public void insertLinuxCommdToDatabase(String ip) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
-				+ "//log//"+getSystime()+"//queryresult_linux.txt");
+				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -821,7 +822,7 @@ class OSSearch extends Thread {
 			InputStream in = channel.getInputStream();
 			// 查询结果返回到queryresult_linux.txt文件中
 			File file = new File(CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\queryresult_linux.txt");
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\queryresult_linux.txt");
 			FileOutputStream fos = new FileOutputStream(file);
 			channel.connect();
 			FileCopyUtils.copy(in, fos);// 利用easydbo.jar将结果存放至文件
@@ -842,7 +843,7 @@ class OSSearch extends Thread {
 		// 写入新的vbs文件
 		try {
 			t.dos_vbs = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
 			t.dos_vbs.seek(t.dos_vbs.length());
 
 			String impSQL = "Set objWsh = CreateObject(\"WScript.Shell\")"
@@ -855,7 +856,7 @@ class OSSearch extends Thread {
 					+ password
 					+ " /output:"
 					+ CollectSysConfig.filePathresult
-					+ "\\log\\"+getSystime()+"\\"
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
 			System.out.println("打印vbs命令:\r\n" + impSQL);
@@ -1201,6 +1202,7 @@ public class MainPanel implements ActionListener {
 			DefaultMutableTreeNode node7 = new DefaultMutableTreeNode("融资融券系统升级");
 			DefaultMutableTreeNode node8 = new DefaultMutableTreeNode("升级记录查询");
 			DefaultMutableTreeNode node9 = new DefaultMutableTreeNode("文件比较");
+			DefaultMutableTreeNode node10 = new DefaultMutableTreeNode("SO文件版本查询");
 			
 						
 			
@@ -1213,6 +1215,7 @@ public class MainPanel implements ActionListener {
 				root.add(node2);
 				root.add(node8);
 				root.add(node9);
+				root.add(node10);
 				//root1.add(node4);
 				root1.add(node5);
 				root1.add(node6);
@@ -1221,6 +1224,7 @@ public class MainPanel implements ActionListener {
 				//Root.add(root1);
 				root.add(node7);
 				root.add(node9);
+				root.add(node10);
 			}
 
 			jTree = new JTree(Root);
@@ -1299,6 +1303,10 @@ public class MainPanel implements ActionListener {
 						
 						SoFileCompare soFileCompare = new SoFileCompare(0);
 						soFileCompare.setVisible(true);
+					}else if(str.equals("SO文件版本查询")){
+						
+						SoVersionSearch soVersionSearch = new SoVersionSearch(0);
+						soVersionSearch.setVisible(true);
 					}
 
 				}

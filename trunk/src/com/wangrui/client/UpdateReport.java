@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import com.wangrui.server.ConnectUtil;
 import com.wangrui.server.DBConnection;
 
 import net.sf.jasperreports.engine.JRException;
@@ -34,7 +33,7 @@ public class UpdateReport extends JFrame {
 	private DBConnection conn_getUpdateSummary;
 	private ResultSet rs_updateSummary; 
 
-	public UpdateReport(int system_type) {
+	public UpdateReport(int system_type) throws Exception {
 
 		// TODO Auto-generated method stub
 		setSize(1024,700);
@@ -81,13 +80,13 @@ public class UpdateReport extends JFrame {
 		setResizable(true);
 	}
 	
-	public void getCompileReport(int system_type)throws IOException{
+	public void getCompileReport(int system_type)throws Exception{
 
 		try {
-		     
+		    DBConnection c = new DBConnection();
 			Connection conn = null;
 			//DBConnection conn1 = null;
-			conn = ConnectUtil.getConnection();
+			conn = c.getConnection();
 			JasperReport jasperReport = null;  
 		        JasperPrint jasperPrint = null;  
 //		      jasperReport = JasperCompileManager.compileReport(fileName);//编译jrxml文件  

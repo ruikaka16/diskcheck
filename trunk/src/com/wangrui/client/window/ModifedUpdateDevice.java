@@ -150,9 +150,9 @@ public class ModifedUpdateDevice extends JDialog{
 
 	        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "","账户管理", "融资融券" }));
 
-	        jLabel5.setText("客户端：");
+	        jLabel5.setText("备份标志：");
 
-	        jLabel6.setText("备份标志：");
+	        jLabel6.setText("客户端标志：");
 
 	        jLabel7.setText("灾备标志：");
 
@@ -248,7 +248,6 @@ public class ModifedUpdateDevice extends JDialog{
 				@Override
 				public void focusLost(FocusEvent arg0) {
 					// TODO Auto-generated method stub
-					System.out.println("两次密码输入验证");
 					if(!jPasswordField2.getText().equals(jPasswordField1.getText())){
 						JOptionPane.showMessageDialog(null, "两次输入的密码不一致，请重新输入！");
 						jPasswordField1.setText("");
@@ -275,7 +274,7 @@ public class ModifedUpdateDevice extends JDialog{
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					if(vaildUpdate(jTextField2.getText(), jPasswordField2.getText(), jComboBox1.getSelectedItem().toString(), jComboBox2.getSelectedItem().toString(), jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString(), jTextField1.getText())){
+					if(vaildUpdate(jTextField2.getText(), jPasswordField2.getText(), jComboBox2.getSelectedItem().toString(), jComboBox1.getSelectedItem().toString(), jComboBox3.getSelectedItem().toString(), jComboBox4.getSelectedItem().toString(), jTextField1.getText())){
 					JOptionPane.showMessageDialog(null, "信息修改成功！");
 					setVisible(false);
 				}
@@ -289,10 +288,9 @@ public boolean vaildUpdate(String username,String password,String backup_flag,St
 		
 		try{
 			int i=0;
-			String sql = "update test.update_device set username = '"+ username+ "',password = '"+ password+ "',backup_flag = case when +"+backup_flag.equals("是")+"  then 1 else 0  end, updatedir_flag= case when +"+jComboBox1.getSelectedItem().equals("是")+" then 1 else 0 end,bdb_flag=case when +"+jComboBox3.getSelectedItem().equals("是")+" then 1 else 0 end,system_type = case when +"+jComboBox4.getSelectedItem().equals("账户管理")+" then 0 else 1 end where ip = '"+jTextField1.getText()+"'";
+			String sql = "update test.update_device set username = '"+ username+ "',password = '"+ password+ "',backup_flag = case when "+jComboBox2.getSelectedItem().equals("是")+" then 1 else 0 end, updatedir_flag= case when "+jComboBox1.getSelectedItem().equals("是")+" then 1 else 0 end,bdb_flag=case when "+jComboBox3.getSelectedItem().equals("是")+" then 1 else 0 end,system_type = case when "+jComboBox4.getSelectedItem().equals("账户管理")+" then 0 else 1 end where ip = '"+jTextField1.getText()+"'";
 			conn_vaildInsert = new DBConnection();
 			conn_vaildInsert.executeUpdate(sql);
-				//System.out.println("i="+i);
 				//JOptionPane.showMessageDialog(null, "该设备已存在,请重新输入设备ip地址！");
 			conn_vaildInsert.close();
 		    return true;

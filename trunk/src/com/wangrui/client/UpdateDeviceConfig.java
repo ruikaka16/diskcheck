@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.util.logging.ErrorManager;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,16 +40,132 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import org.apache.log4j.Logger;
+
 import com.wangrui.client.window.AddUpdateDevice;
 import com.wangrui.client.window.ModifedUpdateDevice;
 import com.wangrui.server.DBConnection;
+
+/****
+ * @author wangrui
+ * 为jTable设置图标，直观显示设备的状态
+ */
+class MyTableCellRenderer implements TableCellRenderer {
+	public CompoundIcon c;
+	public JLabel label;
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		// 根据特定的单元格设置不同的Renderer,假如你要在第2行第3列显示图标
+		DBConnection conn = new DBConnection();
+		String sql = "select ip,username,password from update_device";
+		ResultSet rs = conn.executeQuery(sql);
+		int i = 0;
+		Icon[] deleteIcon = new Icon[] { new ImageIcon(
+				"D:/Management/image/delete.png") };
+		Icon[] acceptIcon = new Icon[] { new ImageIcon(
+				"D:/Management/image/accept.png") };
+		
+		try {
+			while (rs.next()) {
+				
+				if (column == 7 && row == i) {
+					System.out.println("当前行数i="+i);
+					if (checkDeviceStatus(rs.getString("ip"),
+							rs.getString("username"), rs.getString("password")) == false) {
+
+						System.out.println(rs.getString("ip") + "设备出现问题！");
+						// JOptionPane.showMessageDialog(null, "升级设备存在问题，请检查！");
+
+						c = new CompoundIcon(deleteIcon);
+						label = new JLabel(c);
+						label.setOpaque(false);
+						return label;
+					}else{
+						System.out.println(rs.getString("ip") + "设备检查正常");
+						c = new CompoundIcon(acceptIcon);
+						label = new JLabel(c);
+						label.setOpaque(false);
+						return label;	
+					}
+				} 
+				i++;
+			}
+			
+			rs.close();
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return table;
+
+	}
+
+	/****
+	 * 检查设备用户名和密码是否正确
+	 * @param host
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean checkDeviceStatus(String host, String username,
+			String password) throws IOException {
+
+		final Logger logger1 = Logger.getLogger(UpdatePanel.class);
+		if (logger1.isDebugEnabled()) {
+
+			logger1.debug("connecting to " + host + " with user " + username
+
+			+ " and pwd " + password);
+
+		}
+
+		ch.ethz.ssh2.Connection conn = new ch.ethz.ssh2.Connection(host);
+
+		conn.connect(); // make sure the connection is opened
+
+		boolean isAuthenticated = conn.authenticateWithPassword(username,
+
+		password);
+
+		if (isAuthenticated == false) {
+
+			// JOptionPane.showMessageDialog(null, "升级设备认证失败或已关机，请检查！");
+			// throw new IOException(host+"认证失败.");
+			System.out.println("升级设备认证失败或已关机，请检查！");
+
+		} else {
+			return true;
+		}
+		return isAuthenticated;
+
+	}
+}
+
+class MyTableCellRenderer1 implements TableCellRenderer {
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		// 根据特定的单元格设置不同的Renderer,假如你要在第2行第3列显示图标
+		if (column == 7) {
+			Icon[] icons = new Icon[] { new ImageIcon(
+					"D:/Management/image/delete.png") };
+			CompoundIcon c = new CompoundIcon(icons);
+			JLabel l = new JLabel(c);
+			l.setOpaque(false);
+			return l;
+		} else {
+			return null;
+		}
+	}
+}
 
 public class UpdateDeviceConfig extends JDialog {
 
 	public static DefaultTableModel tableModel; // 表格模型对象
 	public static JTable table;
 	private JTextField aTextField;
-	private JTextField bTextField, dTextField,eTextField;
+	private JTextField bTextField, dTextField, eTextField;
 	private JPasswordField password;
 	DBConnection conn_num, conn_table, conn_insert, conn_del, conn_modify;
 	Statement stmt, stmt1;
@@ -56,23 +173,26 @@ public class UpdateDeviceConfig extends JDialog {
 	int num; // 记录条数
 	int i = 0;
 	private Object tableVales[][];
-	//private static String[] data = { "是", "否" };
+
+	// private static String[] data = { "是", "否" };
 
 	public UpdateDeviceConfig() {
 		// 界面部分
 		super();
-		
+
 		setTitle("系统升级设备配置");
-		setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
+		setModal(true); // 子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
 		setBounds(100, 100, 800, 600);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		String[] columnNames = { "IP地址", "用户名", "密码" ,"备份标志","客户端升级标志","灾备标志","系统标志"}; // 20121011列增加os字段对应操作系统
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/computer.png");//图标路径
-	    setIconImage(icon.getImage());
+		String[] columnNames = { "IP地址", "用户名", "密码", "备份标志", "客户端升级标志",
+				"灾备标志", "系统标志", "设备状态" }; // 20121011列增加os字段对应操作系统
+		ImageIcon icon = new ImageIcon(CollectSysConfig.filePathresult
+				+ "/image/computer.png");// 图标路径
+		setIconImage(icon.getImage());
 		// 在下拉框中增加默认数据
-//		for (int i = 0; i < data.length; i++) {
-//			cb.addItem(data[i]);
-//		}
+		// for (int i = 0; i < data.length; i++) {
+		// cb.addItem(data[i]);
+		// }
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
@@ -94,6 +214,7 @@ public class UpdateDeviceConfig extends JDialog {
 		String sql4 = "select ip,username,password,backup_flag,updatedir_flag,bdb_flag,system_type from test.update_device";
 		rs1 = conn_table.executeQuery(sql4);
 		tableVales = new String[num][10];
+
 		try {
 			while (rs1.next()) {
 				// 在表中获取数据
@@ -115,25 +236,29 @@ public class UpdateDeviceConfig extends JDialog {
 		}
 
 		// 添加数据和表到表中
-		tableModel = new DefaultTableModel(tableVales, columnNames){
-			   private static final long serialVersionUID = 1L;
-			   public boolean isCellEditable(int row, int column) {// 双击后不可编辑
-			      return false;
-			     }
-			  };
+		tableModel = new DefaultTableModel(tableVales, columnNames) {
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {// 双击后不可编辑
+				return false;
+			}
+		};
 		table = new JTable(tableModel);
 
-		//DefaultTableCellRenderer cellRanderer = new DefaultTableCellRenderer();
-		//cellRanderer.setHorizontalAlignment(JLabel.CENTER);
-		//table.setDefaultRenderer(Object.class, cellRanderer);
+		TableCellRenderer myRenderer1 = new MyTableCellRenderer1();
+		table.getColumnModel().getColumn(7).setCellRenderer(myRenderer1);
+		// DefaultTableCellRenderer cellRanderer = new
+		// DefaultTableCellRenderer();
+		// cellRanderer.setHorizontalAlignment(JLabel.CENTER);
+		// table.setDefaultRenderer(Object.class, cellRanderer);
 
 		JScrollPane scrollPane = new JScrollPane(table); // 支持滚动
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		// 排序:
-		//table.setGridColor(Color.BLACK);
+		// table.setGridColor(Color.BLACK);
 		// table.setRowSorter(new TableRowSorter(tableModel));
-		//table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // 单选
-		
+		// table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // 单选
+
 		table.addMouseListener(new MouseAdapter() { // 鼠标事件
 			public void mouseClicked(MouseEvent e) {
 				int selectedRow = table.getSelectedRow(); // 获得选中行索引
@@ -144,43 +269,52 @@ public class UpdateDeviceConfig extends JDialog {
 				Object oe = tableModel.getValueAt(selectedRow, 4);
 				Object of = tableModel.getValueAt(selectedRow, 5);
 				Object og = tableModel.getValueAt(selectedRow, 6);
-				//Object oh = tableModel.getValueAt(selectedRow, 7);
-				
-				if(e.getClickCount() == 2){
-					
-					//System.out.println("双击表格");
+				// Object oh = tableModel.getValueAt(selectedRow, 7);
+
+				if (e.getClickCount() == 2) {
+
+					// System.out.println("双击表格");
 					ModifedUpdateDevice modifedUpdateDeviceWin = new ModifedUpdateDevice();
-					//System.out.println("jTextField1.setText(oa.toString()="+oa.toString());
+					// System.out.println("jTextField1.setText(oa.toString()="+oa.toString());
 					modifedUpdateDeviceWin.jTextField1.setText(oa.toString());
 					modifedUpdateDeviceWin.jTextField1.setEnabled(false);
 					modifedUpdateDeviceWin.jTextField2.setText(ob.toString());
-					
-					if(od.toString().equals("0")){
+
+					if (od.toString().equals("0")) {
 						modifedUpdateDeviceWin.jComboBox1.setSelectedItem("否");
-					}else{
+						// System.out.println("备份标志 1"+modifedUpdateDeviceWin.jComboBox1.getSelectedItem());
+					} else {
 						modifedUpdateDeviceWin.jComboBox1.setSelectedItem("是");
-					}					
-					if(oe.toString().equals("0")){
+						// System.out.println("备份标志 1"+modifedUpdateDeviceWin.jComboBox1.getSelectedItem());
+					}
+					if (oe.toString().equals("0")) {
 						modifedUpdateDeviceWin.jComboBox2.setSelectedItem("否");
-					}else{
+						// System.out.println("客户端标志 2"+modifedUpdateDeviceWin.jComboBox2.getSelectedItem());
+					} else {
 						modifedUpdateDeviceWin.jComboBox2.setSelectedItem("是");
+						// System.out.println("客户端标志 2"+modifedUpdateDeviceWin.jComboBox2.getSelectedItem());
 					}
-					if(of.toString().equals("0")){
+					if (of.toString().equals("0")) {
 						modifedUpdateDeviceWin.jComboBox3.setSelectedItem("否");
-					}else{
+						// System.out.println("灾备标志 3"+modifedUpdateDeviceWin.jComboBox3.getSelectedItem());
+					} else {
 						modifedUpdateDeviceWin.jComboBox3.setSelectedItem("是");
+						// System.out.println("灾备标志 3"+modifedUpdateDeviceWin.jComboBox3.getSelectedItem());
 					}
-					if(og.toString().equals("0")){
-						modifedUpdateDeviceWin.jComboBox4.setSelectedItem("账户管理");
-					}else{
-						modifedUpdateDeviceWin.jComboBox4.setSelectedItem("融资融券");
+					if (og.toString().equals("0")) {
+						modifedUpdateDeviceWin.jComboBox4
+								.setSelectedItem("账户管理");
+						// System.out.println("系统标志"+modifedUpdateDeviceWin.jComboBox4.getSelectedItem());
+					} else {
+						modifedUpdateDeviceWin.jComboBox4
+								.setSelectedItem("融资融券");
+						// System.out.println("系统标志"+modifedUpdateDeviceWin.jComboBox4.getSelectedItem());
 					}
 					modifedUpdateDeviceWin.setVisible(true);
-					
-					
-				}else{
 
-				aTextField.setText(oa.toString()); // 给文本框赋值
+				} else {
+
+					aTextField.setText(oa.toString()); // 给文本框赋值
 
 				}
 			}
@@ -201,7 +335,7 @@ public class UpdateDeviceConfig extends JDialog {
 		});
 
 		scrollPane.setViewportView(table);
-		
+
 		final JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.SOUTH);
 		panel.add(new JLabel("IP地址: "));
@@ -211,9 +345,9 @@ public class UpdateDeviceConfig extends JDialog {
 		// 添加查询设备
 		final JButton addButton = new JButton("添加"); // 添加按钮
 		addButton.addActionListener(new ActionListener() {// 添加事件
-					public void actionPerformed(ActionEvent e) {						
+					public void actionPerformed(ActionEvent e) {
 
-						AddUpdateDevice addupdateWin = new AddUpdateDevice();  
+						AddUpdateDevice addupdateWin = new AddUpdateDevice();
 						addupdateWin.setVisible(true);
 					}
 				});
@@ -229,14 +363,13 @@ public class UpdateDeviceConfig extends JDialog {
 							JOptionPane.showMessageDialog(null, "请先选择删除的内容！");
 
 						} else {
-							
+
 							Object[] options = { "确定", "取消" };
 							int n = JOptionPane.showOptionDialog(null,
 									"是否要删除该设备？", "提示",
 									JOptionPane.YES_NO_OPTION,
-									JOptionPane.QUESTION_MESSAGE, null, // do not use a
-																		// custom Icon
-									options, // the titles of buttons
+									JOptionPane.QUESTION_MESSAGE, null, 
+									options, 
 									options[1]);
 							if (n == 0) {
 								// 后台数据库操作
@@ -264,39 +397,52 @@ public class UpdateDeviceConfig extends JDialog {
 							} else {
 								return;
 							}
-						
 
 						}
 					}
 				});
 		panel.add(delButton);
+
+		JButton testButton = new JButton("测试连接");
+		testButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				TableCellRenderer myRenderer = new MyTableCellRenderer();
+				table.getColumnModel().getColumn(7).setCellRenderer(myRenderer);
+				table.repaint();
+			}
+		});
+		panel.add(testButton);
 		// 修改选中设备信息
 		final JButton updateButton = new JButton("修改");
 		updateButton.addActionListener(new ActionListener() {
-		
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO Auto-generated method stub					
-					// 对IP地址进行验证	定义正则表达式
-					String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
-							+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
-							+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
-							+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
-					// 判断ip地址是否与正则表达式匹配
-					if (!aTextField.getText().matches(regex)) {
-						// 返回判断信息
-						JOptionPane.showMessageDialog(null,
-								aTextField.getText() + "不是一个合法的IP地址！");
-						return;
-					}
-				else {
+				// TODO Auto-generated method stub
+				// 对IP地址进行验证 定义正则表达式
+				String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+						+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+						+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+						+ "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+				// 判断ip地址是否与正则表达式匹配
+				if (!aTextField.getText().matches(regex)) {
+					// 返回判断信息
+					JOptionPane.showMessageDialog(null, aTextField.getText()
+							+ "不是一个合法的IP地址！");
+					return;
+				} else {
 
 					try {
 						String sql = "update update_device set username = '"
 								+ bTextField.getText() + "',password = '"
-								+ password.getText() + "' ,backup_flag = "+dTextField.getText()+" ,updatedir_flag = "+eTextField.getText()+" where ip = '"
+								+ password.getText() + "' ,backup_flag = "
+								+ dTextField.getText() + " ,updatedir_flag = "
+								+ eTextField.getText() + " where ip = '"
 								+ aTextField.getText() + "'";
-						//System.out.println("updatesql="+sql);
+						System.out.println("updatesql=" + sql);
 						conn_modify = new DBConnection();
 						conn_modify.executeUpdate(sql);
 						conn_modify.close();
@@ -310,40 +456,47 @@ public class UpdateDeviceConfig extends JDialog {
 
 					} catch (Exception e2) {
 						e2.printStackTrace();
-						JOptionPane.showMessageDialog(null, "设备信息修改失败，请联系开发人员！");
+						JOptionPane
+								.showMessageDialog(null, "设备信息修改失败，请联系开发人员！");
 					}
 				}
 
 			}
 		});
-		//panel.add(updateButton);
+		// panel.add(updateButton);
 
 	}
+	/****
+	 * 插入新设备前检查是否已存在
+	 * @param ip
+	 * @return
+	 */
 
-	public Boolean vaildInsert(String ip){
-		
-		try{
-			int i=0;
-			String sql = "select * from test.update_device where ip = '"+ip+"'";
+	public Boolean vaildInsert(String ip) {
+
+		try {
+			int i = 0;
+			String sql = "select * from test.update_device where ip = '" + ip
+					+ "'";
 			DBConnection conn_vaildInsert = new DBConnection();
 			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
-			if(rs_vaildInsert.next()){
-				//System.out.println("i="+i);
+			if (rs_vaildInsert.next()) {
+				// System.out.println("i="+i);
 				JOptionPane.showMessageDialog(null, "该设备已存在,请重新输入设备ip地址！");
 				return true;
 			}
-	
+
 			else {
-				
+
 				return false;
 			}
-		}catch(Exception e){
-			
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public static void main(String[] args) {
 
 		new UpdateDeviceConfig().setVisible(true);
