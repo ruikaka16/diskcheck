@@ -86,14 +86,14 @@ public class SoFileCompare extends javax.swing.JDialog {
 		jComboBox3.addItem("");
 		
 			DBConnection conn_combox = new DBConnection();
-			String sql5 = "select ip  from update_device where system_type =0";
-			String sql5_1 = "select ip  from update_device where system_type=1";
+			String sql5 = "select ip  from update_device where system_type = "+system_type+"";
+			//String sql5_1 = "select ip  from update_device where system_type=1";
 			
-			if(system_type==0){
+			//if(system_type==0){
 				 rs3 = conn_combox.executeQuery(sql5);
-			}else if(system_type==1){
-				 rs3 = conn_combox.executeQuery(sql5_1);
-			}
+			//}else if(system_type==1){
+			//	 rs3 = conn_combox.executeQuery(sql5_1);
+			//}
 	
 		try {
 			while(rs3.next()){

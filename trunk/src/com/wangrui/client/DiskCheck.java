@@ -146,7 +146,12 @@ public class DiskCheck extends JFrame {
 				jTextArea.paintImmediately(jTextArea.getBounds());
 				
 				//查参数配置表并写入查询命令
-				queryDeviceInfoAll();
+				if(LoginMain.userType.getText().equals("0")){
+					queryDeviceInfoAll(0);
+				}else if(LoginMain.userType.getText().equals("1")){
+					queryDeviceInfoAll(1);
+				}
+				
 		
 				System.out.println("执行vbs命令阶段!");
 				File batFile = new File(CollectSysConfig.filePathresult+"\\"); // vbs的目录
@@ -301,13 +306,14 @@ public class DiskCheck extends JFrame {
  *  取查询设备表device
  */
 
-	public List queryDeviceInfoAll() {
+	public List queryDeviceInfoAll(int system_type) {
 
 		// 生成执行命令并写入vbs中
 		try {
 			File bakfile = new File(CollectSysConfig.filePathresult+"//vbsCommdtest.vbs");
 			conn_query = new DBConnection();
-			String sql = "select * from test.device order by ip desc";
+			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
+			System.out.println("sql查询"+sql);
 			rs_queryDeviceInfo = conn_query.executeQuery(sql);
 
 			List deviceInfoList = new ArrayList();
@@ -644,9 +650,9 @@ public class DiskCheck extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 
 					//未分页表格
-					ChkResult t = new ChkResult();
-					t.setVisible(true);
-					t.setLocationRelativeTo(null);
+					//ChkResult t = new ChkResult();
+					//t.setVisible(true);
+					//t.setLocationRelativeTo(null);
 					
 					//分页表格
 //					ChkResultTable t = new  ChkResultTable();
@@ -659,10 +665,18 @@ public class DiskCheck extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 
-					DeviceConfig deviceConfig = new DeviceConfig();
-					deviceConfig.setVisible(true);
-					deviceConfig.setLocationRelativeTo(null);
+					if(LoginMain.userType.getText().equals("0")){
+						DeviceConfig deviceConfig = new DeviceConfig(0);
+						deviceConfig.setLocationRelativeTo(null);
+						deviceConfig.setVisible(true);	
+					}else if(LoginMain.userType.getText().equals("1")){
+						DeviceConfig deviceConfig = new DeviceConfig(1);
+						deviceConfig.setLocationRelativeTo(null);
+						deviceConfig.setVisible(true);	
+					}
+
 				}
+				
 			});
 
 			item41.addActionListener(new ActionListener() {

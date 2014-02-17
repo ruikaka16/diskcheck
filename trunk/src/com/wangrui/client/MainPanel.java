@@ -99,7 +99,11 @@ class T1 extends Thread {
 		t.jTextArea.paintImmediately(t.jTextArea.getBounds());
 
 		// 查参数配置表并写入查询命令
-		queryDeviceInfoAll();
+		if(LoginMain.userType.getText().equals("0")){
+			queryDeviceInfoAll(0);
+		}else if(LoginMain.userType.getText().equals("1")){
+			queryDeviceInfoAll(1);
+		}
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
@@ -147,14 +151,18 @@ class T1 extends Thread {
 		}
 
 		// 执行Windows查询结果插入数据库操作
-		insertCommdToDatabase();
+		if(LoginMain.userType.getText().equals("0")){
+			insertCommdToDatabase(0);
+		}else if(LoginMain.userType.getText().equals("1")){
+			insertCommdToDatabase(1);
+		}
 
 	}
 
 	/*
 	 * 将windows设备查询后数据插入数据库
 	 */
-	public void insertCommdToDatabase() {
+	public void insertCommdToDatabase(int system_type) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt");
 
@@ -165,7 +173,7 @@ class T1 extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(",");
-					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type,system_type) values(date_format(now(),'%Y%m%d'),'"
 							+ s[0]
 							+ "','"
 							+ s[1]
@@ -173,7 +181,7 @@ class T1 extends Thread {
 							+ s[2]
 							+ "'/1024/1024/1024,'"
 							+ s[3]
-							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ CollectSysConfig.utilresult+ "' then '1'else '0' end)";
+							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ CollectSysConfig.utilresult+ "' then '1'else '0' end,"+system_type+")";
 
 					System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
@@ -281,12 +289,13 @@ class T1 extends Thread {
 	/*
 	 * 获取要查询设备的信息，从device表中取，并存入bean中
 	 */
-	public List queryDeviceInfoAll() {
+	public List queryDeviceInfoAll(int system_type) {
 
 		// 生成执行命令并写入vbs中
 		try {
 			t.conn_query = new DBConnection();
-			String sql = "select * from test.device order by ip desc";
+			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
+			System.out.println(sql);
 			t.rs_queryDeviceInfo = t.conn_query.executeQuery(sql);
 
 			List deviceInfoList = new ArrayList();// 定义一个List
@@ -317,8 +326,7 @@ class T1 extends Thread {
 								t.rs_queryDeviceInfo.getString("username"),
 								t.rs_queryDeviceInfo.getString("password"));
 
-						insertLinuxCommdToDatabase(t.rs_queryDeviceInfo
-								.getString("ip"));
+						insertLinuxCommdToDatabase(t.rs_queryDeviceInfo.getString("ip"),system_type);
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -347,7 +355,7 @@ class T1 extends Thread {
 	/*
 	 * 将queryresult_liunx文件数据插入数据库
 	 */
-	public void insertLinuxCommdToDatabase(String ip) {
+	public void insertLinuxCommdToDatabase(String ip,int system_type) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
 				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
@@ -359,7 +367,7 @@ class T1 extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(" ");
-					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type,system_type) values(date_format(now(),'%Y%m%d'),'"
 							+ ip
 							+ "','"
 							+ s[5]
@@ -376,7 +384,7 @@ class T1 extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end)";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end,"+system_type+")";
 
 					System.out.println("s5="+s[5]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
@@ -495,7 +503,11 @@ class OSSearch extends Thread {
 		t.jTextArea1.paintImmediately(t.jTextArea1.getBounds());
 
 		// 查参数配置表并写入查询命令
-		queryDeviceInfoAll();
+		if(LoginMain.userType.getText().equals("0")){
+			queryDeviceInfoAll(0);
+		}else if(LoginMain.userType.getText().equals("1")){
+			queryDeviceInfoAll(1);
+		}
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
@@ -544,14 +556,18 @@ class OSSearch extends Thread {
 		}
 
 		// 执行Windows查询结果插入数据库操作
-		insertCommdToDatabase();
+		if(LoginMain.userType.getText().equals("0")){
+			insertCommdToDatabase(0);
+		}else if(LoginMain.userType.getText().equals("1")){
+			insertCommdToDatabase(1);
+		}
 
 	}
 
 	/*
 	 * 将windows设备查询后数据插入数据库
 	 */
-	public void insertCommdToDatabase() {
+	public void insertCommdToDatabase(int system_type) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
 				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows_os.txt");
@@ -563,7 +579,7 @@ class OSSearch extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(",");
-					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type,system_type) values(date_format(now(),'%Y%m%d'),'"
 							+ s[0]
 							+ "','"
 							+ s[1]
@@ -581,7 +597,7 @@ class OSSearch extends Thread {
 							+ s[3]
 							+ "',0)>= '"
 							+ CollectSysConfig.utilresult
-							+ "' then '1'else '0' end)";
+							+ "' then '1'else '0' end ,"+system_type+")";
 
 					System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
@@ -688,14 +704,15 @@ class OSSearch extends Thread {
 	/*
 	 * 获取要查询设备的信息，从device表中取，并存入bean中
 	 */
-	public List queryDeviceInfoAll() {
+	public List queryDeviceInfoAll(int system_type) {
 
 		// 生成执行命令并写入vbs中
 		try {
 			File bakfile = new File(CollectSysConfig.filePathresult
 					+ "//log//"+SoFileCompare.getSystime()+"//vbsCommdtest.vbs");
 			t.conn_query = new DBConnection();
-			String sql = "select * from test.device order by ip desc";
+			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
+			System.out.println("sql="+sql);
 			t.rs_queryDeviceInfo = t.conn_query.executeQuery(sql);
 
 			List deviceInfoList = new ArrayList();// 定义一个List
@@ -726,8 +743,7 @@ class OSSearch extends Thread {
 								t.rs_queryDeviceInfo.getString("username"),
 								t.rs_queryDeviceInfo.getString("password"));
 
-						insertLinuxCommdToDatabase(t.rs_queryDeviceInfo
-								.getString("ip"));
+						insertLinuxCommdToDatabase(t.rs_queryDeviceInfo.getString("ip"),system_type);
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -756,7 +772,7 @@ class OSSearch extends Thread {
 	/*
 	 * 将queryresult_liunx文件数据插入数据库
 	 */
-	public void insertLinuxCommdToDatabase(String ip) {
+	public void insertLinuxCommdToDatabase(String ip,int system_type) {
 
 		File txtfile = new File(CollectSysConfig.filePathresult
 				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
@@ -768,7 +784,7 @@ class OSSearch extends Thread {
 			while (null != (str = bf.readLine())) {
 				if (!str.trim().isEmpty()) {
 					String s[] = str.split(" ");
-					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type) values(date_format(now(),'%Y%m%d'),'"
+					String sql = "insert into deviceDisk (date,ip,deviceId,freespace,size,util,type,system_type) values(date_format(now(),'%Y%m%d'),'"
 							+ ip
 							+ "','"
 							+ s[5]
@@ -785,7 +801,7 @@ class OSSearch extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end)";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end ,"+system_type+")";
 
 					System.out.println(s[0]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
@@ -1056,13 +1072,15 @@ public class MainPanel implements ActionListener {
 				public void actionPerformed(ActionEvent arg0) {
 
 					// 未分页表格
-					ChkResult t = new ChkResult();
-					t.setLocationRelativeTo(null);
-					t.setVisible(true);
-
-					// 分页表格
-					// ChkResultTable t = new ChkResultTable();
-					// t.setLocationRelativeTo(null);
+					if(LoginMain.userType.getText().equals("0")){
+						ChkResult t = new ChkResult(0);
+						t.setLocationRelativeTo(null);
+						t.setVisible(true);
+					}else if(LoginMain.userType.getText().equals("1")){
+						ChkResult t = new ChkResult(1);
+						t.setLocationRelativeTo(null);
+						t.setVisible(true);
+					}
 				}
 			});
 			
@@ -1085,10 +1103,16 @@ public class MainPanel implements ActionListener {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-
-					DeviceConfig deviceConfig = new DeviceConfig();
-					deviceConfig.setLocationRelativeTo(null);
-					deviceConfig.setVisible(true);
+					if(LoginMain.userType.getText().equals("0")){
+						DeviceConfig deviceConfig = new DeviceConfig(0);
+						deviceConfig.setLocationRelativeTo(null);
+						deviceConfig.setVisible(true);	
+					}else if(LoginMain.userType.getText().equals("1")){
+						DeviceConfig deviceConfig = new DeviceConfig(1);
+						deviceConfig.setLocationRelativeTo(null);
+						deviceConfig.setVisible(true);	
+					}
+					
 				}
 			});
 
@@ -1119,9 +1143,16 @@ public class MainPanel implements ActionListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					UpdateDeviceConfig systemConfig = new UpdateDeviceConfig();
-					systemConfig.setLocationRelativeTo(null);
-					systemConfig.setVisible(true);
+					if(LoginMain.userType.getText().equals("0")){
+						UpdateDeviceConfig systemConfig = new UpdateDeviceConfig(0);
+						systemConfig.setLocationRelativeTo(null);
+						systemConfig.setVisible(true);
+					}else if(LoginMain.userType.getText().equals("1")){
+						UpdateDeviceConfig systemConfig = new UpdateDeviceConfig(1);
+						systemConfig.setLocationRelativeTo(null);
+						systemConfig.setVisible(true);
+					}
+					
 
 				}
 			});
@@ -1135,7 +1166,7 @@ public class MainPanel implements ActionListener {
 					modifedPswWin.setVisible(true);
 				}
 			});
-
+			//按权限显示相应菜单
 			if (LoginMain.userType.getText().equals("0")) {
 
 				m2.add(item12);
@@ -1168,7 +1199,8 @@ public class MainPanel implements ActionListener {
 				m1.addSeparator();
 				m1.add(item11);
 				m6.add(item21);
-				m4.add(item41);
+				//m4.add(item41);
+				m4.add(item51);
 				m4.addSeparator();
 				m4.add(item31);
 				m3.add(item3_1);
@@ -1178,6 +1210,7 @@ public class MainPanel implements ActionListener {
 				menuBar.add(m1);
 				menuBar.add(m3);
 				menuBar.add(m2);
+				menuBar.add(m4);
 				menuBar.add(m6);
 			}
 
@@ -1221,7 +1254,7 @@ public class MainPanel implements ActionListener {
 				root1.add(node6);
 			}else if(LoginMain.userType.getText().equals("1")){
 				Root.add(root);
-				//Root.add(root1);
+				root.add(node1);
 				root.add(node7);
 				root.add(node9);
 				root.add(node10);
@@ -1301,12 +1334,22 @@ public class MainPanel implements ActionListener {
 						//tabbedPane.getName();
 					}else if(str.equals("文件比较")){
 						
-						SoFileCompare soFileCompare = new SoFileCompare(0);
-						soFileCompare.setVisible(true);
-					}else if(str.equals("SO文件版本查询")){
+						if(LoginMain.userType.getText().equals("0")){
+							SoFileCompare soFileCompare = new SoFileCompare(0);
+							soFileCompare.setVisible(true);
+						}else if(LoginMain.userType.getText().equals("1")){
+							SoFileCompare soFileCompare = new SoFileCompare(1);
+							soFileCompare.setVisible(true);
+						}
 						
-						SoVersionSearch soVersionSearch = new SoVersionSearch(0);
-						soVersionSearch.setVisible(true);
+					}else if(str.equals("SO文件版本查询")){
+						if(LoginMain.userType.getText().equals("0")){
+							SoVersionSearch soVersionSearch = new SoVersionSearch(0);
+							soVersionSearch.setVisible(true);
+						}else if(LoginMain.userType.getText().equals("1")){
+							SoVersionSearch soVersionSearch = new SoVersionSearch(1);
+							soVersionSearch.setVisible(true);
+						}
 					}
 
 				}

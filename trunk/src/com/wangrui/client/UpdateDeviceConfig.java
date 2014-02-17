@@ -176,7 +176,7 @@ public class UpdateDeviceConfig extends JDialog {
 
 	// private static String[] data = { "是", "否" };
 
-	public UpdateDeviceConfig() {
+	public UpdateDeviceConfig(int system_type) {
 		// 界面部分
 		super();
 
@@ -196,7 +196,7 @@ public class UpdateDeviceConfig extends JDialog {
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
-		String sql3 = "select count(*) from test.update_device";
+		String sql3 = "select count(*) from test.update_device where system_type= "+system_type+"";
 		rs = conn_num.executeQuery(sql3);
 		try {
 			while (rs.next()) {
@@ -211,7 +211,7 @@ public class UpdateDeviceConfig extends JDialog {
 
 		// 将表中的数据显示到jtable中
 		conn_table = new DBConnection();
-		String sql4 = "select ip,username,password,backup_flag,updatedir_flag,bdb_flag,system_type from test.update_device";
+		String sql4 = "select ip,username,password,backup_flag,updatedir_flag,bdb_flag,system_type from test.update_device where system_type="+system_type+"";
 		rs1 = conn_table.executeQuery(sql4);
 		tableVales = new String[num][10];
 
@@ -499,7 +499,7 @@ public class UpdateDeviceConfig extends JDialog {
 
 	public static void main(String[] args) {
 
-		new UpdateDeviceConfig().setVisible(true);
+		new UpdateDeviceConfig(0).setVisible(true);
 
 	}
 
