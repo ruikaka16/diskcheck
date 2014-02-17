@@ -45,17 +45,16 @@ public class ReadLinuxFile {
 		
 					DBConnection conn_query = new DBConnection();
 					DBConnection conn_query_version = new DBConnection();
-					String sql1 = "select * from test.update_device where system_type=0";
-					String sql2 = "select * from test.update_device where system_type=1";
-					String sql3 = "select * from update_device  where system_type = 0 order by ip desc limit 1;";
-					String sql4 = "select * from update_device  where system_type = 1 order by ip desc limit 1;";
-					if(system_type==0){
+					String sql1 = "select * from test.update_device where system_type= "+system_type+"";
+					//String sql2 = "select * from test.update_device where system_type=1";
+					String sql3 = "select * from update_device  where system_type = "+system_type+" order by ip desc limit 1;";
+					//String sql4 = "select * from update_device  where system_type = 1 order by ip desc limit 1;";
+					
 						rs_queryDeviceInfo = conn_query.executeQuery(sql1);
 						rs_queryDeviceIp = conn_query_version.executeQuery(sql3);
-					}else if(system_type==1){
-						rs_queryDeviceInfo = conn_query.executeQuery(sql2);
-						rs_queryDeviceIp = conn_query_version.executeQuery(sql4);
-					}
+				
+						
+				
 					System.out.println("开始执行导入SO文件信息......");
 					while (rs_queryDeviceInfo.next()) {		
 						System.out.println("正在导入"+rs_queryDeviceInfo.getString("ip"));
@@ -168,7 +167,11 @@ public class ReadLinuxFile {
 		session.connect();
 		Channel channel = session.openChannel("exec");
 		//((ChannelExec) channel).setCommand("ls -l cd appcom |sed 's/ \\+/ /g'|sed '1,2d'" );
-		((ChannelExec) channel).setCommand("cd appcom;strings -f *.so|fgrep V8." );
+		if(system_type==0){
+			((ChannelExec) channel).setCommand("cd appcom;strings -f *.so|fgrep V8." );
+		}else if(system_type == 1){
+			((ChannelExec) channel).setCommand("cd appcom;strings -f *.so|fgrep V6." );
+		}
 		try {
 			InputStream in = channel.getInputStream();
 			// 查询结果返回到queryresult_linux.txt文件中

@@ -52,7 +52,7 @@ public class DeviceConfig extends JFrame {
 	int i = 0;
 	private Object tableVales[][];
 
-	public DeviceConfig() {
+	public DeviceConfig(final int system_type) {
 		// 界面部分
 		super();
 		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");//图标路径
@@ -70,7 +70,7 @@ public class DeviceConfig extends JFrame {
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
-		String sql3 = "select count(*) from test.device";
+		String sql3 = "select count(*) from test.device where system_type = "+system_type+"";
 		rs = conn_num.executeQuery(sql3);
 		try {
 			while (rs.next()) {
@@ -85,7 +85,7 @@ public class DeviceConfig extends JFrame {
 
 		// 将表中的数据显示到jtable中
 		conn_table = new DBConnection();
-		String sql4 = "select * from test.device  order by os";
+		String sql4 = "select * from test.device where system_type = "+system_type+" order by os";
 		rs1 = conn_table.executeQuery(sql4);
 		tableVales = new String[num][7];
 		try {
@@ -231,14 +231,7 @@ public class DeviceConfig extends JFrame {
 
 								// 后台数据库操作
 								try {
-									String sql5 = "insert into test.device (ip,username,password,os) values('"
-											+ aTextField.getText()
-											+ "','"
-											+ bTextField.getText()
-											+ "','"
-											+ password.getText()
-											+ "','"
-											+ cb.getSelectedItem() + "')";
+									String sql5 = "insert into test.device (ip,username,password,os,system_type) values('"+ aTextField.getText()+ "','"+ bTextField.getText()+ "','"+ password.getText()+ "','"+ cb.getSelectedItem() + "',"+system_type+") ";
 									conn_insert = new DBConnection();
 									conn_insert.executeUpdate(sql5);
 									JOptionPane.showMessageDialog(null, "该设备"
@@ -381,7 +374,7 @@ public class DeviceConfig extends JFrame {
 	
 	public static void main(String[] args) {
 
-		new DeviceConfig();
+		new DeviceConfig(0);
 
 	}
 

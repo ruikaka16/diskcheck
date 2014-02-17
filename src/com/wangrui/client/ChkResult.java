@@ -57,7 +57,7 @@ public class ChkResult extends JFrame {
 
 	// private static String[] data = { "date", "ip" };// 20121019增加下拉框中的默认数据
 
-	public ChkResult() {
+	public ChkResult(final int system_type) {
 
 		// 界面部分
 		super();
@@ -88,7 +88,7 @@ public class ChkResult extends JFrame {
 
 		// 获得表中的数据条数记入num
 		conn_num = new DBConnection();
-		String sql3 = "select count(*) from test.deviceDisk ";
+		String sql3 = "select count(*) from test.deviceDisk where system_type = "+system_type+"";
 		rs = conn_num.executeQuery(sql3);
 		try {
 			while (rs.next()) {
@@ -107,7 +107,7 @@ public class ChkResult extends JFrame {
 		}else{
 			// 将表中的数据显示到jtable中
 			conn_table = new DBConnection();
-			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk where deviceid not in ('/boot')  order by date desc ";
+			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk where deviceid not in ('/boot')  and system_type = "+system_type+" order by date desc ";
 			ArrayList array = conn_table.executeQuery1(sql4);
 			System.out.println("数据量="+array.size());
 			Table_Model model1 = new Table_Model(array);
@@ -154,7 +154,7 @@ public class ChkResult extends JFrame {
 
 			// googlesuggest搜索显示
 			DBConnection conn_searchSuggest = new DBConnection();
-			String sql = "select distinct deviceid from test.devicedisk";
+			String sql = "select distinct deviceid from test.devicedisk where system_type="+system_type+"";
 			ResultSet rs_search = conn_searchSuggest.executeQuery(sql);
 
 			try {
@@ -196,7 +196,7 @@ public class ChkResult extends JFrame {
 					searchCombox.removeAllItems();
 					DBConnection conn_searchCombox = new DBConnection();
 					String sql1 = "select distinct ip from devicedisk where deviceid = '"
-							+ jExpectSearchField.getText() + "'";
+							+ jExpectSearchField.getText() + "' and system_type="+system_type+"";
 					ResultSet rs_searchCombox = conn_searchCombox
 							.executeQuery(sql1);
 					try {
@@ -255,7 +255,7 @@ public class ChkResult extends JFrame {
 					String sql = "select * from test.devicedisk where deviceid ='"
 							+ jExpectSearchField.getText() + "' and ip = '"
 							+ searchCombox.getSelectedItem()
-							+ "' order by date desc";
+							+ "' and system_type="+system_type+" order by date desc";
 					System.out.println("sql=" + sql);
 					ArrayList searcharray = conn_table.executeQuery1(sql);
 					Table_Model model2 = new Table_Model(searcharray);
@@ -287,7 +287,7 @@ public class ChkResult extends JFrame {
 								+ jExpectSearchField.getText()
 								+ "' and ip = '"
 								+ searchCombox.getSelectedItem()
-								+ "' order by date desc";
+								+ "' and system_type="+system_type+" order by date desc";
 						System.out.println("sql=" + sql);
 						ArrayList searcharray = conn_table.executeQuery1(sql);
 						Table_Model model2 = new Table_Model(searcharray);
