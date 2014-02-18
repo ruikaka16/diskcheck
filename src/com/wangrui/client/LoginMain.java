@@ -14,9 +14,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.print.attribute.AttributeSetUtilities;
@@ -41,6 +45,16 @@ public class LoginMain extends JFrame {
 	private Image background;  //背景图片
 	static String RIGHTINFO = "V3.9.3.25"; //版本信息
 	static int count_device=0;
+	public static String app_path=null;
+	public static String disk_util=null;
+
+	public static String getApp_path() {
+		return app_path;
+	}
+
+	public static void setApp_path(String app_path) {
+		LoginMain.app_path = app_path;
+	}
 
 	/**
 	 * Auto-generated main method to display this JFrame
@@ -58,6 +72,8 @@ public class LoginMain extends JFrame {
 			}catch(Exception e){       
 				e.printStackTrace(); 
 				}	
+			
+			getConfigContent();
 		// 从systemconfig表中去参数配置
 	    final CollectSysConfig collectSysConfig = new CollectSysConfig();
 	    //在log文件中建立当天日期的文件夹
@@ -283,5 +299,28 @@ public class LoginMain extends JFrame {
 		    usernameField.requestFocus();
 		}
 				
+	}
+	/*****
+	 * 获取配置文件中的配置参数
+	 * 20140218
+	 */
+	public static void getConfigContent(){
+		Properties pro = new Properties();
+		try {
+			pro.load(new FileInputStream(
+					"C:/Program Files/mysql/mysql.properties"));
+					//CollectSysConfig.filePathresult+"/properties/mysql.properties"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "请联系系统开发人员，报错信息为：" + e1);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// System.out.println(pro.getProperty("jdbc.driver"));
+		app_path=pro.getProperty("config.path");
+		disk_util=pro.getProperty("disk.util");
+		setApp_path(app_path);
 	}
 }

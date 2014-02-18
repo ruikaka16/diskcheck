@@ -107,11 +107,11 @@ class T1 extends Thread {
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
-		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+""); // vbs的目录
+		File batFile = new File(LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+""); // vbs的目录
 		String[] cmd = new String[] { "wscript",
-				CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommd.vbs" };
+				LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommd.vbs" };
 
-		System.out.println("vbs目录：" + CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommd.vbs");
+		System.out.println("vbs目录：" + LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommd.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -164,7 +164,7 @@ class T1 extends Thread {
 	 */
 	public void insertCommdToDatabase(int system_type) {
 
-		File txtfile = new File(CollectSysConfig.filePathresult+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt");
+		File txtfile = new File(LoginMain.app_path+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -181,7 +181,7 @@ class T1 extends Thread {
 							+ s[2]
 							+ "'/1024/1024/1024,'"
 							+ s[3]
-							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ CollectSysConfig.utilresult+ "' then '1'else '0' end,"+system_type+")";
+							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ LoginMain.disk_util+ "' then '1'else '0' end,"+system_type+")";
 
 					System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
@@ -218,8 +218,8 @@ class T1 extends Thread {
 	 * 将windows查询结果的bak文件转换为txt文件，因为查询结果的格式存在问题，所以必须进行转换
 	 */
 	public void changeTxtType() {
-		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+SoFileCompare.getSystime()+"");
-		//System.out.println(CollectSysConfig.filePathresult + "//");
+		File bakfile = new File(LoginMain.app_path + "//log//"+SoFileCompare.getSystime()+"");
+		//System.out.println(LoginMain.app_path + "//");
 		File[] bakFiles = bakfile.listFiles();
 		String content = ""; // content保存文件内容，　　　　
 		BufferedReader reader = null; // 定义BufferedReader
@@ -261,7 +261,7 @@ class T1 extends Thread {
 
 		// 将转换后的数据写入新的txt文件中
 		try {
-			FileWriter fw = new FileWriter(CollectSysConfig.filePathresult
+			FileWriter fw = new FileWriter(LoginMain.app_path
 					+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt", true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
@@ -357,7 +357,7 @@ class T1 extends Thread {
 	 */
 	public void insertLinuxCommdToDatabase(String ip,int system_type) {
 
-		File txtfile = new File(CollectSysConfig.filePathresult
+		File txtfile = new File(LoginMain.app_path
 				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
 
 		try {
@@ -384,7 +384,7 @@ class T1 extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end,"+system_type+")";
+							+ "'),0)>= "+LoginMain.disk_util+" then '1'else '0' end,"+system_type+")";
 
 					System.out.println("s5="+s[5]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
@@ -420,8 +420,8 @@ class T1 extends Thread {
 		try {
 			InputStream in = channel.getInputStream();
 			// 查询结果返回到queryresult_linux.txt文件中
-			File file = new File(CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\queryresult_linux.txt");
+			File file = new File(LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/queryresult_linux.txt");
 			FileOutputStream fos = new FileOutputStream(file);
 			channel.connect();
 			FileCopyUtils.copy(in, fos);// 利用easydbo.jar将结果存放至文件
@@ -442,8 +442,8 @@ class T1 extends Thread {
 	public void WriteVbsCommd(String ip, String username, String password) {
 		// 写入新的vbs文件
 		try {
-			t.dos_vbs = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
+			t.dos_vbs = new RandomAccessFile(LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/" + "vbsCommd" + ".vbs", "rw");
 			t.dos_vbs.seek(t.dos_vbs.length());
 
 			String impSQL = "Set objWsh = CreateObject(\"WScript.Shell\")"
@@ -455,8 +455,8 @@ class T1 extends Thread {
 					+ " /password:"
 					+ password
 					+ " /output:"
-					+ CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
+					+ LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
 			System.out.println("打印vbs命令:\r\n" + impSQL);
@@ -511,12 +511,12 @@ class OSSearch extends Thread {
 
 		// 执行vbs命令阶段
 		System.out.println("执行vbs命令阶段!");
-		File batFile = new File(CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\"); // vbs的目录
+		File batFile = new File(LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/"); // vbs的目录
 		String[] cmd = new String[] { "wscript",
-				CollectSysConfig.filePathresult + "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommdOS.vbs" };
+				LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommdOS.vbs" };
 
-		System.out.println("vbs目录：" + CollectSysConfig.filePathresult
-				+ "\\log\\"+SoFileCompare.getSystime()+"\\vbsCommdOS.vbs");
+		System.out.println("vbs目录：" + LoginMain.app_path
+				+ "/log/"+SoFileCompare.getSystime()+"/vbsCommdOS.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -569,7 +569,7 @@ class OSSearch extends Thread {
 	 */
 	public void insertCommdToDatabase(int system_type) {
 
-		File txtfile = new File(CollectSysConfig.filePathresult
+		File txtfile = new File(LoginMain.app_path
 				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows_os.txt");
 
 		try {
@@ -596,7 +596,7 @@ class OSSearch extends Thread {
 							+ "'*100/'"
 							+ s[3]
 							+ "',0)>= '"
-							+ CollectSysConfig.utilresult
+							+ LoginMain.disk_util
 							+ "' then '1'else '0' end ,"+system_type+")";
 
 					System.out.println(s[0]);
@@ -634,7 +634,7 @@ class OSSearch extends Thread {
 	 * 将windows查询结果的bak文件转换为txt文件，因为查询结果的格式存在问题，所以必须进行转换
 	 */
 	public void changeTxtType() {
-		File bakfile = new File(CollectSysConfig.filePathresult + "//log//"+SoFileCompare.getSystime()+"//");
+		File bakfile = new File(LoginMain.app_path + "//log//"+SoFileCompare.getSystime()+"//");
 		File[] bakFiles = bakfile.listFiles();
 		String content = ""; // content保存文件内容，　　　　
 		BufferedReader reader = null; // 定义BufferedReader
@@ -676,7 +676,7 @@ class OSSearch extends Thread {
 
 		// 将转换后的数据写入新的txt文件中
 		try {
-			FileWriter fw = new FileWriter(CollectSysConfig.filePathresult
+			FileWriter fw = new FileWriter(LoginMain.app_path
 					+ "//log//"+SoFileCompare.getSystime()+"//queryresult_windows.txt", true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
@@ -708,7 +708,7 @@ class OSSearch extends Thread {
 
 		// 生成执行命令并写入vbs中
 		try {
-			File bakfile = new File(CollectSysConfig.filePathresult
+			File bakfile = new File(LoginMain.app_path
 					+ "//log//"+SoFileCompare.getSystime()+"//vbsCommdtest.vbs");
 			t.conn_query = new DBConnection();
 			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
@@ -774,8 +774,8 @@ class OSSearch extends Thread {
 	 */
 	public void insertLinuxCommdToDatabase(String ip,int system_type) {
 
-		File txtfile = new File(CollectSysConfig.filePathresult
-				+ "//log//"+SoFileCompare.getSystime()+"//queryresult_linux.txt");
+		File txtfile = new File(LoginMain.app_path
+				+ "/log/"+SoFileCompare.getSystime()+"/queryresult_linux.txt");
 
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(txtfile));
@@ -801,7 +801,7 @@ class OSSearch extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end ,"+system_type+")";
+							+ "'),0)>= "+LoginMain.disk_util+" then '1'else '0' end ,"+system_type+")";
 
 					System.out.println(s[0]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
@@ -837,8 +837,8 @@ class OSSearch extends Thread {
 		try {
 			InputStream in = channel.getInputStream();
 			// 查询结果返回到queryresult_linux.txt文件中
-			File file = new File(CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\queryresult_linux.txt");
+			File file = new File(LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/queryresult_linux.txt");
 			FileOutputStream fos = new FileOutputStream(file);
 			channel.connect();
 			FileCopyUtils.copy(in, fos);// 利用easydbo.jar将结果存放至文件
@@ -858,8 +858,8 @@ class OSSearch extends Thread {
 	public void WriteVbsCommd(String ip, String username, String password) {
 		// 写入新的vbs文件
 		try {
-			t.dos_vbs = new RandomAccessFile(CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\" + "vbsCommd" + ".vbs", "rw");
+			t.dos_vbs = new RandomAccessFile(LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/" + "vbsCommd" + ".vbs", "rw");
 			t.dos_vbs.seek(t.dos_vbs.length());
 
 			String impSQL = "Set objWsh = CreateObject(\"WScript.Shell\")"
@@ -871,8 +871,8 @@ class OSSearch extends Thread {
 					+ " /password:"
 					+ password
 					+ " /output:"
-					+ CollectSysConfig.filePathresult
-					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
+					+ LoginMain.app_path
+					+ "/log/"+SoFileCompare.getSystime()+"/"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
 			System.out.println("打印vbs命令:\r\n" + impSQL);
@@ -926,10 +926,11 @@ public class MainPanel implements ActionListener {
 	RandomAccessFile dos_vbs = null;
 
 	public MainPanel() {
-		//System.out.println(CollectSysConfig.filePathresult);
-
+		//System.out.println(LoginMain.app_path);
+		System.out.println(LoginMain.disk_util);
 		// 先删除已存在的临时文件
-		File delbatFile = new File(CollectSysConfig.filePathresult + "//"); // 生成bat的目录
+		//File delbatFile = new File(LoginMain.app_path + "//"); // 生成bat的目录
+		File delbatFile = new File(LoginMain.app_path + "//"); // 生成bat的目录
 		final File[] delbatFiles = delbatFile.listFiles();
 		for (int j = 0; j < delbatFiles.length; j++) {
 			if (delbatFiles[j].getName().endsWith(".vbs")
@@ -979,56 +980,57 @@ public class MainPanel implements ActionListener {
 
 			JMenuItem item3_1 = new JMenuItem();
 			item3_1.setText("修改密码");
-			ImageIcon logo3_1=new ImageIcon(CollectSysConfig.filePathresult+"/image/application_key.png");   //这里定义一个Icon图片
+			//ImageIcon logo3_1=new ImageIcon(LoginMain.app_path+"/image/application_key.png");   //这里定义一个Icon图片
+			ImageIcon logo3_1=new ImageIcon(LoginMain.app_path+"/image/application_key.png");
 			item3_1.setIcon(logo3_1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item3_2 = new JMenuItem();
 			item3_2.setText("增加用户");
-			ImageIcon logo3_2=new ImageIcon(CollectSysConfig.filePathresult+"/image/user_add.png");   //这里定义一个Icon图片
+			ImageIcon logo3_2=new ImageIcon(LoginMain.app_path+"/image/user_add.png");   //这里定义一个Icon图片
 			item3_2.setIcon(logo3_2);  //这里设置Icon图片到JMenu
 
 			JMenuItem item11 = new JMenuItem();
 			item11.setText("退出");
 			item11.setAccelerator(KeyStroke.getKeyStroke('Q', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
-			ImageIcon logo1=new ImageIcon(CollectSysConfig.filePathresult+"/image/exit.png");   //这里定义一个Icon图片
+			ImageIcon logo1=new ImageIcon(LoginMain.app_path+"/image/exit.png");   //这里定义一个Icon图片
 			item11.setIcon(logo1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item1_1 = new JMenuItem();
 			item1_1.setText("注销");
 			item1_1.setAccelerator(KeyStroke.getKeyStroke('O', ActionEvent.CTRL_MASK)); //增加Crtl快捷键
-			ImageIcon logo1_1=new ImageIcon(CollectSysConfig.filePathresult+"/image/user_go.png");   //这里定义一个Icon图片
+			ImageIcon logo1_1=new ImageIcon(LoginMain.app_path+"/image/user_go.png");   //这里定义一个Icon图片
 			item1_1.setIcon(logo1_1);  //这里设置Icon图片到JMenu
 
 			JMenuItem item12 = new JMenuItem();
 			item12.setText("磁盘信息查询");			
 			item12.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));  
-			ImageIcon logo12=new ImageIcon(CollectSysConfig.filePathresult+"/image/drive_disk.png");   //这里定义一个Icon图片
+			ImageIcon logo12=new ImageIcon(LoginMain.app_path+"/image/drive_disk.png");   //这里定义一个Icon图片
 			item12.setIcon(logo12);  //这里设置Icon图片到JMenu
 			
 			JMenuItem item13 = new JMenuItem();
 			item13.setText("升级记录查询");			
 			item13.setAccelerator(KeyStroke.getKeyStroke('U', ActionEvent.CTRL_MASK)); 
-			ImageIcon logo13=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");   //这里定义一个Icon图片
+			ImageIcon logo13=new ImageIcon(LoginMain.app_path+"/image/magnifier.png");   //这里定义一个Icon图片
 			item13.setIcon(logo13);  //这里设置Icon图片到JMenu
 
 			JMenuItem item31 = new JMenuItem();
 			item31.setText("查询设备");
-			ImageIcon logo31=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");   //这里定义一个Icon图片
+			ImageIcon logo31=new ImageIcon(LoginMain.app_path+"/image/magnifier.png");   //这里定义一个Icon图片
 			item31.setIcon(logo31);  //这里设置Icon图片到JMenu
 
 			JMenuItem item41 = new JMenuItem();
 			item41.setText("系统参数");
-			ImageIcon logo41=new ImageIcon(CollectSysConfig.filePathresult+"/image/config.png");   //这里定义一个Icon图片
+			ImageIcon logo41=new ImageIcon(LoginMain.app_path+"/image/config.png");   //这里定义一个Icon图片
 			item41.setIcon(logo41);  //这里设置Icon图片到JMenu
 			
 			JMenuItem item51 = new JMenuItem();
 			item51.setText("升级设备");
-			ImageIcon logo51=new ImageIcon(CollectSysConfig.filePathresult+"/image/computer.png");   //这里定义一个Icon图片
+			ImageIcon logo51=new ImageIcon(LoginMain.app_path+"/image/computer.png");   //这里定义一个Icon图片
 			item51.setIcon(logo51);  //这里设置Icon图片到JMenu
 
 			JMenuItem item21 = new JMenuItem();
 			item21.setText("版本信息");
-			ImageIcon logo21=new ImageIcon(CollectSysConfig.filePathresult+"/image/information.png");   //这里定义一个Icon图片
+			ImageIcon logo21=new ImageIcon(LoginMain.app_path+"/image/information.png");   //这里定义一个Icon图片
 			item21.setIcon(logo21);  //这里设置Icon图片到JMenu
 			
 			item21.addActionListener(new ActionListener() {
@@ -1267,9 +1269,9 @@ public class MainPanel implements ActionListener {
 			
 			DefaultTreeCellRenderer cellRenderer = new DefaultTreeCellRenderer();
 
-	        cellRenderer.setOpenIcon(new ImageIcon(CollectSysConfig.filePathresult+"/image/node.gif"));
+	        cellRenderer.setOpenIcon(new ImageIcon(LoginMain.app_path+"/image/node.gif"));
 	        //cellRenderer.setOpenIcon(openIcon);
-	        cellRenderer.setLeafIcon(new ImageIcon(CollectSysConfig.filePathresult+"/image/items.gif")); 
+	        cellRenderer.setLeafIcon(new ImageIcon(LoginMain.app_path+"/image/items.gif")); 
 	        
 	        jTree.setCellRenderer(cellRenderer);
 			
@@ -1288,7 +1290,7 @@ public class MainPanel implements ActionListener {
 						UpdateSummaryPanel updateSummaryPanel = new UpdateSummaryPanel();
 						updateSummaryPanel.setVisible(true);
 						// UpdatePanel updatePanel = new UpdatePanel();
-			            // tabbedPane.addTab(str, new ImageIcon(CollectSysConfig.filePathresult+"/items.gif"),updatePanel);
+			            // tabbedPane.addTab(str, new ImageIcon(LoginMain.app_path+"/items.gif"),updatePanel);
 			            // tabbedPane.setSelectedComponent(updatePanel);// 新建后默认显示新建的tab
 						// tabbedPane.getName();
 						 
@@ -1471,7 +1473,7 @@ public class MainPanel implements ActionListener {
 		
 		frame = new JFrame("运维管理程序");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/application_form.png");//图标路径
+		ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/application_form.png");//图标路径
 	    frame.setIconImage(icon.getImage());
 		frame.setSize(790, 440);
 		frame.setLocationRelativeTo(null); // setLocationRelativeTo必须在setSize()下面
@@ -1505,6 +1507,7 @@ public class MainPanel implements ActionListener {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new MainPanel();
+				
 			}
 		});
 	}

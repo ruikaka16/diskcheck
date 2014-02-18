@@ -207,7 +207,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				if(isSoFileIn()){
+				if(isSoFileIn(system_type)){
 					Object[] options = { "确定", "取消" };
 					int n = JOptionPane.showOptionDialog(null,
 							"已存在当天数据，是否要重新归集？", "提示",
@@ -546,18 +546,19 @@ public class SoFileCompare extends javax.swing.JDialog {
 		return format.format(date);	
 	}
 	
-	public boolean isSoFileIn(){
+	public boolean isSoFileIn(int system_type){
 		CallableStatement cstmt = null;
 		Connection  conn = null;
 		try{
 			 DBConnection c = new DBConnection();
 			 conn = c.getConnection();
-			 String sql = "{call get_count(?)}";	
+			 String sql = "{call get_count(?,?)}";	
 			 cstmt = conn.prepareCall(sql);
-			 cstmt.registerOutParameter(1, Types.INTEGER);
+			 cstmt.setInt(1, system_type);
+			 cstmt.registerOutParameter(2, Types.INTEGER);
 		     cstmt.execute();
-		     System.out.println("通过存储过程获得的当天存在数量="+cstmt.getString(1));
-		     if(cstmt.getString(1).equals("0")){
+		     System.out.println("通过存储过程获得的当天存在数量="+cstmt.getString(2));
+		     if(cstmt.getString(2).equals("0")){
 		    	 return false;
 		     }else {
 		    	 return true;
