@@ -45,6 +45,7 @@ public class DBConnection {
 	private ResultSet rs = null;
 	private String driver = null;
 	private String dbSid = null;
+	public static String app_path=null;
 	private Statement stmt;
 	private PreparedStatement pm;
 
@@ -70,10 +71,12 @@ public class DBConnection {
 			thePw = pro.getProperty("jdbc.password");
 			driver = pro.getProperty("jdbc.driver");
 			dbSid = pro.getProperty("jdbc.sid");
-
+			//app_path=pro.getProperty("config.path");
+				
 			setdbName(theUser);
 			setdbPsw(thePw);
 			setdbSid(dbSid);
+			//setApp_path(app_path);
 
 			Class.forName(driver).newInstance();
 			try {
@@ -120,6 +123,14 @@ public class DBConnection {
 
 	public String getdbPsw() {
 		return thePw;
+	}
+
+	public String getApp_path() {
+		return app_path;
+	}
+
+	public void setApp_path(String app_path) {
+		this.app_path = app_path;
 	}
 
 	public void setdbSid(String dbSid) {

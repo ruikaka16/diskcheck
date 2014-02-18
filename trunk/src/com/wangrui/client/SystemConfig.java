@@ -183,6 +183,8 @@ public class SystemConfig extends JDialog {
 							bTextField.setText("");
 							aTextField.setText("");
 							cTextField.setText("");
+							
+							conn_insertSysConfig.close();
 
 						} catch (Exception e1) {
 							e1.printStackTrace();
@@ -220,6 +222,7 @@ public class SystemConfig extends JDialog {
 								aTextField.setText("");
 								cTextField.setText("");
 
+								conn_delSysConfig.close();
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
@@ -256,6 +259,7 @@ public class SystemConfig extends JDialog {
 						cTextField.setText("");
 						setVisible(false);
 
+						conn_modify.close();
 					} catch (Exception e2) {
 						e2.printStackTrace();
 						JOptionPane
