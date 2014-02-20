@@ -97,6 +97,7 @@ class T1 extends Thread {
 
 		t.jTextArea.append("【" + getSystime() + "】︰" + "开始写入查询命令，请等待!" + "\n");
 		t.jTextArea.paintImmediately(t.jTextArea.getBounds());
+		System.out.println("********开始写入查询命令********");
 
 		// 查参数配置表并写入查询命令
 		if(LoginMain.userType.getText().equals("0")){
@@ -105,13 +106,14 @@ class T1 extends Thread {
 			queryDeviceInfoAll(1);
 		}
 
+		System.out.println("********写入查询命令完成********");
 		// 执行vbs命令阶段
-		System.out.println("执行vbs命令阶段!");
+		System.out.println("××××××××开始执行vbs命令阶段××××××××");
 		File batFile = new File(LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+""); // vbs的目录
 		String[] cmd = new String[] { "wscript",
 				LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommd.vbs" };
 
-		System.out.println("vbs目录：" + LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommd.vbs");
+		//System.out.println("vbs目录：" + LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommd.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -121,20 +123,26 @@ class T1 extends Thread {
 			try {
 				p = rn.exec(cmd);
 				int exitValue = p.waitFor();
-				System.out.println("返回值：" + exitValue);// 执行后的返回值，0为正常结束，1为出现异常
+				//System.out.println("返回值：" + exitValue);// 执行后的返回值，0为正常结束，1为出现异常
+				if(exitValue==0){
+					System.out.println("××××××××执行vbs命令成功××××××××");
+				}else{
+					System.out.println("××××××××执行vbs命令失败××××××××");
+					JOptionPane.showMessageDialog(null, "执行vbs命令失败");
+				}
 			} catch (Exception e2) {
 				e2.printStackTrace();
+				JOptionPane.showMessageDialog(null, "执行vbs命令失败!"+e2);
 			}
 
 		} else {
-			JOptionPane.showMessageDialog(null, "文件不存在!");
+			JOptionPane.showMessageDialog(null, "vbs文件不存在!");
 			t.jdiaLog.setVisible(false);// 出现异常后要去除进度条
 		}
 
 		// 文件写入后等待一下 以防止执行空文件
 		try {
 			Thread.sleep(5000);
-			System.out.println("等待一下！");
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
@@ -145,18 +153,17 @@ class T1 extends Thread {
 		// 字符的处理后等待一下，然后插入数据库
 		try {
 			Thread.sleep(2000);
-			System.out.println("等待一下！");
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
 
 		// 执行Windows查询结果插入数据库操作
+		System.out.println("********查询结果插入数据库中××××××××");
 		if(LoginMain.userType.getText().equals("0")){
 			insertCommdToDatabase(0);
 		}else if(LoginMain.userType.getText().equals("1")){
 			insertCommdToDatabase(1);
 		}
-
 	}
 
 	/*
@@ -181,9 +188,9 @@ class T1 extends Thread {
 							+ s[2]
 							+ "'/1024/1024/1024,'"
 							+ s[3]
-							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ LoginMain.disk_util+ "' then '1'else '0' end,"+system_type+")";
+							+ "'/1024/1024/1024,100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',2),case when 100-round('"+ s[2]+ "'*100/'"+ s[3]+ "',0)>= '"+ CollectSysConfig.utilresult+ "' then '1'else '0' end,"+system_type+")";
 
-					System.out.println(s[0]);
+					//System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
 
 				}
@@ -192,7 +199,7 @@ class T1 extends Thread {
 			t.conn_insertCommdToDatabase.close();
 			t.jdiaLog.setVisible(false); // 插入结束后，去除进度条，并提示查询完毕！
 			JOptionPane.showMessageDialog(null, "查询完毕!");
-
+			System.out.println("********查询结果插入数据库完成××××××××");
 			t.jTextArea.append("【" + getSystime() + "】︰" + "磁盘信息查询完成!" + "\n");
 			t.jTextArea.paintImmediately(t.jTextArea.getBounds());
 
@@ -257,7 +264,7 @@ class T1 extends Thread {
 			}
 		}
 
-		System.out.println("显示打印内容：\r\n" + content);
+		//System.out.println("显示打印内容：\r\n" + content);
 
 		// 将转换后的数据写入新的txt文件中
 		try {
@@ -295,7 +302,7 @@ class T1 extends Thread {
 		try {
 			t.conn_query = new DBConnection();
 			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
-			System.out.println(sql);
+			//System.out.println(sql);
 			t.rs_queryDeviceInfo = t.conn_query.executeQuery(sql);
 
 			List deviceInfoList = new ArrayList();// 定义一个List
@@ -320,7 +327,7 @@ class T1 extends Thread {
 							t.rs_queryDeviceInfo.getString("password"));
 				} else if (t.rs_queryDeviceInfo.getString("os").equals("Linux"))// 如果该设备为Linux则直接查询并返回文件后通过insertLinuxCommdToDatabase过程写入数据库
 				{
-					System.out.println("Linux系统的查询操作");
+					//System.out.println("××××××××Linux系统的查询操作×××××××××");
 					try {
 						WriteLinuxInfo(t.rs_queryDeviceInfo.getString("ip"),
 								t.rs_queryDeviceInfo.getString("username"),
@@ -384,9 +391,9 @@ class T1 extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+LoginMain.disk_util+" then '1'else '0' end,"+system_type+")";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end,"+system_type+")";
 
-					System.out.println("s5="+s[5]);
+					//System.out.println("s5="+s[5]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
 
 				}
@@ -456,10 +463,10 @@ class T1 extends Thread {
 					+ password
 					+ " /output:"
 					+ LoginMain.app_path
-					+ "/log/"+SoFileCompare.getSystime()+"/"
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
-			System.out.println("打印vbs命令:\r\n" + impSQL);
+			//System.out.println("打印vbs命令:\r\n" + impSQL);
 			t.dos_vbs.writeBytes(new String(impSQL.getBytes(), "iso8859-1")
 					+ "\r\n");
 		} catch (Exception e) {
@@ -510,13 +517,11 @@ class OSSearch extends Thread {
 		}
 
 		// 执行vbs命令阶段
-		System.out.println("执行vbs命令阶段!");
+		//System.out.println("执行vbs命令阶段!");
 		File batFile = new File(LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/"); // vbs的目录
 		String[] cmd = new String[] { "wscript",
 				LoginMain.app_path + "/log/"+SoFileCompare.getSystime()+"/vbsCommdOS.vbs" };
 
-		System.out.println("vbs目录：" + LoginMain.app_path
-				+ "/log/"+SoFileCompare.getSystime()+"/vbsCommdOS.vbs");
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
 
@@ -526,7 +531,7 @@ class OSSearch extends Thread {
 			try {
 				p = rn.exec(cmd);
 				int exitValue = p.waitFor();
-				System.out.println("返回值：" + exitValue);// 执行后的返回值，0为正常结束，1为出现异常
+				//System.out.println("返回值：" + exitValue);// 执行后的返回值，0为正常结束，1为出现异常
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -539,7 +544,7 @@ class OSSearch extends Thread {
 		// 文件写入后等待一下 以防止执行空文件
 		try {
 			Thread.sleep(5000);
-			System.out.println("等待一下！");
+			//System.out.println("等待一下！");
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
@@ -550,7 +555,7 @@ class OSSearch extends Thread {
 		// 字符的处理后等待一下，然后插入数据库
 		try {
 			Thread.sleep(2000);
-			System.out.println("等待一下！");
+			//System.out.println("等待一下！");
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
@@ -596,10 +601,10 @@ class OSSearch extends Thread {
 							+ "'*100/'"
 							+ s[3]
 							+ "',0)>= '"
-							+ LoginMain.disk_util
+							+ CollectSysConfig.utilresult
 							+ "' then '1'else '0' end ,"+system_type+")";
 
-					System.out.println(s[0]);
+					//System.out.println(s[0]);
 					t.conn_insertCommdToDatabase.executeUpdate(sql);
 
 				}
@@ -672,7 +677,7 @@ class OSSearch extends Thread {
 			}
 		}
 
-		System.out.println("显示打印内容：\r\n" + content);
+		//System.out.println("显示打印内容：\r\n" + content);
 
 		// 将转换后的数据写入新的txt文件中
 		try {
@@ -712,7 +717,7 @@ class OSSearch extends Thread {
 					+ "//log//"+SoFileCompare.getSystime()+"//vbsCommdtest.vbs");
 			t.conn_query = new DBConnection();
 			String sql = "select * from test.device where system_type = "+system_type+" order by ip desc";
-			System.out.println("sql="+sql);
+			//System.out.println("sql="+sql);
 			t.rs_queryDeviceInfo = t.conn_query.executeQuery(sql);
 
 			List deviceInfoList = new ArrayList();// 定义一个List
@@ -737,7 +742,7 @@ class OSSearch extends Thread {
 							t.rs_queryDeviceInfo.getString("password"));
 				} else if (t.rs_queryDeviceInfo.getString("os").equals("Linux"))// 如果该设备为Linux则直接查询并返回文件后通过insertLinuxCommdToDatabase过程写入数据库
 				{
-					System.out.println("Linux系统的查询操作");
+					//System.out.println("××××××××Linux系统的查询操作××××××××");
 					try {
 						WriteLinuxInfo(t.rs_queryDeviceInfo.getString("ip"),
 								t.rs_queryDeviceInfo.getString("username"),
@@ -801,9 +806,9 @@ class OSSearch extends Thread {
 							+ s[3]
 							+ "'*100/('"
 							+ Integer.parseInt(s[1])
-							+ "'),0)>= "+LoginMain.disk_util+" then '1'else '0' end ,"+system_type+")";
+							+ "'),0)>= "+CollectSysConfig.utilresult+" then '1'else '0' end ,"+system_type+")";
 
-					System.out.println(s[0]);
+					//System.out.println(s[0]);
 					t.conn_insertLiunxCommdToDatabase.executeUpdate(sql);
 
 				}
@@ -872,10 +877,10 @@ class OSSearch extends Thread {
 					+ password
 					+ " /output:"
 					+ LoginMain.app_path
-					+ "/log/"+SoFileCompare.getSystime()+"/"
+					+ "\\log\\"+SoFileCompare.getSystime()+"\\"
 					+ ip
 					+ ".bak logicaldisk where drivetype=3 get DeviceID,Size,FreeSpace /format:csv\",vbhide\r\nWScript.Sleep 3000\r\n";
-			System.out.println("打印vbs命令:\r\n" + impSQL);
+			//System.out.println("打印vbs命令:\r\n" + impSQL);
 			t.dos_vbs.writeBytes(new String(impSQL.getBytes(), "iso8859-1")
 					+ "\r\n");
 		} catch (Exception e) {
@@ -924,23 +929,8 @@ public class MainPanel implements ActionListener {
 	ResultSet rs_queryDeviceInfo, rs_querySysConfigInfo, rs_getFilePath,
 			rs_getUtil;
 	RandomAccessFile dos_vbs = null;
-
+	
 	public MainPanel() {
-		//System.out.println(LoginMain.app_path);
-		System.out.println(LoginMain.disk_util);
-		// 先删除已存在的临时文件
-		//File delbatFile = new File(LoginMain.app_path + "//"); // 生成bat的目录
-		File delbatFile = new File(LoginMain.app_path + "//"); // 生成bat的目录
-		final File[] delbatFiles = delbatFile.listFiles();
-		for (int j = 0; j < delbatFiles.length; j++) {
-			if (delbatFiles[j].getName().endsWith(".vbs")
-					|| delbatFiles[j].getName().endsWith(".bak")
-					|| delbatFiles[j].getName().endsWith(".txt")
-					|| delbatFiles[j].getName().endsWith(".bat")) {
-
-				delbatFiles[j].delete();
-			}
-		}
 
 		setWindow();// 添加程序窗体
 		addComponent();// 在窗体中增加组建
@@ -1093,9 +1083,19 @@ public class MainPanel implements ActionListener {
 					// TODO Auto-generated method stub
 					if(LoginMain.userType.getText().equals("0")){
 					UpdateLog updateLogWin = new UpdateLog(0);
+					if(updateLogWin.getNum(0)==0){
+						return;
+					}else {
+						updateLogWin.setVisible(true);
+					}
 					updateLogWin.setVisible(true);
 					}else if(LoginMain.userType.getText().equals("1")){
 						UpdateLog updateLogWin = new UpdateLog(1);
+						if(updateLogWin.getNum(1)==0){
+							return;
+						}else {
+							updateLogWin.setVisible(true);
+						}
 						updateLogWin.setVisible(true);
 					}
 				}
@@ -1329,8 +1329,15 @@ public class MainPanel implements ActionListener {
 						tabbedPane.getName();
 					}else if(str.equals("升级记录查询")){
 						
-						UpdateLog updateLog = new UpdateLog(0);
-						updateLog.setVisible(true);
+						if(LoginMain.userType.getText().equals("0")){
+							UpdateLog updateLogWin = new UpdateLog(0);
+							updateLogWin.setVisible(true);
+							}else if(LoginMain.userType.getText().equals("1")){
+								UpdateLog updateLogWin = new UpdateLog(1);
+								updateLogWin.setVisible(true);
+							}
+						
+						//updateLog.setVisible(true);
 						//tabbedPane.addTab(str, updateLog);
 						//tabbedPane.setSelectedComponent(updateLog);
 						//tabbedPane.getName();
@@ -1429,7 +1436,7 @@ public class MainPanel implements ActionListener {
 				// TODO Auto-generated method stub
 				if (e.getClickCount() == 2) {
 					int i = tabbedPane.getSelectedIndex();
-					System.out.println(i);
+					//System.out.println(i);
 					if (i == 0) {
 						return;
 					} else
@@ -1485,6 +1492,26 @@ public class MainPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("开始查询")) {
+			// 先删除已存在的临时文件
+			//File delbatFile = new File(LoginMain.app_path + "//"); // 生成bat的目录
+			System.out.println("××××××××开始删除临时文件××××××××");
+			File delbatFile = new File(LoginMain.app_path + "//log//"+SoFileCompare.getSystime()); // 生成bat的目录
+			final File[] delbatFiles = delbatFile.listFiles();
+			for (int j = 0; j < delbatFiles.length; j++) {
+				if(delbatFiles[j].isFile()){
+					if (delbatFiles[j].getName().endsWith(".vbs")
+							//|| delbatFiles[j].getName().endsWith(".bak")
+							//|| delbatFiles[j].getName().endsWith(".txt")
+							|| delbatFiles[j].getName().endsWith(".bat")) {
+
+						delbatFiles[j].delete();
+					}
+				}else {
+					return;
+				}
+				
+			}
+			System.out.println("××××××××临时文件删除成功××××××××");
 			t1 = new T1(this);
 			t1.start();
 			jdiaLog = new JDialog(frame, "searching!", true);

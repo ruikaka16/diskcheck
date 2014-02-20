@@ -1426,7 +1426,7 @@ public class UpdatePanel extends JPanel {
 		if (system_type == 0) {
 			try {
 				dos_bat_zh = new RandomAccessFile(
-						CollectSysConfig.filePathresult + "/log/"
+						LoginMain.app_path + "/log/"
 								+ getCurrentDay() + "/" + "zh_batCommd"
 								+ ".bat", "rw");
 				dos_bat_zh.seek(dos_bat_zh.length());
@@ -1434,11 +1434,11 @@ public class UpdatePanel extends JPanel {
 				String upload_comm = "pscp -l " + username + " -pw " + password
 						+ " -p -r " + localpath + " " + username + "@" + ip
 						+ ":" + remotepath + " |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				String endflag = "@echo end |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				System.out.println("升级设备上传命令:\r\n" + upload_comm + "\r\n"
@@ -1466,7 +1466,7 @@ public class UpdatePanel extends JPanel {
 		} else if (system_type == 1) {
 			try {
 				dos_bat_rzrq = new RandomAccessFile(
-						CollectSysConfig.filePathresult + "/log/"
+						LoginMain.app_path + "/log/"
 								+ getCurrentDay() + "/" + "rzrq_batCommd"
 								+ ".bat", "rw");
 				dos_bat_rzrq.seek(dos_bat_rzrq.length());
@@ -1474,11 +1474,11 @@ public class UpdatePanel extends JPanel {
 				String upload_comm = "pscp -l " + username + " -pw " + password
 						+ " -p -r " + localpath + " " + username + "@" + ip
 						+ ":" + remotepath + " |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				String endflag = "@echo end |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				System.out.println("打印融资融券bat命令:\r\n" + endflag);
@@ -1517,7 +1517,7 @@ public class UpdatePanel extends JPanel {
 	public void excuteUploadComm(final int system_type) throws IOException {
 
 		System.out.println("升级设备数量：" + updatedevice_count);
-		File batFile = new File(CollectSysConfig.filePathresult + "/log/"
+		File batFile = new File(LoginMain.app_path + "/log/"
 				+ getCurrentDay()); // bat的目录
 		final File[] batFiles = batFile.listFiles();
 		if (batFiles != null) {
@@ -1527,7 +1527,7 @@ public class UpdatePanel extends JPanel {
 
 				try {
 					p = rn.exec("cmd.exe /c start "
-							+ CollectSysConfig.filePathresult + "/log/"
+							+ LoginMain.app_path + "/log/"
 							+ getCurrentDay() + "//zh_batCommd.bat");
 					// System.out.println(batFiles[i].getPath());
 					try {
@@ -1550,7 +1550,7 @@ public class UpdatePanel extends JPanel {
 
 				try {
 					p = rn.exec("cmd.exe /c start "
-							+ CollectSysConfig.filePathresult + "/log/"
+							+ LoginMain.app_path + "/log/"
 							+ getCurrentDay() + "//rzrq_batCommd.bat");
 					// System.out.println(batFiles[i].getPath());
 					try {
@@ -1585,7 +1585,7 @@ public class UpdatePanel extends JPanel {
 					long length1 = 0;
 					boolean oneZero = true; // 判断日志是否为空的标志
 					boolean oneComplete = true; // 判断日志导入完成的标志，true代表完成
-					File file = new File(CollectSysConfig.filePathresult
+					File file = new File(LoginMain.app_path
 							+ "//log//" + getCurrentDay() + "//");
 					File[] files = file.listFiles();
 					if (files != null && files.length != 0) {
@@ -2101,13 +2101,13 @@ public class UpdatePanel extends JPanel {
 		if (system_type == 0) {
 			try {
 				dos_bat_zh = new RandomAccessFile(
-						CollectSysConfig.filePathresult + "/log/"
+						LoginMain.app_path + "/log/"
 								+ getCurrentDay() + "/" + "zh_batCommd"
 								+ ".bat", "rw");
 				dos_bat_zh.seek(dos_bat_zh.length());
 
 				String endflag = "@echo end |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				System.out.println("打印账户bat命令:\r\n" + endflag);
@@ -2131,13 +2131,13 @@ public class UpdatePanel extends JPanel {
 		} else if (system_type == 1) {
 			try {
 				dos_bat_rzrq = new RandomAccessFile(
-						CollectSysConfig.filePathresult + "/log/"
+						LoginMain.app_path + "/log/"
 								+ getCurrentDay() + "/" + "rzrq_batCommd"
 								+ ".bat", "rw");
 				dos_bat_rzrq.seek(dos_bat_rzrq.length());
 
 				String endflag = "@echo end |mtee /c /+ "
-						+ CollectSysConfig.filePathresult + "\\log\\"
+						+ LoginMain.app_path + "\\log\\"
 						+ getCurrentDay() + "\\" + ip.replaceAll("\\.", "_")
 						+ "_log.txt";
 				System.out.println("打印融资融券bat命令:\r\n" + endflag);

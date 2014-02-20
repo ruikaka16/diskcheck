@@ -3,6 +3,7 @@ package com.wangrui.client.window;
 import java.awt.BorderLayout;
 import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.JExpectSearchField;
+import com.wangrui.client.LoginMain;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -69,7 +70,7 @@ public class UpdateLog extends JDialog{
 		
 		// 界面部分
 		super();
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");//图标路径
+		ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/magnifier.png");//图标路径
 	    setIconImage(icon.getImage());
 	    
 	   // setModal(true);
@@ -100,39 +101,23 @@ public class UpdateLog extends JDialog{
 				// TODO Auto-generated method stub
 				searchCombox = (JComboBox) e.getSource();
 				String selString = (String) searchCombox.getSelectedItem();
-				System.out.println("searchCombox=" + selString);
+				//System.out.println("searchCombox=" + selString);
 			}
 		});
 
-		// 获得表中的数据条数记入num
-		conn_num = new DBConnection();
-		String sql3 = "select count(*)  from test.update_log where system_type=0";
-		String sql3_1 = "select count(*) from test.update_log where system_type=1";
-		if(system_type == 0){
-		rs = conn_num.executeQuery(sql3);
-		}else if(system_type == 1){
-			rs = conn_num.executeQuery(sql3_1);
-		}
-		try {
-			while (rs.next()) {
-				num = rs.getInt(1);
-			}
-			rs.close();
-			conn_num.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if(num == 0){
+		
+		if(getNum(system_type)==0){
 			JOptionPane.showMessageDialog(null, "没有可用数据！");
+			//System.out.println("zh系统"+getNum(system_type));
 			return;
+			
 		}else{
 			// 将表中的数据显示到jtable中
 			conn_getUpdateLog = new DBConnection();
-			String sql4 = "select oc_date,remark,update_content ,operator from update_log where system_type = 0 order by oc_date desc";
-			String sql4_1 = "select oc_date,remark,update_content ,operator from update_log where system_type = 1 order by oc_date desc";
-			if(system_type == 0){
+			String sql4 = "select oc_date,remark,update_content ,operator from update_log where system_type = "+system_type+" order by oc_date desc";
+			//String sql4_1 = "select oc_date,remark,update_content ,operator from update_log where system_type = 1 order by oc_date desc";
+			
+		
 			ArrayList array = conn_getUpdateLog.executeQuery3(sql4);
 			Table_Model_Updatelog model1 = new Table_Model_Updatelog(array);
 			table = new JTable(model1) { // 表格不允许被编辑
@@ -141,20 +126,7 @@ public class UpdateLog extends JDialog{
 				}
 
 			};
-			}else if(system_type==1){
-				ArrayList array = conn_getUpdateLog.executeQuery3(sql4_1);
-				Table_Model_Updatelog model1 = new Table_Model_Updatelog(array);
-				table = new JTable(model1) { // 表格不允许被编辑
-					public boolean isCellEditable(int row, int column) {
-						return false;
-					}
-
-				};
-			}
 			
-
-			
-
 			// table字段居中显示
 			DefaultTableCellRenderer cellRanderer = new DefaultTableCellRenderer();
 			cellRanderer.setHorizontalAlignment(JLabel.CENTER);
@@ -165,7 +137,7 @@ public class UpdateLog extends JDialog{
 
 			// googlesuggest搜索显示
 			DBConnection conn_searchSuggest = new DBConnection();
-			String sql = "select distinct oc_date from test.update_log";
+			String sql = "select distinct oc_date from test.update_log where system_type = "+system_type+"";
 			ResultSet rs_search = conn_searchSuggest.executeQuery(sql);
 
 			try {
@@ -287,7 +259,7 @@ public class UpdateLog extends JDialog{
 					ArrayList searcharray = null;
 					if(jExpectSearchField.getText().equals("")){
 						 searcharray = conn_getUpdateLog.executeQuery3(sql5);
-						 System.out.println("sql5=" + sql5);
+						 //System.out.println("sql5=" + sql5);
 							Table_Model_Updatelog model2 = new Table_Model_Updatelog(searcharray);
 							// table.remove(table);
 							table.updateUI(); // 按搜索条件重绘table
@@ -295,7 +267,7 @@ public class UpdateLog extends JDialog{
 							table.setRowSorter(new TableRowSorter(model2));// 搜索后的结果进行排序
 					}else{
 						 searcharray = conn_getUpdateLog.executeQuery3(sql);
-						 System.out.println("sql=" + sql);
+						 //System.out.println("sql=" + sql);
 							Table_Model_Updatelog model2 = new Table_Model_Updatelog(searcharray);
 							// table.remove(table);
 							table.updateUI(); // 按搜索条件重绘table
@@ -332,7 +304,7 @@ public class UpdateLog extends JDialog{
 					ArrayList searcharray = null;
 					if(jExpectSearchField.getText().equals("")){
 						 searcharray = conn_getUpdateLog.executeQuery3(sql5);
-						 System.out.println("sql5=" + sql5);
+						 //System.out.println("sql5=" + sql5);
 							Table_Model_Updatelog model2 = new Table_Model_Updatelog(searcharray);
 							// table.remove(table);
 							table.updateUI(); // 按搜索条件重绘table
@@ -340,7 +312,7 @@ public class UpdateLog extends JDialog{
 							table.setRowSorter(new TableRowSorter(model2));// 搜索后的结果进行排序
 					}else{
 						 searcharray = conn_getUpdateLog.executeQuery3(sql);
-						 System.out.println("sql=" + sql);
+						 //System.out.println("sql=" + sql);
 							Table_Model_Updatelog model2 = new Table_Model_Updatelog(searcharray);
 							// table.remove(table);
 							table.updateUI(); // 按搜索条件重绘table
@@ -390,5 +362,28 @@ public class UpdateLog extends JDialog{
 			//setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
 	       
 		}
+	}
+	public int getNum(int system_type){
+		
+		// 获得表中的数据条数记入num
+		conn_num = new DBConnection();
+		String sql3 = "select count(*)  from test.update_log where system_type=0";
+		String sql3_1 = "select count(*) from test.update_log where system_type=1";
+		if(system_type == 0){
+		rs = conn_num.executeQuery(sql3);
+		}else if(system_type == 1){
+			rs = conn_num.executeQuery(sql3_1);
+		}
+		try {
+			while (rs.next()) {
+				num = rs.getInt(1);
+			}
+			rs.close();
+			conn_num.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return num;
 	}
 }

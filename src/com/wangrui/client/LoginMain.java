@@ -43,7 +43,7 @@ public class LoginMain extends JFrame {
 	private MainPanel appPanel;
 	private ReadHQ readHQ;
 	private Image background;  //背景图片
-	static String RIGHTINFO = "V3.9.3.25"; //版本信息
+	static String RIGHTINFO = "V3.9.3.26"; //版本信息
 	static int count_device=0;
 	public static String app_path=null;
 	public static String disk_util=null;
@@ -77,7 +77,7 @@ public class LoginMain extends JFrame {
 		// 从systemconfig表中去参数配置
 	    final CollectSysConfig collectSysConfig = new CollectSysConfig();
 	    //在log文件中建立当天日期的文件夹
-	    File file = new File(CollectSysConfig.filePathresult+"/log/"+getSystemDate());
+	    File file = new File(getApp_path()+"/log/"+getSystemDate());
 	    file.mkdirs();
 	    
 		LoginMain inst = new LoginMain();
@@ -102,7 +102,7 @@ public class LoginMain extends JFrame {
 
 	private void initGUI() {
 
-		Image icon = (new ImageIcon(CollectSysConfig.filePathresult+"/image/title.gif")).getImage();
+		Image icon = (new ImageIcon(getApp_path()+"/image/title.gif")).getImage();
 		setIconImage(icon);
 		mainPanel = (JPanel) this.getContentPane();
 
@@ -125,16 +125,15 @@ public class LoginMain extends JFrame {
 		mainPanel = new JPanel() {  
             @Override  
             protected void paintComponent(Graphics g) {  
-                ImageIcon icon = new ImageIcon(CollectSysConfig.filePathresult+"/image/background.jpg"); 
-               // System.out.println(CollectSysConfig.filePathresult+"/background.jpg");
+                ImageIcon icon = new ImageIcon(getApp_path()+"/image/background.jpg"); 
                 Image img = icon.getImage();  
                 g.drawImage(img, 0, 0, icon.getIconWidth(), icon.getIconHeight(), icon.getImageObserver());  
            }  
         };  
 		mainPanel.setLayout(null);
 
-		ImageIcon userIcon=new ImageIcon(CollectSysConfig.filePathresult+"/image/user.gif");//图标路径
-		ImageIcon pswIcon=new ImageIcon(CollectSysConfig.filePathresult+"/image/psw.gif");//图标路径	        
+		ImageIcon userIcon=new ImageIcon(getApp_path()+"/image/user.gif");//图标路径
+		ImageIcon pswIcon=new ImageIcon(getApp_path()+"/image/psw.gif");//图标路径	        
 	        
 		mainLabel = new JLabel("欢迎使用运维管理程序");
 		mainLabel.setFont(new Font("仿宋", Font.CENTER_BASELINE, 28));
@@ -308,8 +307,8 @@ public class LoginMain extends JFrame {
 		Properties pro = new Properties();
 		try {
 			pro.load(new FileInputStream(
-					"C:/Program Files/mysql/mysql.properties"));
-					//CollectSysConfig.filePathresult+"/properties/mysql.properties"));
+					"D:/Management/properties/mysql.properties"));
+					//getApp_path()+"/properties/mysql.properties"));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -320,7 +319,6 @@ public class LoginMain extends JFrame {
 		}
 		// System.out.println(pro.getProperty("jdbc.driver"));
 		app_path=pro.getProperty("config.path");
-		disk_util=pro.getProperty("disk.util");
 		setApp_path(app_path);
 	}
 }

@@ -55,7 +55,7 @@ public class DBConnection {
 			Properties pro = new Properties();
 			try {
 				pro.load(new FileInputStream(
-						"C:/Program Files/mysql/mysql.properties"));
+						"D:/Management/properties/mysql.properties"));
 						//CollectSysConfig.filePathresult+"/properties/mysql.properties"));
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block

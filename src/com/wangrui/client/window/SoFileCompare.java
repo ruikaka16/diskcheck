@@ -420,7 +420,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 		String sql4 = "select file_name,file_size,file_time from test.update_sofilelist where ip = '"+ip+"' and calc_time = '"+getSystime()+"'";
 		ResultSet rs1 = conn_table.executeQuery(sql4);
 		tableInfo = new String[getNum(ip)][3];
-		System.out.println("获取的文件数量="+getNum(ip));
+		//System.out.println("获取的文件数量="+getNum(ip));
 		try {
 			while (rs1.next()) {
 				// 在表中获取数据
@@ -454,7 +454,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 			while (rs.next()) {
 				number = rs.getInt(1);
 				//jLabel3.setText(String.valueOf(num));
-				System.out.println(number);
+				//System.out.println(number);
 			}
 			rs.close();
 			conn_num.close();
@@ -557,7 +557,7 @@ public class SoFileCompare extends javax.swing.JDialog {
 			 cstmt.setInt(1, system_type);
 			 cstmt.registerOutParameter(2, Types.INTEGER);
 		     cstmt.execute();
-		     System.out.println("通过存储过程获得的当天存在数量="+cstmt.getString(2));
+		    // System.out.println("通过存储过程获得的当天存在数量="+cstmt.getString(2));
 		     if(cstmt.getString(2).equals("0")){
 		    	 return false;
 		     }else {

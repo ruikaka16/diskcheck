@@ -64,7 +64,7 @@ class Table_Model extends AbstractTableModel {
 
 		if (value.getFreespace() != null) {
 			v.add(3, value.getFreespace());
-			System.out.println(value.getFreespace());
+			//System.out.println(value.getFreespace());
 		} else {
 			v.add(3, " ");
 		}
@@ -85,7 +85,7 @@ class Table_Model extends AbstractTableModel {
 		}
 		if (value.getDate() != null) {
 			v.add(7, value.getDate());
-			System.out.println(value.getDate());
+			//System.out.println(value.getDate());
 		} else {
 			v.add(7, " ");
 		}

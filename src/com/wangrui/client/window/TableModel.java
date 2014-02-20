@@ -27,7 +27,7 @@ class Table_Model_Updatelog extends AbstractTableModel {
 		for (int i = 0; i < a.size(); i++) {
 			UpdateLogDateValue value = (UpdateLogDateValue) a.get(i);
 			addRow(value);
-			System.out.println("======="+value.getOc_date());
+			//System.out.println("======="+value.getOc_date());
 		}
 
 	}
@@ -64,7 +64,7 @@ class Table_Model_Updatelog extends AbstractTableModel {
 
 		if (value.getOperator() != null) {
 			v.add(3, value.getOperator());
-			System.out.println("value.getOperator()="+value.getOperator());
+			//System.out.println("value.getOperator()="+value.getOperator());
 		} else {
 			v.add(3, " ");
 		}

@@ -11,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.wangrui.client.CollectSysConfig;
+import com.wangrui.client.LoginMain;
 import com.wangrui.server.DBConnection;
 
 public class AddUser extends JDialog{
@@ -154,7 +155,7 @@ public class AddUser extends JDialog{
 	                .addContainerGap())
 	        );
 	        
-	        ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/user_add.png");//图标路径
+	        ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/user_add.png");//图标路径
 	        setIconImage(icon.getImage());
 	        
 	        setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
@@ -222,7 +223,7 @@ public class AddUser extends JDialog{
 		try{
 			int i=0;
 			String sql = "select count(*) from test.user where name = '"+userid+"'  ";
-			System.out.println(sql);
+			//System.out.println(sql);
 			DBConnection conn_vaildInsert = new DBConnection();
 			ResultSet rs_vaildInsert = conn_vaildInsert.executeQuery(sql);
 			while(rs_vaildInsert.next()){
@@ -245,7 +246,7 @@ public Boolean insertUser(String password,String username){
 	
 		DBConnection insertUser = new DBConnection();
 		String sql = "insert into user (name,password,openday,status,username,classes) values('"+username+"',password('" + password+ "'),now(),0,'"+jComboBox1.getSelectedItem()+"',case when "+jComboBox1.getSelectedItem().equals("账户管理")+" then 0 else 1 end);";
-		System.out.println(sql);
+		//System.out.println(sql);
 		try{
 			insertUser.executeUpdate(sql);
 

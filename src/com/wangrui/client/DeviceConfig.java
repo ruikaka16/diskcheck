@@ -47,7 +47,7 @@ public class DeviceConfig extends JFrame {
 	Statement stmt, stmt1;
 	ResultSet rs, rs1, rs2;
 	private JComboBox cb; // 20121011 增加下拉框
-	private static String[] data = { "Windows", "Linux" };// 20121011增加下拉框中的默认数据
+	private static String[] data = { "   " ,"Windows", "Linux" };// 20121011增加下拉框中的默认数据
 	int num; // 记录条数
 	int i = 0;
 	private Object tableVales[][];
@@ -55,7 +55,7 @@ public class DeviceConfig extends JFrame {
 	public DeviceConfig(final int system_type) {
 		// 界面部分
 		super();
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");//图标路径
+		ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/magnifier.png");//图标路径
         setIconImage(icon.getImage());
 		setTitle("查询设备配置");
 		setBounds(100, 100, 800, 600);
@@ -141,7 +141,7 @@ public class DeviceConfig extends JFrame {
 					cb.addItem(data[1]);
 					cb.setSelectedItem("Linux");
 				}
-				System.out.println(data[1]);
+				//System.out.println(data[1]);
 			}
 		});
 
@@ -183,7 +183,7 @@ public class DeviceConfig extends JFrame {
 		addButton.addActionListener(new ActionListener() {// 添加事件
 					public void actionPerformed(ActionEvent e) {
 						
-						System.out.println("ip="+aTextField.getText());
+						//System.out.println("ip="+aTextField.getText());
 
 						if (aTextField.getText().length() == 0) {
 							JOptionPane
@@ -206,8 +206,6 @@ public class DeviceConfig extends JFrame {
 								return;
 							}
 						}
-						System.out.println("获得Jcombox的当前值："
-								+ cb.getSelectedItem());
 
 						if (bTextField.getText().length() == 0) {
 							JOptionPane.showMessageDialog(null, "请输入查询设备的用户名！");
