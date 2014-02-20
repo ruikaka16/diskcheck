@@ -311,36 +311,6 @@ public class HqQuery extends javax.swing.JFrame {
 		setLocation(500, 300);
 		pack();
 
-		/*
-		 * jButton3.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { // TODO
-		 * Auto-generated method stub
-		 * 
-		 * File reportFile = new File("R:\\wangrui\\report2.jasper");
-		 * JasperReport jasperReport = null; try { jasperReport = (JasperReport)
-		 * JRLoader.loadObject(reportFile.getPath()); } catch (JRException e1) {
-		 * // TODO Auto-generated catch block e1.printStackTrace(); }
-		 * 
-		 * Map parameters = new HashMap<String, String>();
-		 * parameters.put("barcode", "564789"); try {
-		 * Class.forName("com.mysql.jdbc.Driver"); Connection conn
-		 * =DriverManager
-		 * .getConnection("jdbc:mysql://localhost:3306/test","root", "wangrui");
-		 * } catch (ClassNotFoundException e2) { // TODO Auto-generated catch
-		 * block e2.printStackTrace(); } catch (SQLException e3) { // TODO
-		 * Auto-generated catch block e3.printStackTrace(); }
-		 * 
-		 * try { JasperPrint print = JasperFillManager.fillReport(jasperReport,
-		 * parameters); try { OutputStream output = new FileOutputStream(new
-		 * File("R:\\wangrui\\report2.pdf")); } catch (FileNotFoundException e1)
-		 * { // TODO Auto-generated catch block e1.printStackTrace(); }
-		 * JasperExportManager.exportReportToPdfFile(print,
-		 * "R:\\wangrui\\report2.pdf"); } catch (JRException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); }
-		 * 
-		 * } });
-		 */
 		jButton4.addActionListener(new ActionListener() {
 
 			@Override
@@ -419,9 +389,8 @@ public class HqQuery extends javax.swing.JFrame {
 							try {
 								// System.out.println("开始执行读DBF文件！");
 								long start = System.currentTimeMillis();
-								readDBF("D:/hq/szhq/sjshq.dbf", "C:/szhq.txt");
-								readDBF("D:/hq/shhq/show2003.dbf",
-										"C:/shhq.txt");
+								readDBF(CollectSysConfig.hqpath, LoginMain.app_path+"/szhq.txt");
+								readDBF(CollectSysConfig.shhqPath,LoginMain.app_path+"/shhq.txt");
 								long end = System.currentTimeMillis();
 								// System.out.println("耗时="+(end-start));
 
@@ -437,8 +406,8 @@ public class HqQuery extends javax.swing.JFrame {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							executeCommd("C:/szhq.txt", "szhq");
-							executeCommd("C:/shhq.txt", "shhq");
+							executeCommd(LoginMain.app_path+"/szhq.txt", "szhq");
+							executeCommd(LoginMain.app_path+"/shhq.txt", "shhq");
 						}
 
 					}, 0, 1500);
@@ -567,9 +536,6 @@ public class HqQuery extends javax.swing.JFrame {
 			// bw.write(inputStr);
 		}
 		fw.close();
-
-		// executeCommd("c:/szhq.txt");
-		// executeCommd("c:/shhq.txt");
 	}
 
 	public static void executeCommd(String txtpath, String table) {

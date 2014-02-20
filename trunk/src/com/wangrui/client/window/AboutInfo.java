@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.wangrui.client.CollectSysConfig;
+import com.wangrui.client.LoginMain;
 
 public class AboutInfo extends JDialog{
 
@@ -45,7 +46,7 @@ public class AboutInfo extends JDialog{
 		
 		add(aboutInfowin);
 		
-		ImageIcon logo21=new ImageIcon(CollectSysConfig.filePathresult+"/image/information.png");   //这里定义一个Icon图片
+		ImageIcon logo21=new ImageIcon(LoginMain.app_path+"/image/information.png");   //这里定义一个Icon图片
 		setIconImage(logo21.getImage());  //这里设置Icon图片到JMenu
 		setTitle("程序版本信息");
 		setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
@@ -62,7 +63,7 @@ public class AboutInfo extends JDialog{
 		String content = ""; // content保存文件内容，
 		try {
 			
-			File changelog = new File(CollectSysConfig.filePathresult + "//changelog.log");
+			File changelog = new File(LoginMain.app_path + "//changelog.log");
 			InputStreamReader in = new InputStreamReader(new FileInputStream(changelog),"GBK");// 编码装换
 
 			reader = new BufferedReader(in);// 按行读取文件并加入到content中。　　　　　　//当readLine方法返回null时表示文件读取完毕。　　　　　

@@ -61,7 +61,7 @@ public class ChkResult extends JFrame {
 
 		// 界面部分
 		super();
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/drive_disk.png");//图标路径
+		ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/drive_disk.png");//图标路径
 	    setIconImage(icon.getImage());
 		setTitle("磁盘信息查询结果");
 		setBounds(100, 100, 800, 600);
@@ -82,7 +82,7 @@ public class ChkResult extends JFrame {
 				// TODO Auto-generated method stub
 				searchCombox = (JComboBox) e.getSource();
 				String selString = (String) searchCombox.getSelectedItem();
-				System.out.println("searchCombox=" + selString);
+				//System.out.println("searchCombox=" + selString);
 			}
 		});
 
@@ -109,7 +109,7 @@ public class ChkResult extends JFrame {
 			conn_table = new DBConnection();
 			String sql4 = "select date,ip,deviceid,freespace,size,util,type from test.deviceDisk where deviceid not in ('/boot')  and system_type = "+system_type+" order by date desc ";
 			ArrayList array = conn_table.executeQuery1(sql4);
-			System.out.println("数据量="+array.size());
+			//System.out.println("数据量="+array.size());
 			Table_Model model1 = new Table_Model(array);
 
 			table = new JTable(model1) { // 表格不允许被编辑
@@ -150,7 +150,7 @@ public class ChkResult extends JFrame {
 			
 
 			
-			System.out.println("数据库条数：" + num);
+			//System.out.println("数据库条数：" + num);
 
 			// googlesuggest搜索显示
 			DBConnection conn_searchSuggest = new DBConnection();
@@ -192,7 +192,7 @@ public class ChkResult extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					System.out.println("device=" + jExpectSearchField.getText());
+					//System.out.println("device=" + jExpectSearchField.getText());
 					searchCombox.removeAllItems();
 					DBConnection conn_searchCombox = new DBConnection();
 					String sql1 = "select distinct ip from devicedisk where deviceid = '"
@@ -256,7 +256,7 @@ public class ChkResult extends JFrame {
 							+ jExpectSearchField.getText() + "' and ip = '"
 							+ searchCombox.getSelectedItem()
 							+ "' and system_type="+system_type+" order by date desc";
-					System.out.println("sql=" + sql);
+					//System.out.println("sql=" + sql);
 					ArrayList searcharray = conn_table.executeQuery1(sql);
 					Table_Model model2 = new Table_Model(searcharray);
 					// table.remove(table);
@@ -288,7 +288,7 @@ public class ChkResult extends JFrame {
 								+ "' and ip = '"
 								+ searchCombox.getSelectedItem()
 								+ "' and system_type="+system_type+" order by date desc";
-						System.out.println("sql=" + sql);
+						//System.out.println("sql=" + sql);
 						ArrayList searcharray = conn_table.executeQuery1(sql);
 						Table_Model model2 = new Table_Model(searcharray);
 						// table.remove(table);

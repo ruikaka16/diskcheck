@@ -49,7 +49,7 @@ public class UpdateReport extends JFrame {
 		editorPane.setEditable(false);
 		// 要能响应网页中的链接，则必须加上超链监听器
 		// editorPane.addHyperlinkListener(this);
-		String path = "file:///"+CollectSysConfig.filePathresult+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html";
+		String path = "file:///"+LoginMain.app_path+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html";
 		System.out.println("升级报告文件路径："+path);
 		try {
 			if(system_type==0){
@@ -90,7 +90,7 @@ public class UpdateReport extends JFrame {
 			JasperReport jasperReport = null;  
 		        JasperPrint jasperPrint = null;  
 //		      jasperReport = JasperCompileManager.compileReport(fileName);//编译jrxml文件  
-		        InputStream inputStream = new FileInputStream(CollectSysConfig.filePathresult+"/jasper/updateFileInfo.jasper");  
+		        InputStream inputStream = new FileInputStream(LoginMain.app_path+"/jasper/updateFileInfo.jasper");  
 		        Map<String, Object> parameters = new HashMap<String, Object>();//需要传入报表中的参数  
 				parameters.put("title",MainPanel.str+"文件报告");
 				parameters.put("operator", LoginMain.userLabel.getText());
@@ -104,7 +104,7 @@ public class UpdateReport extends JFrame {
 				//}
 			
 		        jasperPrint = JasperFillManager.fillReport(inputStream, parameters, conn);  
-		        JasperExportManager.exportReportToHtmlFile(jasperPrint, CollectSysConfig.filePathresult+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html");
+		        JasperExportManager.exportReportToHtmlFile(jasperPrint, LoginMain.app_path+"/report/"+getSystime()+"_"+MainPanel.str+"文件报告.html");
 		       // 
 		}catch (JRException e) {
 			// TODO Auto-generated catch block

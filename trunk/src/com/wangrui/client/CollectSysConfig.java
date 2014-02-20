@@ -6,29 +6,30 @@ import com.wangrui.server.DBConnection;
 
 public class CollectSysConfig {
 
-	public static DBConnection conn_getFilePath, conn_getUtil,conn_getDbUrl,conn_getHqpath,conn_getExcelPath,conn_updatePath;
-	public static String filePathresult, utilresult,dburl,hqpath,excelpath,updatePath;
-	public static ResultSet rs_getFilePath, rs_getUtil,rs_getDbUrl,rs_getHqpath,rs_getExcelPath,rs_updatePath;
+	public static DBConnection conn_getFilePath, conn_getUtil,conn_getDbUrl,conn_getHqpath,conn_getExcelPath,conn_updatePath,conn_getShhqpath;
+	public static String filePathresult, utilresult,dburl,hqpath,excelpath,updatePath,shhqPath;
+	public static ResultSet rs_getFilePath, rs_getUtil,rs_getDbUrl,rs_getHqpath,rs_getExcelPath,rs_updatePath,rs_shhqpath;
 
 	public CollectSysConfig() {
 
-		String sql_getFilePath = "select value from systemconfig where id = 1000";
+		//String sql_getFilePath = "select value from systemconfig where id = 1000";
 		String sql_getUtil = "select value from systemconfig where id = 1001";
 		String sql_dburl = "select value from systemconfig where id = 1002";
-		String sql_hqpath = "select value from systemconfig where id = 1003";
+		String sql_szhqpath = "select value from systemconfig where id = 1003";
 		String sql_excelpath = "select value from systemconfig where id = 1004";
 		String sql_updatepath = "select value from systemconfig where id = 1005";
+		String sql_shhqpath = "select value from systemconfig where id = 1006";
 
-		conn_getFilePath = new DBConnection();
-		rs_getFilePath = conn_getFilePath.executeQuery(sql_getFilePath);
-		try {
-			while (rs_getFilePath.next()) {
-				filePathresult = rs_getFilePath.getString("value");
-			}
-			conn_getFilePath.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		conn_getFilePath = new DBConnection();
+//		rs_getFilePath = conn_getFilePath.executeQuery(sql_getFilePath);
+//		try {
+//			while (rs_getFilePath.next()) {
+//				filePathresult = rs_getFilePath.getString("value");
+//			}
+//			conn_getFilePath.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 		conn_getUtil = new DBConnection();
 		rs_getUtil = conn_getUtil.executeQuery(sql_getUtil);
@@ -40,6 +41,17 @@ public class CollectSysConfig {
 			e.printStackTrace();
 		}
 		conn_getUtil.close();
+		
+		conn_getShhqpath = new DBConnection();
+		rs_shhqpath = conn_getShhqpath.executeQuery(sql_shhqpath);
+		try {
+			while (rs_shhqpath.next()) {
+				shhqPath = rs_shhqpath.getString("value");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		conn_getShhqpath.close();
 		
 		conn_getDbUrl = new DBConnection();
 		rs_getDbUrl = conn_getDbUrl.executeQuery(sql_dburl);
@@ -53,7 +65,7 @@ public class CollectSysConfig {
 		}
 		
 		conn_getHqpath = new DBConnection();
-		rs_getHqpath = conn_getHqpath.executeQuery(sql_hqpath);
+		rs_getHqpath = conn_getHqpath.executeQuery(sql_szhqpath);
 		try {
 			while (rs_getHqpath.next()) {
 				hqpath = rs_getHqpath.getString("value");

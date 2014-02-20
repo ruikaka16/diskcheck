@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 
 import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.JExpectSearchField;
+import com.wangrui.client.LoginMain;
 import com.wangrui.server.DBConnection;
 
 public class SoVersionSearch extends JDialog {
@@ -27,7 +28,7 @@ public class SoVersionSearch extends JDialog {
     /** Creates new form Find */
     public SoVersionSearch(int system_type) {
 
-    	ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/magnifier.png");
+    	ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/magnifier.png");
         jExpectSearchField = new JExpectSearchField();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new JLabel();

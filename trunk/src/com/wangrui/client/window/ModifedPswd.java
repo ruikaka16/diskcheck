@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 import com.wangrui.client.CollectSysConfig;
 import com.wangrui.client.LoginMain;
+import com.wangrui.client.MainPanel;
 import com.wangrui.server.DBConnection;
 
 public class ModifedPswd extends JDialog{
@@ -162,7 +163,7 @@ public class ModifedPswd extends JDialog{
                 .addContainerGap())
         );
 
-        ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/application_key.png");//图标路径
+        ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/application_key.png");//图标路径
         setIconImage(icon.getImage());
         
         setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
@@ -249,10 +250,10 @@ addWindowListener(new WindowListener() {
 					JOptionPane.showMessageDialog(null, "信息输入不完整，请重新输入！");
 				}else {
 				if(!updatePsw(jPasswordField4.getText().toString(),jTextField1.getText())){
-					JOptionPane.showMessageDialog(null, "密码修改成功！");
+					JOptionPane.showMessageDialog(null, "密码修改失败！");
 					setVisible(false);
 				}else{
-					JOptionPane.showMessageDialog(null, "密码修改失败！");
+					JOptionPane.showMessageDialog(null, "密码修改成功,请重新登录！");
 				 }
 				}
 			}

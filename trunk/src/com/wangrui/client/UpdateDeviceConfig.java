@@ -53,23 +53,30 @@ import com.wangrui.server.DBConnection;
 class MyTableCellRenderer implements TableCellRenderer {
 	public CompoundIcon c;
 	public JLabel label;
+	public ResultSet rs;
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		// 根据特定的单元格设置不同的Renderer,假如你要在第2行第3列显示图标
 		DBConnection conn = new DBConnection();
-		String sql = "select ip,username,password from update_device";
-		ResultSet rs = conn.executeQuery(sql);
+
+		String sql = "select ip,username,password from update_device where system_type = 0";
+		String sql1 = "select ip,username,password from update_device where system_type = 1";
+		
+		if(LoginMain.userType.getText().equals("0")){
+			rs = conn.executeQuery(sql);
+		}else if(LoginMain.userType.getText().equals("1")){
+			rs = conn.executeQuery(sql1);
+		}
+		
 		int i = 0;
-		Icon[] deleteIcon = new Icon[] { new ImageIcon(
-				"D:/Management/image/delete.png") };
-		Icon[] acceptIcon = new Icon[] { new ImageIcon(
-				"D:/Management/image/accept.png") };
+		Icon[] deleteIcon = new Icon[] { new ImageIcon(LoginMain.app_path+"/image/delete.png") };
+		Icon[] acceptIcon = new Icon[] { new ImageIcon(LoginMain.app_path+"/image/accept.png") };
 		
 		try {
 			while (rs.next()) {
 				
 				if (column == 7 && row == i) {
-					System.out.println("当前行数i="+i);
+					//System.out.println("当前行数i="+i);
 					if (checkDeviceStatus(rs.getString("ip"),
 							rs.getString("username"), rs.getString("password")) == false) {
 
@@ -149,7 +156,7 @@ class MyTableCellRenderer1 implements TableCellRenderer {
 		// 根据特定的单元格设置不同的Renderer,假如你要在第2行第3列显示图标
 		if (column == 7) {
 			Icon[] icons = new Icon[] { new ImageIcon(
-					"D:/Management/image/delete.png") };
+					LoginMain.app_path+"/image/delete.png") };
 			CompoundIcon c = new CompoundIcon(icons);
 			JLabel l = new JLabel(c);
 			l.setOpaque(false);
@@ -186,7 +193,7 @@ public class UpdateDeviceConfig extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		String[] columnNames = { "IP地址", "用户名", "密码", "备份标志", "客户端升级标志",
 				"灾备标志", "系统标志", "设备状态" }; // 20121011列增加os字段对应操作系统
-		ImageIcon icon = new ImageIcon(CollectSysConfig.filePathresult
+		ImageIcon icon = new ImageIcon(LoginMain.app_path
 				+ "/image/computer.png");// 图标路径
 		setIconImage(icon.getImage());
 		// 在下拉框中增加默认数据
@@ -388,6 +395,7 @@ public class UpdateDeviceConfig extends JDialog {
 									{
 										tableModel.removeRow(selectedRow); // 删除行
 									}
+									dispose();
 
 								} catch (Exception e1) {
 									e1.printStackTrace();

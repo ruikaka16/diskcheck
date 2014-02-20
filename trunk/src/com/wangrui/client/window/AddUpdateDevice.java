@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.wangrui.client.CollectSysConfig;
+import com.wangrui.client.LoginMain;
 import com.wangrui.client.UpdateDeviceConfig;
 import com.wangrui.server.DBConnection;
 
@@ -236,7 +237,7 @@ public class AddUpdateDevice extends JDialog{
 	                .addContainerGap())
 	        );
 	       
-	        ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/computer_add.png");//图标路径
+	        ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/computer_add.png");//图标路径
 	        setIconImage(icon.getImage());
 	        
 	        setModal(true); //子窗口在父窗口上，将子窗口设置为JDialog，并设置setModal(true)
@@ -348,6 +349,7 @@ public class AddUpdateDevice extends JDialog{
 								   jComboBox2.setSelectedItem("");
 								   jComboBox3.setSelectedItem("");
 								   jComboBox4.setSelectedItem("");
+								   dispose();
 
 							}
 

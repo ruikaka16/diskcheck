@@ -46,14 +46,12 @@ public class SystemConfig extends JDialog {
 	private int num; // 记录条数
 	private int i = 0;
 	private Object tableVales[][];
-	private static String url = "jdbc:mysql://localhost:3306/test";// mysql连接
-	private static String dbuser = "root"; // 数据库名称
 	static String dbpsw = "wangrui";// 数据库密码
 
 	public SystemConfig() {
 		// 界面部分
 		super();
-		ImageIcon icon=new ImageIcon(CollectSysConfig.filePathresult+"/image/config.png");//图标路径
+		ImageIcon icon=new ImageIcon(LoginMain.app_path+"/image/config.png");//图标路径
         setIconImage(icon.getImage());
 		setTitle("系统参数配置");
 		setModal(true);
